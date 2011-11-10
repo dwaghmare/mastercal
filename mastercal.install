@@ -1,0 +1,101 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the aggregator module.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function mastercal_uninstall() {
+  variable_del('mastercal_id');
+  variable_del('mastercal_host');
+
+
+}
+function mastercal_install() {
+  // Outside of the .install file we would use drupal_write_record() to
+  // populate the database, but it cannot be used here, so we'll use
+  // db_insert().
+
+}
+/**
+ * Implements hook_schema().
+ 
+function mastercal_schema() {
+
+  $schema['mastercal_depts'] = array(
+    'description' => 'Stores the individual departments from mastercal.',
+    'fields' => array(
+      'lname' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'last name of the employee.',
+      ),
+      'fname' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'frist name of the employee.',
+      ),
+      
+      'email' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'email of the employee.',
+      ),
+      'title' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Title of the employee.',
+      ),
+      'office' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'office address of the employee.',
+      ),
+      'phone' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'default' => '',
+        'description' => 'phone number of the employee.',
+      ),
+      'href' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'link to whitepage.',
+      ),
+      'dept' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'link to whitepage.',
+      ),
+    ),
+    'primary key' => array('fname', 'lname')
+    
+
+  );
+
+  return $schema;
+  
+}
+*/
+
+
+
+

@@ -1,0 +1,290 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * A module querying Whitepages for a list of department members.
+ *
+ * This module provides a block that lists all of the
+ * members of a specified dapartment. 
+ * 
+ */
+
+ //sets a couple default values
+
+define('MASTERCAL_HOST', 'directory.uiowa.edu');
+define('MASTERCAL_ID', 62);
+define('MASTERCAL_AUTH', False);
+
+ 
+ 
+/**
+ * Implements hook_help().
+ */
+function mastercal_help($path, $arg) {
+  if ($path == 'admin/help#mastercal') {
+    return t('A module to display members of a specified department.');
+  }
+}
+
+
+
+/**
+ * Implements hook_menu().
+ */
+function mastercal_menu() {
+  $items = array();
+  
+  //path to config
+  $items['admin/config/people/mastercal'] = array(
+    'title' => 'mastercal',
+    'description' => 'config page for mastercal module',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('mastercal_form'),
+    'access arguments' => array('administer users'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  
+  //path to page view
+
+  $items['org/calendar'] = array(
+    'title' => 'Calendar',
+    'page callback' => 'mastercal_pageview',
+    'access callback' => TRUE,
+  );
+  
+  return $items;
+}
+
+
+
+/**
+ * Function to create page view
+ */
+function mastercal_pageview() {
+  if (variable_get('MASTERCAL_AUTH')) {
+    ini_set('display_errors',1); 
+    error_reporting(E_ALL);
+
+    $day = new DateTime();
+    
+    $calendars = GetCalendars();
+    
+    
+    print_r($calendars);
+    return array(
+      'prefix_suffix' => array(
+        '#markup' => 'GetCalendarsResult',
+        '#prefix' => "<h2>",
+        '#suffix' => "</h2>",
+      ),
+      'second_para' => array(
+          '#items' => $calendars,
+          '#theme' => 'item_list',
+      ),
+    );
+  }else {
+    return array(
+      'prefix_suffix' => array(
+        '#markup' => 'Configure the Calendar first!',
+        '#prefix' => "<h2>",
+        '#suffix' => "</h2>",
+      ),
+
+    );
+  }
+  
+}
+
+/**
+ * Form builder; Create and display the Whitepages configuration settings form.
+ */
+function mastercal_form($form, &$form_state) {
+  
+   $form['mastercal_name'] = array(
+       '#type' => 'select',
+       '#title' => t('Calendar'),
+       '#options' => GetCalendars(),
+       '#default_value' => variable_get('mastercal_id', MASTERCAL_ID),
+       '#description' => t('Set this to <em>Yes</em> if you would like this category to be selected by default.'),
+   );
+  $form = system_settings_form($form);
+  $form['#submit'][] = 'mastercal_form_submit';
+  return $form;
+}
+
+/**
+ * Form submit handler. Save configuration settings for User Warn module.
+ */
+function mastercal_form_submit($form, &$form_state) {
+  
+  variable_set('mastercal_id', $form_state['values']['mastercal_name']);
+  variable_set('MASTERCAL_AUTH', True);
+  $calarray = GetCalendars();
+  variable_set('mastercal_name', $calarray[$form_state['values']['mastercal_name']]);
+ 
+  drupal_set_message('The settings have been saved!');
+}
+
+
+
+function client() {
+  require_once('nusoap/nusoap.php');
+  
+
+  $url = 'http://itsnt917.iowa.uiowa.edu/MCAPI/MCAPIService.asmx?wsdl';  
+    
+  $client = new nusoap_client($url, true); 
+  $client->soap_defencoding = 'UTF-8';
+  $err = $client->getError();
+  if ($err) {
+    echo '<h2>Constructor error</h2><pre>' . $err . '</pre>';
+    echo '<h2>Debug</h2><pre>' . htmlspecialchars($client->getDebug(), ENT_QUOTES) . '</pre>';
+    exit();
+  }    
+    
+  return $client;
+}
+
+function GetCalendars() {
+  $param['userName'] = 'emsapi@uiowa.edu';
+  $param['password'] = 'emsapi2011';
+  $client = client($param);
+  $result = $client->call('GetCalendars', $param);
+  $respxml = simplexml_load_string($result['GetCalendarsResult'])->asXML();
+  
+  //print_r($respxml);
+  $calendars = array();
+  foreach (qp($respxml, 'Data') as $cal) {
+    $calendars[$cal->children('CalendarID')->text()] = $cal->siblings('Name')->text();
+  }
+  return $calendars;
+}
+function GetEvents() {
+  $param['userName'] = 'emsapi@uiowa.edu';
+  $param['password'] = 'emsapi2011'; 
+  $client = client($param);
+  
+  $param['startDate'] = firstOfMonth();
+  $param['endDate'] = lastOfMonth();
+  $param['location'] = '';
+  $param['eventName'] = '';
+  $param['calendars'] = array('int' => variable_get('mastercal_id', variable_get('MASTERCAL_ID')));
+  $param['eventTypes'] = Null;
+  
+  print_r($param);
+  $result = $client->call('GetEvents', $param);
+  print_r($result);
+  $respxml = simplexml_load_string(utf8_encode($result['GetEventsResult']))->asXML();
+  //print_r(variable_get('mastercal_name', 'poop'));
+  //print_r($respxml);
+  $calendars = array();
+  foreach (qp($respxml, 'Data') as $event) {
+    $calendars[] = array(
+                          'EventDetailID' => $event->children('EventDetailID')->text(),
+                          'Title' => $event->siblings('Title')->text(),
+                          'Date' => $event->siblings('EventDate')->text(),
+                          'Description' => $event->siblings('Description')->text(),
+                          'LocationURL' => $event->siblings('LocationURL')->text(),
+                          'Location' => $event->siblings('Location')->text(),
+                          'ContactEmail' => $event->siblings('ContactEmail')->text(),
+                          'ContactName' => $event->siblings('ContactName')->text(),
+                        );
+    
+  }
+  return $calendars;
+}
+
+
+/**
+ * Implements hook_block_info().
+ *
+ * This hook declares what blocks are provided by the module.
+ */
+function mastercal_block_info() {
+
+  $blocks['mastercal_block'] = array(
+    'info' => t('MasterCal: block'),
+
+  );
+
+  return $blocks;
+}
+
+
+
+/**
+ * Implements hook_block_view().
+ *
+ * This hook generates the contents of the blocks themselves.
+ */
+function mastercal_block_view($delta = '') {
+  //The $delta parameter tells us which block is being requested.
+  $block = array();
+  switch ($delta) {
+    case 'mastercal_block':
+      $block['subject'] = t('Events');
+      if (variable_get('MASTERCAL_AUTH')) {
+        $block['content'] = mastercal_contents('mastercal_block');
+      } else {
+        $block['content'] = 'Configure the mastercal module first';
+      }
+      break;
+  }
+  return $block;
+}
+
+/**
+ * A module-defined block content function.
+ */
+function mastercal_contents($which_block) {
+  switch ($which_block) {
+
+    case 'mastercal_block':
+      $calendars = GetEvents();
+      //print_r($calendars);
+      foreach($calendars as $event) {
+        $body = '<a class="event-show" href="#">';
+        $body .= $event['Title'];
+        $body .= '</a><br /><div class="more-event">';
+        if ($event['Location']) {
+          $body .= '<strong>Location: </strong>';
+          if ($event['LocationURL']) {
+            $loc = '<a href="' . $event['LocationURL'] .'">';
+            $loc .= $event['Location'] .'</a><br />';
+          } else { $loc = $event['Location']; }
+          $body .= $loc.'<br />';
+        }
+        $body .= $event['Description'] . '<br />';
+
+        $body .= '<strong>Contact: </strong>';
+        $body .= '<a href="mailto:' . $event['ContactEmail'] . '">';
+        $body .= $event['ContactName'] . '</a>';
+        $body .= '<br />';
+        
+        $date = explode('T', $event['Date']);
+          
+          $events[] = array(
+                        'data' => $date[0],
+                        'children' => array($body),
+                      );
+                        
+        
+      }
+      //print_r($events);
+      return array(
+        'second_para' => array(
+            '#items' => $events,
+            '#theme' => 'item_list',
+        ),
+      );
+  }
+}
+
+function firstOfMonth() {
+return date("Y-m-d", strtotime(date('m').'/01/'.date('Y').' 00:00:00'));
+}
+
+function lastOfMonth() {
+return date("Y-m-d", strtotime('-1 second',strtotime('+1 month',strtotime(date('m').'/01/'.date('Y').' 00:00:00'))));
+}
