@@ -172,9 +172,9 @@ function GetEvents() {
   $param['calendars'] = array('int' => variable_get('mastercal_id', variable_get('MASTERCAL_ID')));
   $param['eventTypes'] = Null;
   
-  print_r($param);
+  //print_r($param);
   $result = $client->call('GetEvents', $param);
-  print_r($result);
+  //print_r($result);
   $respxml = simplexml_load_string(utf8_encode($result['GetEventsResult']))->asXML();
   //print_r(variable_get('mastercal_name', 'poop'));
   //print_r($respxml);
