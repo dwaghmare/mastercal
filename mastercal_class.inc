@@ -1,0 +1,159 @@
+<?php
+
+/**
+ * Custom exception class to enhance default PHP exceptions.
+ */
+require_once('nusoap/nusoap.php');
+class mastercalSOAPexception extends Exception {
+  /**
+   * @param $msg
+   *   The exception message containing placeholder as t().
+   * @param $args
+   *   Replacement arguments such as for t().
+   */
+  function __construct($msg, $args = array()) {
+    $message = t($msg, $args);
+    parent::__construct($message);
+  }
+}
+
+
+/**
+ * A soap client class specific to MasterCalendar
+ */
+class mastercalSOAP {
+
+  protected $client;
+  protected $url;
+  protected $un;
+  protected $pw;
+  protected $param;
+
+  public function __construct($options = Null) {
+    $this->un = 'emsapi@uiowa.edu';
+    $this->pw = 'emsapi2011';
+    $this->url = 'http://itsnt917.iowa.uiowa.edu/MCAPI/MCAPIService.asmx?wsdl';
+    
+  }
+  public function client() {
+    if (!isset($this->client)) {
+      $options['exceptions'] = TRUE;
+
+      // The url has to point to a valid WSDL file.
+      $wsdl = @file_get_contents($this->url);
+      if ($wsdl) {
+        $this->client = new nusoap_client($this->url, true);
+        $err = $this->client->getError();
+        if ($err) {
+          // Display the error
+          drupal_set_message('<h2>Constructor error</h2><pre>' . $err . '</pre>', 'Error');
+        }
+      }
+      else {
+        throw new mastercalSOAPexception('Unable to fetch WSDL file from %wsdl', array('%wsdl' => $this->url));
+      }
+    }
+    return $this->client;
+  }
+
+
+
+  /**
+   * Calls the SOAP service.
+   *
+   * @param string $operation
+   *   The name of the operation to execute.
+   * @param array $arguments
+   *   Arguments to pass to the service with this operation.
+   */
+  public function call($operation, $arguments) {
+    $client = $this->client();
+    $response = $client->call($operation, $arguments);
+    // Check for a fault
+    if ($client->fault) {
+        echo '<p><b>Fault: ';
+        print_r($result);
+        
+        echo '</b></p>';
+    } else {
+        // Check for errors
+        $err = $client->getError();
+        if ($err) {
+            // Display the error
+            echo '<p><b>Error: ' . $err . '</b></p>';
+        } else {
+            // Display the result
+            return $response;
+        }
+    }  
+
+  }
+  
+  function MakeXml($soaprsp) {
+    return simplexml_load_string($soaprsp)->asXML();
+  }
+  
+  public function GetCals() {
+    $param = array(
+      'userName' => $this->un,
+      'password' => $this->pw,
+    );
+
+    $result = $this->call('GetCalendars', $param);
+    //print_r($result);
+    $respxml = $this->MakeXml($result['GetCalendarsResult']);
+    
+    //print_r($respxml);
+    $calendars = array();
+    foreach (qp($respxml, 'Data') as $cal) {
+      $calendars[$cal->children('CalendarID')->text()] = $cal->siblings('Name')->text();
+    }
+    return $calendars;
+  }
+  
+  public function GetEvents() {
+    $param['userName'] = $this->un;
+    $param['password'] = $this->pw; 
+
+    
+    $param['startDate'] = $this->firstOfMonth();
+    $param['endDate'] = $this->lastOfMonth();
+    $param['location'] = '';
+    $param['eventName'] = '';
+    $param['calendars'] = array('int' => variable_get('mastercal_id', variable_get('MASTERCAL_ID')));
+    $param['eventTypes'] = Null;
+    
+    //print_r($param);
+    $result = $this->call('GetEvents', $param);
+    //print_r($result);
+    $xml = simplexml_load_string(utf8_encode($result['GetEventsResult']));
+    $calenss = array();
+    $count = 0;
+    foreach($xml->children() as $child) {
+      //print_r("\n---------------------------");
+      $cals = array();
+      foreach($child->children() as $subchild) {
+        $cals[$subchild->getName()] = (string) $subchild;
+        //print_r("\n".$subchild->getName().": ".$subchild."");
+      }
+      $calens[] = $cals;
+      $count .= 1;
+    }
+    //print_r($calens);
+    //$respxml = $this->MakeXml(utf8_encode($result['GetEventsResult']));
+    //print_r(variable_get('mastercal_name', 'poop'));
+    //print_r($respxml);
+    $calendars = $calens;
+
+    //print_r($calendars);
+    return $calendars;
+  }
+  function firstOfMonth() {
+    return date("Y-m-d", strtotime(date('m').'/01/'.date('Y').' 00:00:00'));
+  }
+
+  function lastOfMonth() {
+    return date("Y-m-d", strtotime('-1 second',strtotime('+1 month',strtotime(date('m').'/01/'.date('Y').' 00:00:00'))));
+  }
+
+}

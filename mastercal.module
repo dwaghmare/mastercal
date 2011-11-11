@@ -16,7 +16,7 @@ define('MASTERCAL_HOST', 'directory.uiowa.edu');
 define('MASTERCAL_ID', 62);
 define('MASTERCAL_AUTH', False);
 
- 
+   
  
 /**
  * Implements hook_help().
@@ -62,23 +62,14 @@ function mastercal_menu() {
  * Function to create page view
  */
 function mastercal_pageview() {
-  if (variable_get('MASTERCAL_AUTH')) {
-    ini_set('display_errors',1); 
-    error_reporting(E_ALL);
 
-    $day = new DateTime();
-    
-    $calendars = GetCalendars();
-    
-    
-    print_r($calendars);
+  if (variable_get('MASTERCAL_AUTH')) {
+
+    $calendars = client()->GetCals();
+       
+    //print_r($calendars);
     return array(
-      'prefix_suffix' => array(
-        '#markup' => 'GetCalendarsResult',
-        '#prefix' => "<h2>",
-        '#suffix' => "</h2>",
-      ),
-      'second_para' => array(
+      'para' => array(
           '#items' => $calendars,
           '#theme' => 'item_list',
       ),
@@ -120,7 +111,7 @@ function mastercal_form_submit($form, &$form_state) {
   
   variable_set('mastercal_id', $form_state['values']['mastercal_name']);
   variable_set('MASTERCAL_AUTH', True);
-  $calarray = GetCalendars();
+  $calarray = client()->GetCals();
   variable_set('mastercal_name', $calarray[$form_state['values']['mastercal_name']]);
  
   drupal_set_message('The settings have been saved!');
@@ -129,71 +120,14 @@ function mastercal_form_submit($form, &$form_state) {
 
 
 function client() {
-  require_once('nusoap/nusoap.php');
-  
-
-  $url = 'http://itsnt917.iowa.uiowa.edu/MCAPI/MCAPIService.asmx?wsdl';  
-    
-  $client = new nusoap_client($url, true); 
-  $client->soap_defencoding = 'UTF-8';
-  $err = $client->getError();
-  if ($err) {
-    echo '<h2>Constructor error</h2><pre>' . $err . '</pre>';
-    echo '<h2>Debug</h2><pre>' . htmlspecialchars($client->getDebug(), ENT_QUOTES) . '</pre>';
-    exit();
-  }    
+  require_once('mastercal_class.inc');
+  $client = new mastercalSOAP();
     
   return $client;
 }
 
-function GetCalendars() {
-  $param['userName'] = 'emsapi@uiowa.edu';
-  $param['password'] = 'emsapi2011';
-  $client = client($param);
-  $result = $client->call('GetCalendars', $param);
-  $respxml = simplexml_load_string($result['GetCalendarsResult'])->asXML();
-  
-  //print_r($respxml);
-  $calendars = array();
-  foreach (qp($respxml, 'Data') as $cal) {
-    $calendars[$cal->children('CalendarID')->text()] = $cal->siblings('Name')->text();
-  }
-  return $calendars;
-}
-function GetEvents() {
-  $param['userName'] = 'emsapi@uiowa.edu';
-  $param['password'] = 'emsapi2011'; 
-  $client = client($param);
-  
-  $param['startDate'] = firstOfMonth();
-  $param['endDate'] = lastOfMonth();
-  $param['location'] = '';
-  $param['eventName'] = '';
-  $param['calendars'] = array('int' => variable_get('mastercal_id', variable_get('MASTERCAL_ID')));
-  $param['eventTypes'] = Null;
-  
-  //print_r($param);
-  $result = $client->call('GetEvents', $param);
-  //print_r($result);
-  $respxml = simplexml_load_string(utf8_encode($result['GetEventsResult']))->asXML();
-  //print_r(variable_get('mastercal_name', 'poop'));
-  //print_r($respxml);
-  $calendars = array();
-  foreach (qp($respxml, 'Data') as $event) {
-    $calendars[] = array(
-                          'EventDetailID' => $event->children('EventDetailID')->text(),
-                          'Title' => $event->siblings('Title')->text(),
-                          'Date' => $event->siblings('EventDate')->text(),
-                          'Description' => $event->siblings('Description')->text(),
-                          'LocationURL' => $event->siblings('LocationURL')->text(),
-                          'Location' => $event->siblings('Location')->text(),
-                          'ContactEmail' => $event->siblings('ContactEmail')->text(),
-                          'ContactName' => $event->siblings('ContactName')->text(),
-                        );
-    
-  }
-  return $calendars;
-}
+
+
 
 
 /**
@@ -241,7 +175,7 @@ function mastercal_contents($which_block) {
   switch ($which_block) {
 
     case 'mastercal_block':
-      $calendars = GetEvents();
+      $calendars = client()->GetEvents();
       //print_r($calendars);
       foreach($calendars as $event) {
         $body = '<a class="event-show" href="#">';
@@ -262,7 +196,7 @@ function mastercal_contents($which_block) {
         $body .= $event['ContactName'] . '</a>';
         $body .= '<br />';
         
-        $date = explode('T', $event['Date']);
+        $date = explode('T', $event['EventDate']);
           
           $events[] = array(
                         'data' => $date[0],
@@ -271,6 +205,7 @@ function mastercal_contents($which_block) {
                         
         
       }
+      $events = (isset($events) ? $events : array('No items to show'));
       //print_r($events);
       return array(
         'second_para' => array(
@@ -281,10 +216,3 @@ function mastercal_contents($which_block) {
   }
 }
 
-function firstOfMonth() {
-return date("Y-m-d", strtotime(date('m').'/01/'.date('Y').' 00:00:00'));
-}
-
-function lastOfMonth() {
-return date("Y-m-d", strtotime('-1 second',strtotime('+1 month',strtotime(date('m').'/01/'.date('Y').' 00:00:00'))));
-}
