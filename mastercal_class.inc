@@ -89,8 +89,30 @@ class mastercalSOAP {
 
   }
   
-  function MakeXml($soaprsp) {
-    return simplexml_load_string($soaprsp)->asXML();
+
+  
+  public function GetCal($calID) {
+    $param = array(
+      'userName' => $this->un,
+      'password' => $this->pw,
+      'calendarId' => $calID,
+    );
+
+    $result = $this->call('GetCalendar', $param);
+    //print_r($result);
+    $respxml = simplexml_load_string($result['GetCalendarResult']);
+    
+    //print_r($respxml);
+    $cals = array();
+    foreach($respxml->children() as $child) {
+      //print_r($child->calendar);
+      foreach($child->children() as $subchild) {
+        $cals[$subchild->getName()] = (string) $subchild;
+        //print_r("\n".$subchild->getName().": ".$subchild."");
+      }
+    }
+
+    return $cals;
   }
   
   public function GetCals() {
@@ -101,13 +123,16 @@ class mastercalSOAP {
 
     $result = $this->call('GetCalendars', $param);
     //print_r($result);
-    $respxml = $this->MakeXml($result['GetCalendarsResult']);
+    $respxml = simplexml_load_string($result['GetCalendarsResult']);
     
     //print_r($respxml);
     $calendars = array();
-    foreach (qp($respxml, 'Data') as $cal) {
-      $calendars[$cal->children('CalendarID')->text()] = $cal->siblings('Name')->text();
+    foreach ($respxml->children() as $cal) {
+      $calendars[(string)$cal->CalendarID] = (string)$cal->Name;
     }
+    
+    $calendars = $this->filterCals($calendars);
+    //print_r($calendars);
     return $calendars;
   }
   
@@ -143,11 +168,37 @@ class mastercalSOAP {
     //$respxml = $this->MakeXml(utf8_encode($result['GetEventsResult']));
     //print_r(variable_get('mastercal_name', 'poop'));
     //print_r($respxml);
-    $calendars = $calens;
+    if (isset($calens)) {
+      $calendars = $calens;
+    }else {
+      $calendars = Null;
+    }
 
     //print_r($calendars);
     return $calendars;
   }
+  
+  /**
+   * Helper functions
+   */
+   
+  function filterCals($allCals) {
+    $filtered = array();
+    foreach($allCals as $calid => $calname) {
+      $calData = $this->GetCal($calid);
+      //print_r($calData);
+      if ($calData['IsPrivate'] != 'true') {
+        $filtered[$calid] =$calname;        
+      }
+    }
+    //print_r($filtered);
+    return $filtered;
+  }
+  
+  function MakeXml($soaprsp) {
+    return simplexml_load_string($soaprsp)->asXML();
+  }
+  
   function firstOfMonth() {
     return date("Y-m-d", strtotime(date('m').'/01/'.date('Y').' 00:00:00'));
   }

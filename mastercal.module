@@ -68,6 +68,7 @@ function mastercal_pageview() {
     $calendars = client()->GetCals();
        
     //print_r($calendars);
+
     return array(
       'para' => array(
           '#items' => $calendars,
@@ -91,11 +92,12 @@ function mastercal_pageview() {
  * Form builder; Create and display the Whitepages configuration settings form.
  */
 function mastercal_form($form, &$form_state) {
-  
+   $calendars = client()->GetCals();
+   
    $form['mastercal_name'] = array(
        '#type' => 'select',
        '#title' => t('Calendar'),
-       '#options' => GetCalendars(),
+       '#options' => $calendars,
        '#default_value' => variable_get('mastercal_id', MASTERCAL_ID),
        '#description' => t('Set this to <em>Yes</em> if you would like this category to be selected by default.'),
    );
@@ -177,34 +179,36 @@ function mastercal_contents($which_block) {
     case 'mastercal_block':
       $calendars = client()->GetEvents();
       //print_r($calendars);
-      foreach($calendars as $event) {
-        $body = '<a class="event-show" href="#">';
-        $body .= $event['Title'];
-        $body .= '</a><br /><div class="more-event">';
-        if ($event['Location']) {
-          $body .= '<strong>Location: </strong>';
-          if ($event['LocationURL']) {
-            $loc = '<a href="' . $event['LocationURL'] .'">';
-            $loc .= $event['Location'] .'</a><br />';
-          } else { $loc = $event['Location']; }
-          $body .= $loc.'<br />';
-        }
-        $body .= $event['Description'] . '<br />';
+      if (isset($calendars)) {
+        foreach($calendars as $event) {
+          $body = '<a class="event-show" href="#">';
+          $body .= $event['Title'];
+          $body .= '</a><br /><div class="more-event">';
+          if ($event['Location']) {
+            $body .= '<strong>Location: </strong>';
+            if ($event['LocationURL']) {
+              $loc = '<a href="' . $event['LocationURL'] .'">';
+              $loc .= $event['Location'] .'</a><br />';
+            } else { $loc = $event['Location']; }
+            $body .= $loc.'<br />';
+          }
+          $body .= $event['Description'] . '<br />';
 
-        $body .= '<strong>Contact: </strong>';
-        $body .= '<a href="mailto:' . $event['ContactEmail'] . '">';
-        $body .= $event['ContactName'] . '</a>';
-        $body .= '<br />';
-        
-        $date = explode('T', $event['EventDate']);
+          $body .= '<strong>Contact: </strong>';
+          $body .= '<a href="mailto:' . $event['ContactEmail'] . '">';
+          $body .= $event['ContactName'] . '</a>';
+          $body .= '<br />';
           
-          $events[] = array(
-                        'data' => $date[0],
-                        'children' => array($body),
-                      );
-                        
-        
-      }
+          $date = explode('T', $event['EventDate']);
+            
+            $events[] = array(
+                          'data' => $date[0],
+                          'children' => array($body),
+                        );
+                          
+          
+        }
+      }else { $events = Null; }
       $events = (isset($events) ? $events : array('No items to show'));
       //print_r($events);
       return array(
