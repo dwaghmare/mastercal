@@ -64,15 +64,27 @@ function mastercal_menu() {
 function mastercal_pageview() {
 
   if (variable_get('MASTERCAL_AUTH')) {
-
-    $calendars = client()->GetCals();
-       
+    $events = client()->GetEvents();
+    //print_r($events);
+    $widgetData  = '';
+    foreach($events as $event) {
+      $widgetData .= "{title:'".$event['Title']."',start:'".$event['EventDate']."'},";
+    }
+    //$calendars = client()->GetCals();
+    drupal_add_js(
+      '(function($){jQuery(document).ready(function () { 
+        $("#mastercal_page").fullCalendar({
+        events: [' . $widgetData . ']
+        }) });})(jQuery);', 
+        array('type' => 'inline', 'scope' => 'header', 'weight' => 5)
+    );   
     //print_r($calendars);
 
     return array(
       'para' => array(
-          '#items' => $calendars,
-          '#theme' => 'item_list',
+          '#markup' => 'Calendar',
+          '#prefix' => '<div id="mastercal_page">',
+          '#suffix' => '</div>',
       ),
     );
   }else {
@@ -178,7 +190,7 @@ function mastercal_contents($which_block) {
 
     case 'mastercal_block':
       $calendars = client()->GetEvents();
-      //print_r($calendars);
+      //print_r(client()->GetEvent());
       if (isset($calendars)) {
         foreach($calendars as $event) {
           $body = '<a class="event-show" href="#">';
@@ -215,6 +227,8 @@ function mastercal_contents($which_block) {
         'second_para' => array(
             '#items' => $events,
             '#theme' => 'item_list',
+            '#prefix' => '<div id="mastercal_block">',
+            '#suffix' => '</div>',
         ),
       );
   }

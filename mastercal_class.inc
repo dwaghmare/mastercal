@@ -69,10 +69,12 @@ class mastercalSOAP {
   public function call($operation, $arguments) {
     $client = $this->client();
     $response = $client->call($operation, $arguments);
+    //print_r($operation);
+    //print_r($arguments);
     // Check for a fault
     if ($client->fault) {
         echo '<p><b>Fault: ';
-        print_r($result);
+        print_r($response);
         
         echo '</b></p>';
     } else {
@@ -177,6 +179,45 @@ class mastercalSOAP {
     //print_r($calendars);
     return $calendars;
   }
+  
+  public function GetEvent() {
+    $param['userName'] = $this->un;
+    $param['password'] = $this->pw; 
+
+    
+    $param['eventDetailId'] = 20841;
+
+    
+    //print_r($param);
+    $result = $this->call('GetEvent', $param);
+    //print_r($result);
+    $xml = simplexml_load_string(utf8_encode($result['GetEventResult']));
+    $calenss = array();
+    $count = 0;
+    foreach($xml->children() as $child) {
+      //print_r("\n---------------------------");
+      $cals = array();
+      foreach($child->children() as $subchild) {
+        $cals[$subchild->getName()] = (string) $subchild;
+        //print_r("\n".$subchild->getName().": ".$subchild."");
+      }
+      $calens[] = $cals;
+      $count .= 1;
+    }
+    //print_r($calens);
+    //$respxml = $this->MakeXml(utf8_encode($result['GetEventsResult']));
+    //print_r(variable_get('mastercal_name', 'poop'));
+    //print_r($respxml);
+    if (isset($calens)) {
+      $calendars = $calens;
+    }else {
+      $calendars = Null;
+    }
+
+    //print_r($calendars);
+    return $calendars;
+  }
+  
   
   /**
    * Helper functions
