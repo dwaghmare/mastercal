@@ -139,15 +139,21 @@ class mastercalSOAP {
   }
   
   public function GetEvents() {
+    $cal_ids = mastercal_load();
+    $cal_list = array();
+    if (isset($cal_ids)) { 
+      foreach ($cal_ids as $item) {
+        $cal_list['int'][] = $item->cid;
+      }
+    }
+    //print_r($cal_list);
     $param['userName'] = $this->un;
     $param['password'] = $this->pw; 
-
-    
     $param['startDate'] = $this->firstOfMonth();
     $param['endDate'] = $this->lastOfMonth();
     $param['location'] = '';
     $param['eventName'] = '';
-    $param['calendars'] = array('int' => variable_get('mastercal_id', variable_get('MASTERCAL_ID')));
+    $param['calendars'] = $cal_list;
     $param['eventTypes'] = Null;
     
     //print_r($param);

@@ -27,7 +27,16 @@ function mastercal_help($path, $arg) {
   }
 }
 
-
+/**
+ * Implements hook_permission().
+ */
+function mastercal_permission() {
+  return array(
+    'administer mastercal' => array(
+      'title' => t('Administer mastercal'),
+    ),
+  );
+}
 
 /**
  * Implements hook_menu().
@@ -44,7 +53,29 @@ function mastercal_menu() {
     'access arguments' => array('administer users'),
     'type' => MENU_NORMAL_ITEM,
   );
-  
+    $items['admin/config/user-interface/mastercal'] = array(
+    'title' => 'Calendars',
+    'description' => 'Add and modify Calendar sets.',
+    'page callback' => 'mastercal_set_admin',
+    'access arguments' => array('administer mastercal'),
+    'file' => 'mastercal.admin.inc',
+  );
+  $items['admin/config/user-interface/mastercal/add-set'] = array(
+    'title' => 'Add calendar set',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('mastercal_set_add_form'),
+    'access arguments' => array('administer mastercal'),
+    'type' => MENU_LOCAL_ACTION,
+    'file' => 'mastercal.admin.inc',
+  );
+  $items['admin/config/user-interface/mastercal/%/delete'] = array(
+    'title' => 'Delete shortcut set',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('mastercal_set_delete_form', 4),
+    'access callback' => True,
+    'access arguments' => array(4),
+    'file' => 'mastercal.admin.inc',
+  );
   //path to page view
 
   $items['org/calendar'] = array(
@@ -233,4 +264,29 @@ function mastercal_contents($which_block) {
       );
   }
 }
+function cal_exists($cid) {
+  return (bool) db_query_range('SELECT 1 FROM {mastercal_source} WHERE cid = :cid', 0, 1, array(':cid' => $cid))->fetchField();
+}
 
+function mastercal_save(&$cal) {
+  // First save the shortcut set itself.
+ $return = db_insert('mastercal_source')
+            ->fields(array(
+                'title' => $cal['Name'],
+                'cid' => (int)$cal['CalendarID'],
+              )
+            )
+            ->execute();
+  return $return;
+}
+
+function mastercal_load() {
+  $result = db_query("SELECT title, cid FROM {mastercal_source}");
+  return $result;
+}
+function mastercal_delete($cid) {
+  $deleted = db_delete('mastercal_source')
+  ->condition('cid', $cid)
+  ->execute();
+  return $deleted;
+}
