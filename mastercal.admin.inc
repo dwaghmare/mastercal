@@ -1,5 +1,5 @@
 <?php
-// $Id: shortcut.admin.inc,v 1.16 2010/10/20 01:31:07 dries Exp $
+
 
 /**
  * @file
@@ -11,8 +11,9 @@
 
 
 /**
- * Menu page callback: builds the page for administering shortcut sets.
+ * Menu page callback: builds the page for administering the site's DEA MasterCalendar integration.
  */
+ //create the table of calendars with remove button seen at /admin/config/user-interface/mastercal
 function mastercal_set_admin() {
   $saved_cals = mastercal_load();
   $header = array(t('Name'), array('data' => t('options'), 'colspan' => 4));
@@ -25,10 +26,7 @@ function mastercal_set_admin() {
       '',
     );
  
-    $row[] = l(t('remove'), "admin/config/user-interface/mastercal/$cal->cid/delete");
-
-    
-
+    $row[] = l(t('remove'), "admin/config/user-interface/mastercal/$cal->cid/delete");   
     $rows[] = $row;
   }
 
@@ -36,7 +34,7 @@ function mastercal_set_admin() {
 }
 
 /**
- * Form callback: builds the form for adding a shortcut set.
+ * Form callback: builds the form for adding a Calendar.
  *
  * @param $form
  *   An associative array containing the structure of the form.
@@ -47,13 +45,13 @@ function mastercal_set_admin() {
  *   An array representing the form definition.
  *
  * @ingroup forms
- * @see shortcut_set_add_form_validate()
- * @see shortcut_set_add_form_submit()
+ * @see mastercal_set_add_form_validate()
+ * @see mastercal_set_add_form_submit()
  */
 function mastercal_set_add_form($form, &$form_state) {
 
   $calendars = client()->GetCals();
-   
+   //select box where the value of the selection = the calendar id number
    $form['mastercal_name'] = array(
        '#type' => 'select',
        '#title' => t('Calendar'),
@@ -63,6 +61,7 @@ function mastercal_set_add_form($form, &$form_state) {
    );
 
   $form['actions'] = array('#type' => 'actions');
+  //create submit button
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Add Calendar'),
@@ -72,20 +71,19 @@ function mastercal_set_add_form($form, &$form_state) {
 }
 
 /**
- * Validation handler for shortcut_set_add_form().
+ * Validation handler for mastercal_set_add_form().
  */
 function mastercal_set_add_form_validate($form, &$form_state) {
-  // Check to prevent a duplicate title.
+  // Check to prevent a duplicate.
   if (cal_exists($form_state['values']['mastercal_name'])) {
-    form_set_error('new', t('The shortcut set %name already exists. Choose another name.', array('%name' => $form_state['values']['mastercal_name'])));
+    form_set_error('new', t('The calendar %name already exists. Choose another.', array('%name' => $form_state['values']['mastercal_name'])));
   }
 }
 
 /**
- * Submit handler for shortcut_set_add_form().
+ * Submit handler for mastercal_set_add_form().
  */
 function mastercal_set_add_form_submit($form, &$form_state) {
-  // Save a new shortcut set with links copied from the user's default set.
   $cal = client()->GetCal($form_state['values']['mastercal_name']);
   //print_r($title);
   mastercal_save($cal);
@@ -96,16 +94,13 @@ function mastercal_set_add_form_submit($form, &$form_state) {
 
 
 /**
- * Form callback: builds the confirmation form for deleting a shortcut set.
+ * Form callback: builds the confirmation form for deleting a calendart.
  *
  * @param $form
  *   An associative array containing the structure of the form.
  * @param $form_state
  *   An associative array containing the current state of the form.
- * @param object $shortcut_set
- *   An object representing the shortcut set, as returned from
- *   shortcut_set_load().
- *
+ *   
  * @return
  *   An array representing the form definition.
  *
@@ -131,7 +126,7 @@ function mastercal_set_delete_form($form, &$form_state, $cid) {
 }
 
 /**
- * Submit handler for shortcut_set_delete_form().
+ * Submit handler for mastercal_set_delete_form().
  */
 function mastercal_set_delete_form_submit($form, &$form_state) {
   $cid = $form_state['values']['cid'];

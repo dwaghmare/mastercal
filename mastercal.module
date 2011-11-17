@@ -3,16 +3,15 @@
 
 /**
  * @file
- * A module querying Whitepages for a list of department members.
+ * A module integrating DEA Master Calendar with Drupal.
  *
- * This module provides a block that lists all of the
- * members of a specified dapartment. 
+ * This module provides a block with an events stream and a page that displays the same events in a calendar format. 
  * 
  */
 
  //sets a couple default values
 
-define('MASTERCAL_HOST', 'directory.uiowa.edu');
+//these will be removed at a later date
 define('MASTERCAL_ID', 62);
 define('MASTERCAL_AUTH', False);
 
@@ -23,12 +22,13 @@ define('MASTERCAL_AUTH', False);
  */
 function mastercal_help($path, $arg) {
   if ($path == 'admin/help#mastercal') {
-    return t('A module to display members of a specified department.');
+    return t('A module to display Calendar data from Master Calendar.');
   }
 }
 
 /**
  * Implements hook_permission().
+ * - The option to give this permission will show up under Mastercal in the permissions page
  */
 function mastercal_permission() {
   return array(
@@ -44,7 +44,7 @@ function mastercal_permission() {
 function mastercal_menu() {
   $items = array();
   
-  //path to config
+  //path to old config
   $items['admin/config/people/mastercal'] = array(
     'title' => 'mastercal',
     'description' => 'config page for mastercal module',
@@ -53,6 +53,7 @@ function mastercal_menu() {
     'access arguments' => array('administer users'),
     'type' => MENU_NORMAL_ITEM,
   );
+  //path to new config...transition in progress
     $items['admin/config/user-interface/mastercal'] = array(
     'title' => 'Calendars',
     'description' => 'Add and modify Calendar sets.',
@@ -60,6 +61,8 @@ function mastercal_menu() {
     'access arguments' => array('administer mastercal'),
     'file' => 'mastercal.admin.inc',
   );
+  //callback url for adding a new calendar
+  //the function mastercal_set_add_form() in the admin.inc file provides the form
   $items['admin/config/user-interface/mastercal/add-set'] = array(
     'title' => 'Add calendar set',
     'page callback' => 'drupal_get_form',
@@ -68,6 +71,8 @@ function mastercal_menu() {
     'type' => MENU_LOCAL_ACTION,
     'file' => 'mastercal.admin.inc',
   );
+  //passes the calendar id of the item you are trying to remove
+  //the access callback should be changed to be more restrictive
   $items['admin/config/user-interface/mastercal/%/delete'] = array(
     'title' => 'Delete shortcut set',
     'page callback' => 'drupal_get_form',
@@ -76,8 +81,8 @@ function mastercal_menu() {
     'access arguments' => array(4),
     'file' => 'mastercal.admin.inc',
   );
+  
   //path to page view
-
   $items['org/calendar'] = array(
     'title' => 'Calendar',
     'page callback' => 'mastercal_pageview',
@@ -91,17 +96,25 @@ function mastercal_menu() {
 
 /**
  * Function to create page view
+ *
+ * Currently this page can be accessed at example.com/org/calendar
  */
 function mastercal_pageview() {
-
+//This condition was to make sure a calendar has been added and the soapclient
+//successfully intialized but will be phased out soon
   if (variable_get('MASTERCAL_AUTH')) {
+  //initialize an instance of the mastercalSOAP class then call the GetEvents() method
+  //the calednars being queried for the events list are loaded from the database
     $events = client()->GetEvents();
     //print_r($events);
+    //initialize the JSON string so I can append to it later
+    //there may be a better way to create thsi JSON
     $widgetData  = '';
     foreach($events as $event) {
       $widgetData .= "{title:'".$event['Title']."',start:'".$event['EventDate']."'},";
     }
     //$calendars = client()->GetCals();
+    //adds a failry commonplace jquery library initializing statement and adds our event data in teh middle
     drupal_add_js(
       '(function($){jQuery(document).ready(function () { 
         $("#mastercal_page").fullCalendar({
@@ -112,7 +125,7 @@ function mastercal_pageview() {
     //print_r($calendars);
 
     return array(
-      'para' => array(
+      'calendar' => array(
           '#markup' => 'Calendar',
           '#prefix' => '<div id="mastercal_page">',
           '#suffix' => '</div>',
@@ -134,6 +147,7 @@ function mastercal_pageview() {
 /**
  * Form builder; Create and display the Whitepages configuration settings form.
  */
+ //old config code...will be replaced with code in admin.inc
 function mastercal_form($form, &$form_state) {
    $calendars = client()->GetCals();
    
@@ -269,7 +283,7 @@ function cal_exists($cid) {
 }
 
 function mastercal_save(&$cal) {
-  // First save the shortcut set itself.
+  // Save the calendar ID and its name to teh database
  $return = db_insert('mastercal_source')
             ->fields(array(
                 'title' => $cal['Name'],
@@ -281,6 +295,7 @@ function mastercal_save(&$cal) {
 }
 
 function mastercal_load() {
+//for simple queries it is more economical to use db_query and SQL than to use the new Drupal 7 methods
   $result = db_query("SELECT title, cid FROM {mastercal_source}");
   return $result;
 }

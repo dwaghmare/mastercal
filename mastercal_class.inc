@@ -141,12 +141,15 @@ class mastercalSOAP {
   public function GetEvents() {
     $cal_ids = mastercal_load();
     $cal_list = array();
+    //make sure the lsit isnt empty
     if (isset($cal_ids)) { 
+      //for the soap handler to identify your array as an integer array you have to make an associative array where 'int' => array(12,32,43)
       foreach ($cal_ids as $item) {
         $cal_list['int'][] = $item->cid;
       }
     }
     //print_r($cal_list);
+    //the Camel Case is required and not specified in the API but can be found by examining the request example on the API site /MCAPI/MCAPIService.asmx
     $param['userName'] = $this->un;
     $param['password'] = $this->pw; 
     $param['startDate'] = $this->firstOfMonth();
@@ -162,19 +165,20 @@ class mastercalSOAP {
     $xml = simplexml_load_string(utf8_encode($result['GetEventsResult']));
     $calenss = array();
     $count = 0;
+    //parse the xml response from the web service using SimpleXML
     foreach($xml->children() as $child) {
-      //print_r("\n---------------------------");
+      //create an array to store the data
       $cals = array();
       foreach($child->children() as $subchild) {
+        //associate array var['Name of field'] = 'value of field'
         $cals[$subchild->getName()] = (string) $subchild;
-        //print_r("\n".$subchild->getName().": ".$subchild."");
       }
       $calens[] = $cals;
       $count .= 1;
     }
     //print_r($calens);
-    //$respxml = $this->MakeXml(utf8_encode($result['GetEventsResult']));
-    //print_r(variable_get('mastercal_name', 'poop'));
+
+
     //print_r($respxml);
     if (isset($calens)) {
       $calendars = $calens;
@@ -185,7 +189,7 @@ class mastercalSOAP {
     //print_r($calendars);
     return $calendars;
   }
-  
+  //not being used so far but will be needed in order to get images from events
   public function GetEvent() {
     $param['userName'] = $this->un;
     $param['password'] = $this->pw; 
@@ -229,6 +233,7 @@ class mastercalSOAP {
    * Helper functions
    */
    
+   //currently only filters out private calednars but may be expanded at some point
   function filterCals($allCals) {
     $filtered = array();
     foreach($allCals as $calid => $calname) {
@@ -242,14 +247,17 @@ class mastercalSOAP {
     return $filtered;
   }
   
+  //currently not being used
   function MakeXml($soaprsp) {
     return simplexml_load_string($soaprsp)->asXML();
   }
   
+  //returns the date of the first of the month 'yyyy-mm-dd'
   function firstOfMonth() {
     return date("Y-m-d", strtotime(date('m').'/01/'.date('Y').' 00:00:00'));
   }
 
+  //date of the last day of the month
   function lastOfMonth() {
     return date("Y-m-d", strtotime('-1 second',strtotime('+1 month',strtotime(date('m').'/01/'.date('Y').' 00:00:00'))));
   }
