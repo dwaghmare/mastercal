@@ -15,7 +15,20 @@
 define('MASTERCAL_ID', 62);
 define('MASTERCAL_AUTH', False);
 
-   
+
+
+
+function mastercal_theme() {
+  return array(
+    'employee_list' => array(
+      'template' => 'employees',
+      'arguments' => array('list' => NULL, 'count' => NULL),
+    ),
+
+  );
+} 
+
+
  
 /**
  * Implements hook_help().
