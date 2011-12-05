@@ -4,7 +4,38 @@
  * @file
  * Install, update and uninstall functions for the aggregator module.
  */
+/**
+ * Implements hook_schema().
+ */
+function mastercal_schema() {
 
+  $schema['mastercal_source'] = array(
+    'description' => 'Stores information about sets of Calendars.',
+    'fields' => array(
+
+      'title' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Title of the Calendar.',
+      ),
+       'cid' => array(
+        'description' => 'Calendar ID number.',
+        'type' => 'int',
+        'not null' => TRUE
+      ),
+    ),
+    'primary key' => array('cid'),
+
+  );
+    
+
+ 
+
+  return $schema;
+  
+}
 
 function mastercal_install() {
   // Outside of the .install file we would use drupal_write_record() to
@@ -12,6 +43,7 @@ function mastercal_install() {
   // db_insert().
  // use get_t() to get the name of our localization function for translation
   // during install, when t() is not available.
+  drupal_install_schema('mastercal_source');
   $t = get_t();
 
   // Define the node type.
