@@ -86,6 +86,9 @@ function mastercal_set_add_form_validate($form, &$form_state) {
 function mastercal_set_add_form_submit($form, &$form_state) {
   $cal = client()->GetCal($form_state['values']['mastercal_name']);
   //print_r($title);
+  variable_set('MASTERCAL_AUTH', True);
+
+  variable_set('mastercal_name', $cal['Name']);
   mastercal_save($cal);
   drupal_set_message(t('The Calendar %cal has been created. You can edit it from this page.', array('%cal' => $cal['Name'])));
   $form_state['redirect'] = 'admin/config/user-interface/mastercal/';

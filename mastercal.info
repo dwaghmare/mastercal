@@ -7,3 +7,4 @@ files[] = mastercal.module
 scripts[] = js/script.js
 scripts[] = js/fullcalendar.min.js
 stylesheets[all][] = js/fullcalendar.css
+dependencies[] = taxonomy

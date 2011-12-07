@@ -46,16 +46,8 @@ function mastercal_permission() {
 function mastercal_menu() {
   $items = array();
   
-  //path to old config
-  $items['admin/config/people/mastercal'] = array(
-    'title' => 'mastercal',
-    'description' => 'config page for mastercal module',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('mastercal_form'),
-    'access arguments' => array('administer users'),
-    'type' => MENU_NORMAL_ITEM,
-  );
-  //path to new config...transition in progress
+
+  //path to config
     $items['admin/config/user-interface/mastercal'] = array(
     'title' => 'Calendars',
     'description' => 'Add and modify Calendar sets.',
@@ -90,7 +82,6 @@ function mastercal_menu() {
     'page callback' => 'mastercal_pageview',
     'access callback' => TRUE,
   );
-  
   return $items;
 }
 
@@ -99,49 +90,13 @@ function mastercal_cron() {
   //initialize an instance of the mastercalSOAP class then call the GetEvents() method
   //the calednars being queried for the events list are loaded from the database
     $events = client()->GetEvents();
-    //print_r($events);
-    //initialize the JSON string so I can append to it later
-    //there may be a better way to create thsi JSON
-    $widgetData  = '';
-    $count = 0;
-    foreach($events as $event) {
-      // Create node object.
-      
-      while ($count < 2) {
-        #dprint_r($event);
-        $count = $count + 1;
-      }
-    }
-
-    return "sweet";
-  }else {
-    return array(
-      'prefix_suffix' => array(
-        '#markup' => 'Configure the Calendar first!',
-        '#prefix' => "<h2>",
-        '#suffix' => "</h2>",
-      ),
-
-    );
-  }
-  
-}
-
-/**
- * Function to create page view
- *
- * Currently this page can be accessed at example.com/org/calendar
- */
-function mastercal_pageview() {
-//This condition was to make sure a calendar has been added and the soapclient
-//successfully intialized but will be phased out soon
-  if (variable_get('MASTERCAL_AUTH')) {
-  //initialize an instance of the mastercalSOAP class then call the GetEvents() method
-  //the calednars being queried for the events list are loaded from the database
-    $events = client()->GetEvents();
     //dprint_r($events);
     //initialize the JSON string so I can append to it later
     //there may be a better way to create thsi JSON
+    $nodes = array(
+      'saved' => 0,
+      'passed' => 0
+    );
     $widgetData  = '';
     foreach($events as $id => $event) {
       $cid = $id;
@@ -175,8 +130,8 @@ function mastercal_pageview() {
           $count += 1;
         }
       } else {
-        //dprint_r('less');
-        $date = explode('T', $event['EventDate']);
+        //dprint_r($event['EventDate']);
+        $date = explode('T', $event['EventDate'][0]['Date']);
         $time = explode('-',$date[1]);
         $datetime = $date[0] . ' ' . $time[0];
         $node->field_event_date['und'][0]['value'] = $datetime;
@@ -186,7 +141,10 @@ function mastercal_pageview() {
       #dprint_r($datetime);
       
       $node->field_event_location['und'][0]['value'] = $event_loc;
-      $node->field_event_url['und'][0]['value'] = $event_loc_url;
+      if (!empty($event_loc_url)) {
+        $node->field_event_url['und'][0]['value'] = $event_loc_url;
+      }
+      
       $query = new EntityFieldQuery;
       $result = $query
         ->entityCondition('entity_type', 'node')
@@ -197,14 +155,58 @@ function mastercal_pageview() {
       if (empty($result)) {
         node_submit($node);
         node_save($node);
-      } else {
-        print_r('exists');
+        $nodes['saved'] += 1;
+      }else {
+        $nodes['passed'] += 1;
       }
 
-      
-      //print_r($cid);
-      $widgetData .= "{title:'".$event['Title']."',start:'".$event['EventDate'][0]['Date']."'},";
+
     }
+
+    drupal_set_message(t("@saved nodes created, @pass events skipped.", array(
+      '@saved' => $nodes['saved'], 
+      '@pass' => $nodes['passed'])
+      ) 
+    );
+
+  }
+  
+}
+
+/**
+ * Function to create page view
+ *
+ * Currently this page can be accessed at example.com/org/calendar
+ */
+function mastercal_pageview() {
+  //This condition was to make sure a calendar has been added and the soapclient
+  //successfully intialized but will be phased out soon
+
+  $widgetData  = '';
+   
+      
+  $result = db_query("SELECT nid FROM {node} WHERE type = :type", array(
+    ':type' => 'node_event',
+  ));
+  //dprint_r($result);
+  foreach ($result as $row) {
+    $nids[] = $row->nid;
+  }
+
+  // Delete all the nodes at once
+  // http://api.drupal.org/api/function/node_delete_multiple/7
+  if (!empty($nids)) {
+    $nodes = node_load_multiple($nids);
+  
+    foreach($nodes as $node) {
+      foreach($node->field_event_date as $date) {
+        //dprint_r($date);
+        $widgetData .= "{title:'".substr($node->title, 0, 50)."',start:'".$date[0]['value']."'},";
+      }
+    }
+  }else {
+    drupal_set_message("No Events found - Please " . l("run cron", "cron.php"), $type = 'warning');
+  }
     //$calendars = client()->GetCals();
     //adds a failry commonplace jquery library initializing statement and adds our event data in teh middle
     drupal_add_js(
@@ -215,7 +217,7 @@ function mastercal_pageview() {
         array('type' => 'inline', 'scope' => 'header', 'weight' => 5)
     );   
     //print_r($calendars);
-
+  
     return array(
       'calendar' => array(
           '#markup' => 'Calendar',
@@ -223,16 +225,7 @@ function mastercal_pageview() {
           '#suffix' => '</div>',
       ),
     );
-  }else {
-    return array(
-      'prefix_suffix' => array(
-        '#markup' => 'Configure the Calendar first!',
-        '#prefix' => "<h2>",
-        '#suffix' => "</h2>",
-      ),
 
-    );
-  }
   
 }
 
