@@ -205,7 +205,9 @@ function mastercal_pageview() {
       }
     }
   }else {
-    drupal_set_message("No Events found - Please " . l("run cron", "cron.php"), $type = 'warning');
+    if (user_access('administer modules')){
+      drupal_set_message("No Events found - Please " . l('configure', 'admin/config/user-interface/mastercal',array('attributes' => array('class' => 'to-overlay'))) . " then " . l('run cron', 'admin/config/system/cron',array('attributes' => array('class' => 'to-overlay'))), $type = 'warning');
+    }
   }
     //$calendars = client()->GetCals();
     //adds a failry commonplace jquery library initializing statement and adds our event data in teh middle
@@ -229,37 +231,9 @@ function mastercal_pageview() {
   
 }
 
-/**
- * Form builder; Create and display the Whitepages configuration settings form.
- */
- //old config code...will be replaced with code in admin.inc
-function mastercal_form($form, &$form_state) {
-   $calendars = client()->GetCals();
-   
-   $form['mastercal_name'] = array(
-       '#type' => 'select',
-       '#title' => t('Calendar'),
-       '#options' => $calendars,
-       '#default_value' => variable_get('mastercal_id', MASTERCAL_ID),
-       '#description' => t('Set this to <em>Yes</em> if you would like this category to be selected by default.'),
-   );
-  $form = system_settings_form($form);
-  $form['#submit'][] = 'mastercal_form_submit';
-  return $form;
-}
 
-/**
- * Form submit handler. Save configuration settings for User Warn module.
- */
-function mastercal_form_submit($form, &$form_state) {
-  
-  variable_set('mastercal_id', $form_state['values']['mastercal_name']);
-  variable_set('MASTERCAL_AUTH', True);
-  $calarray = client()->GetCals();
-  variable_set('mastercal_name', $calarray[$form_state['values']['mastercal_name']]);
- 
-  drupal_set_message('The settings have been saved!');
-}
+
+
 
 
 
@@ -273,96 +247,6 @@ function client() {
 
 
 
-
-/**
- * Implements hook_block_info().
- *
- * This hook declares what blocks are provided by the module.
- */
-function mastercal_block_info() {
-
-  $blocks['mastercal_block'] = array(
-    'info' => t('MasterCal: block'),
-
-  );
-
-  return $blocks;
-}
-
-
-
-/**
- * Implements hook_block_view().
- *
- * This hook generates the contents of the blocks themselves.
- */
-function mastercal_block_view($delta = '') {
-  //The $delta parameter tells us which block is being requested.
-  $block = array();
-  switch ($delta) {
-    case 'mastercal_block':
-      $block['subject'] = t('Events');
-      if (variable_get('MASTERCAL_AUTH')) {
-        $block['content'] = mastercal_contents('mastercal_block');
-      } else {
-        $block['content'] = 'Configure the mastercal module first';
-      }
-      break;
-  }
-  return $block;
-}
-
-/**
- * A module-defined block content function.
- */
-function mastercal_contents($which_block) {
-  switch ($which_block) {
-
-    case 'mastercal_block':
-      $calendars = client()->GetEvents();
-      //print_r(client()->GetEvent());
-      if (isset($calendars)) {
-        foreach($calendars as $event) {
-          $body = '<a class="event-show" href="#">';
-          $body .= $event['Title'];
-          $body .= '</a><br /><div class="more-event">';
-          if ($event['Location']) {
-            $body .= '<strong>Location: </strong>';
-            if ($event['LocationURL']) {
-              $loc = '<a href="' . $event['LocationURL'] .'">';
-              $loc .= $event['Location'] .'</a><br />';
-            } else { $loc = $event['Location']; }
-            $body .= $loc.'<br />';
-          }
-          $body .= $event['Description'] . '<br />';
-
-          $body .= '<strong>Contact: </strong>';
-          $body .= '<a href="mailto:' . $event['ContactEmail'] . '">';
-          $body .= $event['ContactName'] . '</a>';
-          $body .= '<br />';
-          
-          $date = explode('T', $event['EventDate']);
-            
-            $events[] = array(
-                          'data' => $date[0],
-                          'children' => array($body),
-                        );
-                          
-          
-        }
-      }else { $events = Null; }
-      $events = (isset($events) ? $events : array('No items to show'));
-      //print_r($events);
-      return array(
-        'second_para' => array(
-            '#items' => $events,
-            '#theme' => 'item_list',
-            '#prefix' => '<div id="mastercal_block">',
-            '#suffix' => '</div>',
-        ),
-      );
-  }
-}
 function cal_exists($cid) {
   return (bool) db_query_range('SELECT 1 FROM {mastercal_source} WHERE cid = :cid', 0, 1, array(':cid' => $cid))->fetchField();
 }
