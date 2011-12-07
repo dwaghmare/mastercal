@@ -120,7 +120,7 @@ function mastercal_set_delete_form($form, &$form_state, $cid) {
 
   return confirm_form(
     $form,
-    t('Are you sure you want to delete the shortcut set %title?', array('%title' => $cid)),
+    t('Are you sure you want to delete the Calendar %title?', array('%title' => $cid)),
     'admin/config/user-interface/mastercal/' . $cid,
     t('This action cannot be undone.'),
     t('Delete'),
@@ -135,7 +135,7 @@ function mastercal_set_delete_form_submit($form, &$form_state) {
   $cid = $form_state['values']['cid'];
   mastercal_delete($cid);
   $form_state['redirect'] = 'admin/config/user-interface/mastercal';
-  drupal_set_message(t('The shortcut set %title has been deleted.', array('%title' => $cid)));
+  drupal_set_message(t('The Calendar has been removed.'));
 }
 
 

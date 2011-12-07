@@ -72,7 +72,7 @@ function mastercal_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('mastercal_set_delete_form', 4),
     'access callback' => True,
-    'access arguments' => array(4),
+    'access arguments' => array('administer mastercal'),
     'file' => 'mastercal.admin.inc',
   );
   
@@ -151,6 +151,7 @@ function mastercal_cron() {
         ->propertyCondition('type', 'node_event')
         ->fieldCondition('field_event_cid', 'value', $cid, '=')
         ->execute();
+        
       //dprint_r($result);
       if (empty($result)) {
         node_submit($node);
