@@ -108,7 +108,7 @@ function mastercal_cron() {
       // Create node object.
       
       while ($count < 2) {
-        dprint_r($event);
+        #dprint_r($event);
         $count = $count + 1;
       }
     }
@@ -139,17 +139,16 @@ function mastercal_pageview() {
   //initialize an instance of the mastercalSOAP class then call the GetEvents() method
   //the calednars being queried for the events list are loaded from the database
     $events = client()->GetEvents();
-    //print_r($events);
+    //dprint_r($events);
     //initialize the JSON string so I can append to it later
     //there may be a better way to create thsi JSON
     $widgetData  = '';
-    foreach($events as $event) {
-      $cid = $event['EventID'];
+    foreach($events as $id => $event) {
+      $cid = $id;
       $contact_name = $event['ContactName'];
       $contact_email = $event['ContactEmail'];
-      $date = explode('T', $event['EventDate']);
-      $time = explode('-',$date[1]);
-      $datetime = $date[0] . ' ' . $time[0];
+      
+      
       $event_loc = (!empty($event['Location'])) ? $event['Location'] : null;
       $event_loc_url = (!empty($event['LocationURL'])) ? $event['LocationURL'] : null;
       
@@ -157,21 +156,44 @@ function mastercal_pageview() {
       $node->type = 'node_event';
       $node->language = LANGUAGE_NONE;
       node_object_prepare($node);
-      $node->title = $event['Title'] . ' - ' . $datetime;
+      $node->title = $event['Title'];
+      $node->body['und'][0]['value'] = $event['Description'];
       $node->field_event_cid['und'][0]['value'] = $cid;
       $node->field_event_contact['und'][0]['value'] = $contact_name;
+      $n_dates = count($event['EventDate']);
+      if ($n_dates > 1) {
+        //dprint_r('more');
+        $count = 0;
+        foreach ($event['EventDate'] as $day) {
+          //dprint_r($day);
+          $date = explode('T', $day['Date']);
+          $time = explode('-',$date[1]);
+          $datetime = $date[0] . ' ' . $time[0];
+          $node->field_event_date['und'][$count]['value'] = $datetime;
+          $node->field_event_date['und'][$count]['value2'] = $datetime;
+          //dprint_r($count);
+          $count += 1;
+        }
+      } else {
+        //dprint_r('less');
+        $date = explode('T', $event['EventDate']);
+        $time = explode('-',$date[1]);
+        $datetime = $date[0] . ' ' . $time[0];
+        $node->field_event_date['und'][0]['value'] = $datetime;
+        $node->field_event_date['und'][0]['value2'] = $datetime;
 
-      dprint_r($datetime);
-      $node->field_event_date['und'][0]['value'] = $datetime;
+      }
+      #dprint_r($datetime);
+      
       $node->field_event_location['und'][0]['value'] = $event_loc;
       $node->field_event_url['und'][0]['value'] = $event_loc_url;
       $query = new EntityFieldQuery;
       $result = $query
         ->entityCondition('entity_type', 'node')
         ->propertyCondition('type', 'node_event')
-        ->propertyCondition('title', $node->title)
+        ->fieldCondition('field_event_cid', 'value', $cid, '=')
         ->execute();
-    
+      //dprint_r($result);
       if (empty($result)) {
         node_submit($node);
         node_save($node);
@@ -181,7 +203,7 @@ function mastercal_pageview() {
 
       
       //print_r($cid);
-      $widgetData .= "{title:'".$event['Title']."',start:'".$event['EventDate']."'},";
+      $widgetData .= "{title:'".$event['Title']."',start:'".$event['EventDate'][0]['Date']."'},";
     }
     //$calendars = client()->GetCals();
     //adds a failry commonplace jquery library initializing statement and adds our event data in teh middle
@@ -375,3 +397,4 @@ function mastercal_delete($cid) {
   ->execute();
   return $deleted;
 }
+

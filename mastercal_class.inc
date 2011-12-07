@@ -176,12 +176,12 @@ class mastercalSOAP {
       $calens[] = $cals;
       $count .= 1;
     }
-    //print_r($calens);
+    //dprint_r($calens);
 
 
     //print_r($respxml);
     if (isset($calens)) {
-      $calendars = $calens;
+      $calendars = $this->collapseDates($calens);
     }else {
       $calendars = Null;
     }
@@ -232,6 +232,28 @@ class mastercalSOAP {
   /**
    * Helper functions
    */
+   
+   //collapses repeat dates of the same event into one item
+  function collapseDates($events) {
+    $collapsed = array();
+    $viewed = array();
+    foreach($events as $event) {
+      $cid = $event['EventID'];
+      if (isset($viewed[$cid])) {
+        $collapsed[$cid]['EventDate'][] = array(
+          'Date' => $event['EventDate'], 
+          'Start' => $event['TimeEventStart'], 
+          'End' => $event['TimeEventEnd']
+        );
+      }else {
+        $viewed[$cid] = True;
+        $collapsed[$cid] = $event;
+        $collapsed[$cid]['EventDate'] = array();
+        $collapsed[$cid]['EventDate'][] = array('Date' => $event['EventDate'], 'Start' => $event['TimeEventStart'], 'End' => $event['TimeEventEnd']);
+      }
+    }
+    return $collapsed;  
+  }
    
    //currently only filters out private calednars but may be expanded at some point
   function filterCals($allCals) {

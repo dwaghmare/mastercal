@@ -221,7 +221,7 @@ function _mastercal_installed_fields() {
   $fields['field_event_date'] = array(
   
       'active' => '1',
-      'cardinality' => '1',
+      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
       'deleted' => '0',
       'entity_types' => array(),
       'field_name' => 'field_event_date',
