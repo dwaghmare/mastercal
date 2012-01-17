@@ -32,7 +32,7 @@ class mastercalSOAP {
   public function __construct($options = Null) {
     $this->un = 'emsapi@uiowa.edu';
     $this->pw = 'emsapi2011';
-    $this->url = 'http://itsnt917.iowa.uiowa.edu/MCAPI/MCAPIService.asmx?wsdl';
+    $this->url = 'https://calendar.uiowa.edu/MCAPI/MCAPIService.asmx?wsdl';
     
   }
   public function client() {
