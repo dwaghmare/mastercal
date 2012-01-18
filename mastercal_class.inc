@@ -227,7 +227,27 @@ class mastercalSOAP {
     //print_r($calendars);
     return $calendars;
   }
-  
+  public function GetEventTypes() {
+    $param = array(
+      'userName' => $this->un,
+      'password' => $this->pw,
+    );
+
+    $result = $this->call('GetEventTypes', $param);
+    //print_r($result);
+    $respxml = simplexml_load_string($result['GetEventTypesResult']);
+    
+    //print_r($respxml);
+    $types = array();
+    foreach ($respxml->children() as $type) {
+      $types[(string)$type->EventTypeID] = (string)$type->Name;
+    }
+    
+    //$calendars = $this->filterCals($calendars);
+    //print_r($types);
+    //return $calendars;
+    return $types;
+  }
   
   /**
    * Helper functions
