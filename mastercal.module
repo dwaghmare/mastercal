@@ -82,6 +82,11 @@ function mastercal_menu() {
     'page callback' => 'mastercal_pageview',
     'access callback' => TRUE,
   );
+  $items['org/tester'] = array(
+    'title' => 'Calendar',
+    'page callback' => 'mastercal_testview',
+    'access callback' => TRUE,
+  );
   return $items;
 }
 
@@ -144,7 +149,17 @@ function mastercal_cron() {
       if (!empty($event_loc_url)) {
         $node->field_event_url['und'][0]['value'] = $event_loc_url;
       }
-      
+      if (!empty($event['EventTypeName'])) {
+        $type_name = $event['EventTypeName'];    
+        mastercal_create_terms(array($type_name));
+        $tid = db_query("SELECT tid FROM {taxonomy_term_data} WHERE name = :name ORDER BY tid DESC LIMIT 1", array(
+          ':name' => $type_name,
+        ))->fetchField();
+          
+        if (!empty($tid)) {
+          $node->field_event_type['und'][0]['tid'] = $tid;
+        }
+      }
       $query = new EntityFieldQuery;
       $result = $query
         ->entityCondition('entity_type', 'node')
@@ -173,7 +188,71 @@ function mastercal_cron() {
   }
   
 }
+function mastercal_create_terms($list) {
+$jobs = array();
+  //grabs the list of vocabularies  
+  $vocabularies = taxonomy_get_vocabularies();
+  foreach($vocabularies as $voc) {
+    if ($voc->machine_name == 'event_types') {
+      $vid = $voc->vid;
+    }
+  }
+  //grabs the terms from the chosen vocabulary
+  $existing = taxonomy_get_tree($vid);
+  
+  $loaded_terms = array();
+  foreach($existing as $job_rank) {           
+    $loaded_terms[] = $job_rank->name;     
+  }
+  foreach($list as $entry) {
+    if (is_array($entry)) {
+      if (!isset($jobs[$entry['title']])) {
+        $jobs[$entry['title']] = False;
+      }
+    }else {
+      if (!isset($jobs[$entry])) {
+        $jobs[$entry] = False;
+      }
+    }
+  }
+  
+  if (!empty($loaded_terms)) {
+    foreach($jobs as $new_term => $val) {
 
+      if (!in_array($new_term, $loaded_terms)) {
+        taxonomy_term_save((object) array(
+          'name' => t($new_term),
+          'vid' => $vid,
+        )); 
+      }
+    }
+  }else { 
+    foreach($jobs as $new_term => $val) {
+      //print_r($new_term);
+      taxonomy_term_save((object) array(
+        'name' => t($new_term),
+        'vid' => $vid,
+      )); 
+    }
+  }
+}
+function mastercal_testview() {
+
+  //initialize an instance of the mastercalSOAP class then call the GetEvents() method
+  //the calednars being queried for the events list are loaded from the database
+    $eventtypes = client()->GetEventTypes();
+    //print_r(client()->GetEvents());
+  $list = $eventtypes;
+  
+
+    return array(
+      'calendar' => array(
+          '#markup' => 'Test',
+          '#prefix' => '<div id="mastercal_page">',
+          '#suffix' => '</div>',
+      ),
+    );
+}
 /**
  * Function to create page view
  *
