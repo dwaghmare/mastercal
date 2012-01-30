@@ -192,6 +192,24 @@ function _mastercal_installed_fields() {
     
   );
 
+  
+  $fields['field_event_did'] = array(
+    
+      'active' => '1',
+      'cardinality' => '1',
+      'deleted' => '0',
+      'entity_types' => array(),
+      'field_name' => 'field_event_did',
+      'foreign keys' => array(),
+      'indexes' => array(),
+      'module' => 'number',
+      'settings' => array(),
+      
+      'type' => 'number_integer',
+  
+    
+  );
+  
   // Exported field: 'node-event-field_event_contact'
   $fields['field_event_contact'] = array(
     
@@ -438,6 +456,19 @@ function _mastercal_installed_instances() {
         'weight' => '2',
       ),
     ),
+    
+    'field_event_did' => array(
+      'bundle' => 'node_event',
+      'default_value' => NULL,
+      'deleted' => '0',
+      'description' => '',
+      'entity_type' => 'node',
+      'field_name' => 'field_event_did',
+      'label' => 'DetailID',
+      'required' => 1,
+    ),
+    
+    
     
     'field_event_contact' => array(
       'bundle' => 'node_event',
