@@ -167,7 +167,13 @@ function _mastercal_installed_fields() {
   $fields = array();
   
   
+  
 
+  $fields['field_event_image'] = array(
+      'field_name' => 'field_event_image',
+      'type'       => 'image',
+      'cardinality' => 1,
+    );
   // Exported field: 'node-event-field_event_cid'
   $fields['field_event_cid'] = array(
     
@@ -370,6 +376,18 @@ function _mastercal_installed_fields() {
 function _mastercal_installed_instances() {
   $t = get_t();
   return array(
+  
+    'field_event_image' => array(
+      'field_name'  => 'field_event_image',
+      'label'       => $t('Upload an image:'),
+      'required'    => FALSE,
+      'widget' => array(
+        'type'    => 'image_image',
+        'weight'  => 2.10,
+      ),
+    ),
+  
+  
     'field_event_cid' => array(
       'bundle' => 'node_event',
       'default_value' => NULL,
