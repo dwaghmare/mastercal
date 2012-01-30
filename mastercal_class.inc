@@ -190,12 +190,12 @@ class mastercalSOAP {
     return $calendars;
   }
   //not being used so far but will be needed in order to get images from events
-  public function GetEvent() {
+  public function GetEvent($eid) {
     $param['userName'] = $this->un;
     $param['password'] = $this->pw; 
 
     
-    $param['eventDetailId'] = 20841;
+    $param['eventDetailId'] = $eid;
 
     
     //print_r($param);
