@@ -82,8 +82,8 @@ function mastercal_menu() {
     'page callback' => 'mastercal_pageview',
     'access callback' => TRUE,
   );
-  $items['org/tester'] = array(
-    'title' => 'Calendar',
+  $items['org/testcal'] = array(
+    'title' => 'Tests',
     'page callback' => 'mastercal_testview',
     'access callback' => TRUE,
   );
@@ -105,6 +105,7 @@ function mastercal_cron() {
     $widgetData  = '';
     foreach($events as $id => $event) {
       $cid = $id;
+      $did = $event['EventDetailID'];
       $contact_name = $event['ContactName'];
       $contact_email = $event['ContactEmail'];
       
@@ -119,6 +120,17 @@ function mastercal_cron() {
       $node->title = $event['Title'];
       $node->body['und'][0]['value'] = $event['Description'];
       $node->field_event_cid['und'][0]['value'] = $cid;
+      $node->field_event_did['und'][0]['value'] = $did;
+      
+      $event_data = client()->GetEvent($did);
+        if (isset($event_data[0]['Image'])) {
+          $image = base64_decode($event_data[0]['Image']);
+          $file = file_save_data($image, 'public://' . $event_data[0]['ImageName'],FILE_EXISTS_REPLACE);
+          $node->field_event_image['und']['0']['fid'] = $file->fid;
+          //node_save($node);
+        }
+      
+      
       $node->field_event_contact['und'][0]['value'] = $contact_name;
       $n_dates = count($event['EventDate']);
       if ($n_dates > 1) {
@@ -237,17 +249,50 @@ $jobs = array();
   }
 }
 function mastercal_testview() {
+  //$events = client()->GetEvents();
+  //print_r($events);
+  
+  $result = db_query("SELECT nid FROM {node} WHERE type = :type", array(
+    ':type' => 'node_event',
+  ));
+  //dprint_r($result);
+  foreach ($result as $row) {
+    $nids[] = $row->nid;
+  }
 
-  //initialize an instance of the mastercalSOAP class then call the GetEvents() method
-  //the calednars being queried for the events list are loaded from the database
-    $eventtypes = client()->GetEventTypes();
-    //print_r(client()->GetEvents());
-  $list = $eventtypes;
+  // Delete all the nodes at once
+  // http://api.drupal.org/api/function/node_delete_multiple/7
+  if (!empty($nids)) {
+    $nodes = node_load_multiple($nids);
+  
+    foreach($nodes as $node) {
+      
+        $event_data = client()->GetEvent($node->field_event_did['und'][0]['value']);
+        if (isset($event_data[0]['Image'])) {
+          print_r($event_data[0]['ImageId']);
+          print_r($event_data[0]['FileExtension']);
+          print_r($event_data[0]['ImageName']);
+          //print_r($event_data[0]['Image']);
+          
+          $image = base64_decode($event_data[0]['Image']);
+          
+          $file = file_save_data($image, 'public://' . $event_data[0]['ImageName'],FILE_EXISTS_REPLACE);
+          $node->field_event_image['und']['0']['fid'] = $file->fid;
+          node_save($node);
+        }
+        
+      
+    }
+  }else {
+    if (user_access('administer modules')){
+      drupal_set_message("No Events found - Please " . l('configure', 'admin/config/user-interface/mastercal',array('attributes' => array('class' => 'to-overlay'))) . " then " . l('run cron', 'admin/config/system/cron',array('attributes' => array('class' => 'to-overlay'))), $type = 'warning');
+    }
+  }
   
 
     return array(
       'calendar' => array(
-          '#markup' => 'Test',
+          '#markup' => 'Tes',
           '#prefix' => '<div id="mastercal_page">',
           '#suffix' => '</div>',
       ),
