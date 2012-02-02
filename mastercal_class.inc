@@ -133,7 +133,8 @@ class mastercalSOAP {
       $calendars[(string)$cal->CalendarID] = (string)$cal->Name;
     }
     
-    $calendars = $this->filterCals($calendars);
+    //$calendars = $this->filterCals($calendars);
+    $calendars = $calendars;
     //print_r($calendars);
     return $calendars;
   }
