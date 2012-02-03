@@ -726,6 +726,11 @@ function _mastercal_installed_instances() {
  * Implements hook_uninstall().
  */
 function mastercal_uninstall() {
+  // Delete system variables.
+  variable_del('MASTERCAL_AUTH');
+  variable_del('mastercal_name');
+  
+  
   // Gather all the example content that might have been created while this
   // module was enabled.  Simple selects still use db_query().
   // http://api.drupal.org/api/function/db_query/7
