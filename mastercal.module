@@ -9,15 +9,6 @@
  * 
  */
 
- //sets a couple default values
-
-//these will be removed at a later date
-define('MASTERCAL_ID', 62);
-define('MASTERCAL_AUTH', False);
-
-
-
-
  
 /**
  * Implements hook_help().
