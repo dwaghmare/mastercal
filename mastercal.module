@@ -36,30 +36,31 @@ function mastercal_permission() {
  */
 function mastercal_menu() {
   $items = array();
-  
 
   //path to config
     $items['admin/config/user-interface/mastercal'] = array(
-    'title' => 'Calendars',
-    'description' => 'Add and modify Calendar sets.',
+    'title' => 'Master Calendar',
+    'description' => 'Add, remove and configure calendars.',
     'page callback' => 'mastercal_set_admin',
     'access arguments' => array('administer mastercal'),
     'file' => 'mastercal.admin.inc',
   );
+    
   //callback url for adding a new calendar
   //the function mastercal_set_add_form() in the admin.inc file provides the form
   $items['admin/config/user-interface/mastercal/add-set'] = array(
-    'title' => 'Add calendar set',
+    'title' => 'Add a calendar.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('mastercal_set_add_form'),
     'access arguments' => array('administer mastercal'),
     'type' => MENU_LOCAL_ACTION,
     'file' => 'mastercal.admin.inc',
   );
+  
   //passes the calendar id of the item you are trying to remove
   //the access callback should be changed to be more restrictive
   $items['admin/config/user-interface/mastercal/%/delete'] = array(
-    'title' => 'Delete shortcut set',
+    'title' => 'Delete a calendar.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('mastercal_set_delete_form', 4),
     'access callback' => True,

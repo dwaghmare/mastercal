@@ -1,4 +1,3 @@
-
 name = DEA Master Calendar Integration
 description = Include an events stream block or calendar page
 package = UI Module Package
