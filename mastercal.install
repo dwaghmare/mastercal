@@ -12,7 +12,6 @@ function mastercal_schema() {
   $schema['mastercal_source'] = array(
     'description' => 'Stores information about sets of Calendars.',
     'fields' => array(
-
       'title' => array(
         'type' => 'varchar',
         'length' => 255,
@@ -27,7 +26,6 @@ function mastercal_schema() {
       ),
     ),
     'primary key' => array('cid'),
-
   );
     
   return $schema;
