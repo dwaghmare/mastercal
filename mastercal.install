@@ -53,7 +53,7 @@ function mastercal_install() {
     'module' => 'mastercal',
     'base' => 'node_content',
     'description' => $t('This is an Event content-type for use with the Calendar.'),
-    'has_title' => true,
+    'has_title' => TRUE,
     'title_label' => $t('Name'),
   );
 

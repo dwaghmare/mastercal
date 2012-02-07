@@ -104,10 +104,10 @@ function mastercal_cron() {
       $contact_email = $event['ContactEmail'];
       
       
-      $event_loc = (!empty($event['Location'])) ? $event['Location'] : null;
-      $event_loc_url = (!empty($event['LocationURL'])) ? $event['LocationURL'] : null;
+      $event_loc = (!empty($event['Location'])) ? $event['Location'] : NULL;
+      $event_loc_url = (!empty($event['LocationURL'])) ? $event['LocationURL'] : NULL;
       
-      $node = new StdClass();
+      $node = new stdClass();
       $node->type = 'node_event';
       $node->language = LANGUAGE_NONE;
       node_object_prepare($node);
