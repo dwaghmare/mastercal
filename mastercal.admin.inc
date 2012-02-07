@@ -1,14 +1,8 @@
 <?php
-
-
 /**
  * @file
  * Administrative page callbacks
  */
-
-
-
-
 
 /**
  * Menu page callback: builds the page for administering the site's DEA MasterCalendar integration.
@@ -94,8 +88,6 @@ function mastercal_set_add_form_submit($form, &$form_state) {
   $form_state['redirect'] = 'admin/config/user-interface/mastercal/';
 }
 
-
-
 /**
  * Form callback: builds the confirmation form for deleting a calendart.
  *
@@ -115,8 +107,6 @@ function mastercal_set_delete_form($form, &$form_state, $cid) {
     '#type' => 'value',
     '#value' => $cid,
   );
-
-  
 
   return confirm_form(
     $form,
@@ -142,5 +132,3 @@ function mastercal_set_delete_form_submit($form, &$form_state) {
     variable_set('MASTERCAL_AUTH', FALSE);
   }
 }
-
-

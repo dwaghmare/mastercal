@@ -419,4 +419,3 @@ function mastercal_delete($cid) {
   ->execute();
   return $deleted;
 }
-
