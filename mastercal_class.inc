@@ -1,8 +1,12 @@
 <?php
+/**
+ * @file
+ * This file contains the mastercalSOAP class definition.
+ */
 
 /**
- * Custom exception class to enhance default PHP exceptions.
- */
+* Custom exception class to enhance default PHP exceptions.
+*/
 require_once('nusoap/nusoap.php');
 class mastercalSOAPexception extends Exception {
   /**
@@ -29,7 +33,7 @@ class mastercalSOAP {
   protected $pw;
   protected $param;
 
-  public function __construct($options = Null) {
+  public function __construct($options = NULL) {
     $this->un = 'emsapi@uiowa.edu';
     $this->pw = 'emsapi2011';
     $this->url = 'https://calendar.uiowa.edu/MCAPI/MCAPIService.asmx?wsdl';
@@ -42,7 +46,7 @@ class mastercalSOAP {
       // The url has to point to a valid WSDL file.
       $wsdl = @file_get_contents($this->url);
       if ($wsdl) {
-        $this->client = new nusoap_client($this->url, true);
+        $this->client = new nusoap_client($this->url, TRUE);
         $err = $this->client->getError();
         if ($err) {
           // Display the error
@@ -55,8 +59,6 @@ class mastercalSOAP {
     }
     return $this->client;
   }
-
-
 
   /**
    * Calls the SOAP service.
@@ -77,21 +79,20 @@ class mastercalSOAP {
         print_r($response);
         
         echo '</b></p>';
-    } else {
+    }
+    else {
         // Check for errors
         $err = $client->getError();
         if ($err) {
             // Display the error
             echo '<p><b>Error: ' . $err . '</b></p>';
-        } else {
+        }
+        else {
             // Display the result
             return $response;
         }
     }  
-
   }
-  
-
   
   public function GetCal($calID) {
     $param = array(
@@ -106,9 +107,9 @@ class mastercalSOAP {
     
     //print_r($respxml);
     $cals = array();
-    foreach($respxml->children() as $child) {
+    foreach ($respxml->children() as $child) {
       //print_r($child->calendar);
-      foreach($child->children() as $subchild) {
+      foreach ($child->children() as $subchild) {
         $cals[$subchild->getName()] = (string) $subchild;
         //print_r("\n".$subchild->getName().": ".$subchild."");
       }
@@ -167,10 +168,10 @@ class mastercalSOAP {
     $calenss = array();
     $count = 0;
     //parse the xml response from the web service using SimpleXML
-    foreach($xml->children() as $child) {
+    foreach ($xml->children() as $child) {
       //create an array to store the data
       $cals = array();
-      foreach($child->children() as $subchild) {
+      foreach ($child->children() as $subchild) {
         //associate array var['Name of field'] = 'value of field'
         $cals[$subchild->getName()] = (string) $subchild;
       }
@@ -183,7 +184,8 @@ class mastercalSOAP {
     //print_r($respxml);
     if (isset($calens)) {
       $calendars = $this->collapseDates($calens);
-    }else {
+    }
+    else {
       $calendars = Null;
     }
 
@@ -205,10 +207,10 @@ class mastercalSOAP {
     $xml = simplexml_load_string(utf8_encode($result['GetEventResult']));
     $calenss = array();
     $count = 0;
-    foreach($xml->children() as $child) {
+    foreach ($xml->children() as $child) {
       //print_r("\n---------------------------");
       $cals = array();
-      foreach($child->children() as $subchild) {
+      foreach ($child->children() as $subchild) {
         $cals[$subchild->getName()] = (string) $subchild;
         //print_r("\n".$subchild->getName().": ".$subchild."");
       }
@@ -221,7 +223,8 @@ class mastercalSOAP {
     //print_r($respxml);
     if (isset($calens)) {
       $calendars = $calens;
-    }else {
+    }
+    else {
       $calendars = Null;
     }
 
@@ -253,12 +256,11 @@ class mastercalSOAP {
   /**
    * Helper functions
    */
-   
    //collapses repeat dates of the same event into one item
   function collapseDates($events) {
     $collapsed = array();
     $viewed = array();
-    foreach($events as $event) {
+    foreach ($events as $event) {
       $cid = $event['EventID'];
       if (isset($viewed[$cid])) {
         $collapsed[$cid]['EventDate'][] = array(
@@ -266,7 +268,8 @@ class mastercalSOAP {
           'Start' => $event['TimeEventStart'], 
           'End' => $event['TimeEventEnd']
         );
-      }else {
+      }
+      else {
         $viewed[$cid] = True;
         $collapsed[$cid] = $event;
         $collapsed[$cid]['EventDate'] = array();
@@ -279,7 +282,7 @@ class mastercalSOAP {
    //currently only filters out private calednars but may be expanded at some point
   function filterCals($allCals) {
     $filtered = array();
-    foreach($allCals as $calid => $calname) {
+    foreach ($allCals as $calid => $calname) {
       $calData = $this->GetCal($calid);
       //print_r($calData);
       if ($calData['IsPrivate'] != 'true') {
@@ -297,12 +300,12 @@ class mastercalSOAP {
   
   //returns the date of the first of the month 'yyyy-mm-dd'
   function firstOfMonth() {
-    return date("Y-m-d", strtotime(date('m').'/01/'.date('Y').' 00:00:00'));
+    return date("Y-m-d", strtotime(date('m') . '/01/'.date('Y') . ' 00:00:00'));
   }
 
   //date of the last day of the month
   function lastOfMonth() {
-    return date("Y-m-d", strtotime('-1 second',strtotime('+1 month',strtotime(date('m').'/01/'.date('Y').' 00:00:00'))));
+    return date("Y-m-d", strtotime('-1 second', strtotime('+1 month', strtotime(date('m') . '/01/'.date('Y') . ' 00:00:00'))));
   }
 
 }
