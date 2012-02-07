@@ -367,6 +367,17 @@ function cal_exists($cid) {
   return (bool) db_query_range('SELECT 1 FROM {mastercal_source} WHERE cid = :cid', 0, 1, array(':cid' => $cid))->fetchField();
 }
 
+/**
+ * Helper function to check if {mastercal_source} is empty.
+ *   
+ * @return boolean
+ *   true if records exist
+ *   false if table is empty
+ */ 
+function records_exist() {
+  return (bool) db_query_range('SELECT 1 FROM {mastercal_source}', 0, 1)->fetchField();
+}
+
 function mastercal_save(&$cal) {
   // Save the calendar ID and its name to teh database
  $return = db_insert('mastercal_source')
