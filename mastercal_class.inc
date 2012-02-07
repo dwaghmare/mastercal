@@ -300,12 +300,12 @@ class mastercalSOAP {
   
   //returns the date of the first of the month 'yyyy-mm-dd'
   function firstOfMonth() {
-    return date("Y-m-d", strtotime(date('m') . '/01/'.date('Y') . ' 00:00:00'));
+    return date("Y-m-d", strtotime(date('m') . '/01/' . date('Y') . ' 00:00:00'));
   }
 
   //date of the last day of the month
   function lastOfMonth() {
-    return date("Y-m-d", strtotime('-1 second', strtotime('+1 month', strtotime(date('m') . '/01/'.date('Y') . ' 00:00:00'))));
+    return date("Y-m-d", strtotime('-1 second', strtotime('+1 month', strtotime(date('m') . '/01/' . date('Y') . ' 00:00:00'))));
   }
 
 }

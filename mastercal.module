@@ -325,7 +325,7 @@ function mastercal_pageview() {
     foreach ($nodes as $node) {
       foreach ($node->field_event_date as $date) {
         //dprint_r($date);
-        $widgetData .= "{title:'".substr($node->title, 0, 50) . "',start:'" . $date[0]['value'] . "'},";
+        $widgetData .= "{title:'" . substr($node->title, 0, 50) . "',start:'" . $date[0]['value'] . "'},";
       }
     }
   }
