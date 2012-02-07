@@ -159,9 +159,8 @@ function mastercal_cron() {
       if (!empty($event['EventTypeName'])) {
         $type_name = $event['EventTypeName'];    
         mastercal_create_terms(array($type_name));
-        $tid = db_query("SELECT tid FROM {taxonomy_term_data} WHERE name = :name ORDER BY tid DESC LIMIT 1", array(
-          ':name' => $type_name,
-        ))->fetchField();
+        $tid = db_query_range('SELECT tid FROM {taxonomy_term_data} WHERE name = :name ORDER BY tid DESC', 0, 
+          1, array(':name' => $type_name))->fetchField();
           
         if (!empty($tid)) {
           $node->field_event_type['und'][0]['tid'] = $tid;
