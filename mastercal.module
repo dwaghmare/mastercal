@@ -8,7 +8,6 @@
  * This module provides a block with an events stream and a page that displays the same events in a calendar format. 
  * 
  */
-
  
 /**
  * Implements hook_help().
@@ -21,7 +20,7 @@ function mastercal_help($path, $arg) {
 
 /**
  * Implements hook_permission().
- * - The option to give this permission will show up under Mastercal in the permissions page
+ * - The option to give this permission will show up under Mastercal in the permissions page.
  */
 function mastercal_permission() {
   return array(
@@ -38,7 +37,7 @@ function mastercal_menu() {
   $items = array();
 
   //path to config
-    $items['admin/config/user-interface/mastercal'] = array(
+  $items['admin/config/user-interface/mastercal'] = array(
     'title' => 'Master Calendar',
     'description' => 'Add, remove and configure calendars.',
     'page callback' => 'mastercal_set_admin',
@@ -74,28 +73,31 @@ function mastercal_menu() {
     'page callback' => 'mastercal_pageview',
     'access callback' => TRUE,
   );
+  
   $items['org/testcal'] = array(
     'title' => 'Tests',
     'page callback' => 'mastercal_testview',
     'access callback' => TRUE,
   );
+  
   return $items;
 }
 
 function mastercal_cron() {
   if (variable_get('MASTERCAL_AUTH')) {
   //initialize an instance of the mastercalSOAP class then call the GetEvents() method
-  //the calednars being queried for the events list are loaded from the database
+  //the calendars being queried for the events list are loaded from the database
     $events = client()->GetEvents();
     //dprint_r($events);
     //initialize the JSON string so I can append to it later
-    //there may be a better way to create thsi JSON
+    //there may be a better way to create this JSON
     $nodes = array(
       'saved' => 0,
       'passed' => 0
     );
     $widgetData  = '';
-    foreach($events as $id => $event) {
+    
+    foreach ($events as $id => $event) {
       $cid = $id;
       $did = $event['EventDetailID'];
       $contact_name = $event['ContactName'];
@@ -117,7 +119,7 @@ function mastercal_cron() {
       $event_data = client()->GetEvent($did);
         if (isset($event_data[0]['Image'])) {
           $image = base64_decode($event_data[0]['Image']);
-          $file = file_save_data($image, 'public://' . $event_data[0]['ImageName'],FILE_EXISTS_REPLACE);
+          $file = file_save_data($image, 'public://' . $event_data[0]['ImageName'], FILE_EXISTS_REPLACE);
           $node->field_event_image['und']['0']['fid'] = $file->fid;
           //node_save($node);
         }
@@ -131,17 +133,18 @@ function mastercal_cron() {
         foreach ($event['EventDate'] as $day) {
           //dprint_r($day);
           $date = explode('T', $day['Date']);
-          $time = explode('-',$date[1]);
+          $time = explode('-', $date[1]);
           $datetime = $date[0] . ' ' . $time[0];
           $node->field_event_date['und'][$count]['value'] = $datetime;
           $node->field_event_date['und'][$count]['value2'] = $datetime;
           //dprint_r($count);
           $count += 1;
         }
-      } else {
+      } 
+      else {
         //dprint_r($event['EventDate']);
         $date = explode('T', $event['EventDate'][0]['Date']);
-        $time = explode('-',$date[1]);
+        $time = explode('-', $date[1]);
         $datetime = $date[0] . ' ' . $time[0];
         $node->field_event_date['und'][0]['value'] = $datetime;
         $node->field_event_date['und'][0]['value2'] = $datetime;
@@ -176,7 +179,8 @@ function mastercal_cron() {
         node_submit($node);
         node_save($node);
         $nodes['saved'] += 1;
-      }else {
+      }
+      else {
         $nodes['passed'] += 1;
       }
 
@@ -192,11 +196,15 @@ function mastercal_cron() {
   }
   
 }
+
+/**
+ * Create taxonomy lists.
+ */
 function mastercal_create_terms($list) {
 $jobs = array();
   //grabs the list of vocabularies  
   $vocabularies = taxonomy_get_vocabularies();
-  foreach($vocabularies as $voc) {
+  foreach ($vocabularies as $voc) {
     if ($voc->machine_name == 'event_types') {
       $vid = $voc->vid;
     }
@@ -205,15 +213,16 @@ $jobs = array();
   $existing = taxonomy_get_tree($vid);
   
   $loaded_terms = array();
-  foreach($existing as $job_rank) {           
+  foreach ($existing as $job_rank) {           
     $loaded_terms[] = $job_rank->name;     
   }
-  foreach($list as $entry) {
+  foreach ($list as $entry) {
     if (is_array($entry)) {
       if (!isset($jobs[$entry['title']])) {
         $jobs[$entry['title']] = False;
       }
-    }else {
+    }
+    else {
       if (!isset($jobs[$entry])) {
         $jobs[$entry] = False;
       }
@@ -221,7 +230,7 @@ $jobs = array();
   }
   
   if (!empty($loaded_terms)) {
-    foreach($jobs as $new_term => $val) {
+    foreach ($jobs as $new_term => $val) {
 
       if (!in_array($new_term, $loaded_terms)) {
         taxonomy_term_save((object) array(
@@ -230,8 +239,9 @@ $jobs = array();
         )); 
       }
     }
-  }else { 
-    foreach($jobs as $new_term => $val) {
+  }
+  else { 
+    foreach ($jobs as $new_term => $val) {
       //print_r($new_term);
       taxonomy_term_save((object) array(
         'name' => t($new_term),
@@ -240,6 +250,10 @@ $jobs = array();
     }
   }
 }
+
+/**
+ * Test view function.
+ */
 function mastercal_testview() {
   //$events = client()->GetEvents();
   //print_r($events);
@@ -257,7 +271,7 @@ function mastercal_testview() {
   if (!empty($nids)) {
     $nodes = node_load_multiple($nids);
   
-    foreach($nodes as $node) {
+    foreach ($nodes as $node) {
       
         $event_data = client()->GetEvent($node->field_event_did['und'][0]['value']);
         if (isset($event_data[0]['Image'])) {
@@ -268,28 +282,27 @@ function mastercal_testview() {
           
           $image = base64_decode($event_data[0]['Image']);
           
-          $file = file_save_data($image, 'public://' . $event_data[0]['ImageName'],FILE_EXISTS_REPLACE);
+          $file = file_save_data($image, 'public://' . $event_data[0]['ImageName'], FILE_EXISTS_REPLACE);
           $node->field_event_image['und']['0']['fid'] = $file->fid;
           node_save($node);
-        }
-        
-      
+        } 
     }
-  }else {
-    if (user_access('administer modules')){
-      drupal_set_message("No Events found - Please " . l('configure', 'admin/config/user-interface/mastercal',array('attributes' => array('class' => 'to-overlay'))) . " then " . l('run cron', 'admin/config/system/cron',array('attributes' => array('class' => 'to-overlay'))), $type = 'warning');
+  }
+  else {
+    if (user_access('administer modules')) {
+      drupal_set_message("No Events found - Please " . l('configure', 'admin/config/user-interface/mastercal', array('attributes' => array('class' => 'to-overlay'))) . " then " . l('run cron', 'admin/config/system/cron', array('attributes' => array('class' => 'to-overlay'))), $type = 'warning');
     }
   }
   
-
-    return array(
-      'calendar' => array(
-          '#markup' => 'Tes',
-          '#prefix' => '<div id="mastercal_page">',
-          '#suffix' => '</div>',
-      ),
-    );
+  return array(
+  	'calendar' => array(
+    	'#markup' => 'Tes',
+      '#prefix' => '<div id="mastercal_page">',
+      '#suffix' => '</div>',
+    ),
+  );
 }
+
 /**
  * Function to create page view
  *
@@ -297,11 +310,10 @@ function mastercal_testview() {
  */
 function mastercal_pageview() {
   //This condition was to make sure a calendar has been added and the soapclient
-  //successfully intialized but will be phased out soon
+  //successfully intialized but will be phased out soon.
 
   $widgetData  = '';
    
-      
   $result = db_query("SELECT nid FROM {node} WHERE type = :type", array(
     ':type' => 'node_event',
   ));
@@ -315,45 +327,45 @@ function mastercal_pageview() {
   if (!empty($nids)) {
     $nodes = node_load_multiple($nids);
   
-    foreach($nodes as $node) {
-      foreach($node->field_event_date as $date) {
+    foreach ($nodes as $node) {
+      foreach ($node->field_event_date as $date) {
         //dprint_r($date);
-        $widgetData .= "{title:'".substr($node->title, 0, 50)."',start:'".$date[0]['value']."'},";
+        $widgetData .= "{title:'".substr($node->title, 0, 50) . "',start:'" . $date[0]['value'] . "'},";
       }
     }
-  }else {
-    if (user_access('administer modules')){
-      drupal_set_message("No Events found - Please " . l('configure', 'admin/config/user-interface/mastercal',array('attributes' => array('class' => 'to-overlay'))) . " then " . l('run cron', 'admin/config/system/cron',array('attributes' => array('class' => 'to-overlay'))), $type = 'warning');
+  }
+  else {
+    if (user_access('administer modules')) {
+      drupal_set_message("No Events found - Please " . l('configure', 'admin/config/user-interface/mastercal', array('attributes' => array('class' => 'to-overlay'))) . " then " . l('run cron', 'admin/config/system/cron', array('attributes' => array('class' => 'to-overlay'))), $type = 'warning');
     }
   }
-    //$calendars = client()->GetCals();
-    //adds a failry commonplace jquery library initializing statement and adds our event data in teh middle
-    drupal_add_js(
-      '(function($){jQuery(document).ready(function () { 
-        $("#mastercal_page").fullCalendar({
-        events: [' . $widgetData . ']
-        }) });})(jQuery);', 
-        array('type' => 'inline', 'scope' => 'header', 'weight' => 5)
-    );   
-    //print_r($calendars);
   
-    return array(
-      'calendar' => array(
-          '#markup' => 'Calendar',
-          '#prefix' => '<div id="mastercal_page">',
-          '#suffix' => '</div>',
-      ),
-    );
-
+  //$calendars = client()->GetCals();
+  //adds a failry commonplace jquery library initializing statement and adds our event data in teh middle
+  drupal_add_js(
+  	'(function($){jQuery(document).ready(function () { 
+    $("#mastercal_page").fullCalendar({
+    events: [' . $widgetData . ']
+    }) });})(jQuery);', 
+    array('type' => 'inline', 'scope' => 'header', 'weight' => 5)
+  );   
   
+  //print_r($calendars);
+  
+  return array(
+  	'calendar' => array(
+    	'#markup' => 'Calendar',
+      '#prefix' => '<div id="mastercal_page">',
+      '#suffix' => '</div>',
+    ),
+  );
 }
 
-
-
-
-
-
-
+/**
+ * 
+ * Instantiate mastercalSOAP client.
+ * @return mastercalSOAP
+ */
 function client() {
   require_once('mastercal_class.inc');
   $client = new mastercalSOAP();
@@ -361,9 +373,13 @@ function client() {
   return $client;
 }
 
-
-
-
+/**
+ * Helper function to check if a calendar already exists in {mastercal_source}.
+ *   
+ * @return boolean
+ *   TRUE if calendar exists.
+ *   FALSE if calendar does not exist.
+ */
 function cal_exists($cid) {
   return (bool) db_query_range('SELECT 1 FROM {mastercal_source} WHERE cid = :cid', 0, 1, array(':cid' => $cid))->fetchField();
 }
@@ -372,8 +388,8 @@ function cal_exists($cid) {
  * Helper function to check if {mastercal_source} is empty.
  *   
  * @return boolean
- *   true if records exist
- *   false if table is empty
+ *   TRUE if any records exist.
+ *   FALSE if table is empty.
  */ 
 function records_exist() {
   return (bool) db_query_range('SELECT 1 FROM {mastercal_source}', 0, 1)->fetchField();
