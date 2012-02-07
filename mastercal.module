@@ -283,7 +283,9 @@ function mastercal_testview() {
   }
   else {
     if (user_access('administer modules')) {
-      drupal_set_message("No Events found - Please " . l('configure', 'admin/config/user-interface/mastercal', array('attributes' => array('class' => 'to-overlay'))) . " then " . l('run cron', 'admin/config/system/cron', array('attributes' => array('class' => 'to-overlay'))), $type = 'warning');
+      drupal_set_message(t("No Events found - Please " . l('configure', 'admin/config/user-interface/mastercal', 
+      array('attributes' => array('class' => 'to-overlay'))) . " then " . l('run cron', 'admin/config/system/cron', 
+      array('attributes' => array('class' => 'to-overlay')))), $type = 'warning');
     }
   }
   
@@ -331,9 +333,9 @@ function mastercal_pageview() {
   }
   else {
     if (user_access('administer modules')) {
-      drupal_set_message("No Events found - Please " . l('configure', 'admin/config/user-interface/mastercal', 
+      drupal_set_message(t("No Events found - Please " . l('configure', 'admin/config/user-interface/mastercal', 
       array('attributes' => array('class' => 'to-overlay'))) . " then " . l('run cron', 'admin/config/system/cron', 
-      array('attributes' => array('class' => 'to-overlay'))), $type = 'warning');
+      array('attributes' => array('class' => 'to-overlay')))), $type = 'warning');
     }
   }
   

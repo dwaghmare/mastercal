@@ -50,7 +50,7 @@ class mastercalSOAP {
         $err = $this->client->getError();
         if ($err) {
           // Display the error
-          drupal_set_message('<h2>Constructor error</h2><pre>' . $err . '</pre>', 'Error');
+          drupal_set_message(t('<h2>Constructor error</h2><pre>' . $err . '</pre>', 'Error'));
         }
       }
       else {
