@@ -294,13 +294,15 @@ function mastercal_testview() {
     }
   }
   
-  return array(
-  	'calendar' => array(
-    	'#markup' => 'Tes',
+  $return = array(
+    'calendar' => array(
+      '#markup' => 'Tes',
       '#prefix' => '<div id="mastercal_page">',
       '#suffix' => '</div>',
     ),
   );
+  
+  return $return;
 }
 
 /**
@@ -336,29 +338,28 @@ function mastercal_pageview() {
   }
   else {
     if (user_access('administer modules')) {
-      drupal_set_message("No Events found - Please " . l('configure', 'admin/config/user-interface/mastercal', array('attributes' => array('class' => 'to-overlay'))) . " then " . l('run cron', 'admin/config/system/cron', array('attributes' => array('class' => 'to-overlay'))), $type = 'warning');
+      drupal_set_message("No Events found - Please " . l('configure', 'admin/config/user-interface/mastercal', 
+      array('attributes' => array('class' => 'to-overlay'))) . " then " . l('run cron', 'admin/config/system/cron', 
+      array('attributes' => array('class' => 'to-overlay'))), $type = 'warning');
     }
   }
   
   //$calendars = client()->GetCals();
   //adds a failry commonplace jquery library initializing statement and adds our event data in teh middle
-  drupal_add_js(
-  	'(function($){jQuery(document).ready(function () { 
-    $("#mastercal_page").fullCalendar({
-    events: [' . $widgetData . ']
-    }) });})(jQuery);', 
-    array('type' => 'inline', 'scope' => 'header', 'weight' => 5)
-  );   
+  drupal_add_js('(function($){jQuery(document).ready(function () { $("#mastercal_page").fullCalendar({ events: [' . 
+  $widgetData . '] }) });})(jQuery);', array('type' => 'inline', 'scope' => 'header', 'weight' => 5));   
   
   //print_r($calendars);
   
-  return array(
-  	'calendar' => array(
-    	'#markup' => 'Calendar',
+  $return = array(
+    'calendar' => array(
+      '#markup' => 'Calendar',
       '#prefix' => '<div id="mastercal_page">',
       '#suffix' => '</div>',
     ),
   );
+  
+  return $return;
 }
 
 /**
