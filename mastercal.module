@@ -103,7 +103,6 @@ function mastercal_cron() {
       $contact_name = $event['ContactName'];
       $contact_email = $event['ContactEmail'];
       
-      
       $event_loc = (!empty($event['Location'])) ? $event['Location'] : NULL;
       $event_loc_url = (!empty($event['LocationURL'])) ? $event['LocationURL'] : NULL;
       
@@ -123,7 +122,6 @@ function mastercal_cron() {
           $node->field_event_image['und']['0']['fid'] = $file->fid;
           //node_save($node);
         }
-      
       
       $node->field_event_contact['und'][0]['value'] = $contact_name;
       $n_dates = count($event['EventDate']);
@@ -182,8 +180,6 @@ function mastercal_cron() {
       else {
         $nodes['passed'] += 1;
       }
-
-
     }
 
     drupal_set_message(t("@saved nodes created, @pass events skipped.", array(
@@ -191,9 +187,7 @@ function mastercal_cron() {
       '@pass' => $nodes['passed'])
       ) 
     );
-
   }
-  
 }
 
 /**
