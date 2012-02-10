@@ -8,9 +8,10 @@ INSTALLATION
 	- /sites/all/modules
 	- sites/all/modules/custom
 	- or sites/example.com/modules
-2) Enable the module (It can be found under "UI development Package" in the modules list)
-3) Add one or more Calendars
-4) Run Cron
+2) Enable the module (It can be found under "UI Module Package" in the modules list)
+3) Navigate to admin/config/user-interface/mastercal
+4) Add one or more Calendars
+5) Run Cron
 
 TROUBLESHOOTING
 ---------------
