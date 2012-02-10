@@ -67,12 +67,6 @@ function mastercal_menu() {
     'file' => 'mastercal.admin.inc',
   );
   
-  //path to page view
-  $items['org/calendar'] = array(
-    'title' => 'Calendar',
-    'page callback' => 'mastercal_pageview',
-    'access callback' => TRUE,
-  );
   
   $items['org/testcal'] = array(
     'title' => 'Tests',
@@ -300,62 +294,7 @@ function mastercal_testview() {
   return $return;
 }
 
-/**
- * Function to create page view
- *
- * Currently this page can be accessed at example.com/org/calendar
- */
-function mastercal_pageview() {
-  //This condition was to make sure a calendar has been added and the soapclient
-  //successfully intialized but will be phased out soon.
 
-  $widgetData  = '';
-   
-  $result = db_query("SELECT nid FROM {node} WHERE type = :type", array(
-    ':type' => 'node_event',
-  ));
-  //dprint_r($result);
-  foreach ($result as $row) {
-    $nids[] = $row->nid;
-  }
-
-  // Delete all the nodes at once
-  // http://api.drupal.org/api/function/node_delete_multiple/7
-  if (!empty($nids)) {
-    $nodes = node_load_multiple($nids);
-  
-    foreach ($nodes as $node) {
-      foreach ($node->field_event_date as $date) {
-        //dprint_r($date);
-        $widgetData .= "{title:'" . substr($node->title, 0, 50) . "',start:'" . $date[0]['value'] . "'},";
-      }
-    }
-  }
-  else {
-    if (user_access('administer modules')) {
-      drupal_set_message(t("No Events found - Please " . l('configure', 'admin/config/user-interface/mastercal', 
-      array('attributes' => array('class' => 'to-overlay'))) . " then " . l('run cron', 'admin/config/system/cron', 
-      array('attributes' => array('class' => 'to-overlay')))), $type = 'warning');
-    }
-  }
-  
-  //$calendars = client()->GetCals();
-  //adds a failry commonplace jquery library initializing statement and adds our event data in teh middle
-  drupal_add_js('(function($){jQuery(document).ready(function () { $("#mastercal_page").fullCalendar({ events: [' . 
-  $widgetData . '] }) });})(jQuery);', array('type' => 'inline', 'scope' => 'header', 'weight' => 5));   
-  
-  //print_r($calendars);
-  
-  $return = array(
-    'calendar' => array(
-      '#markup' => 'Calendar',
-      '#prefix' => '<div id="mastercal_page">',
-      '#suffix' => '</div>',
-    ),
-  );
-  
-  return $return;
-}
 
 /**
  * 
