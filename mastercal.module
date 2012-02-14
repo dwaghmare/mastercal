@@ -106,6 +106,7 @@ function mastercal_cron() {
       node_object_prepare($node);
       $node->title = $event['Title'];
       $node->body['und'][0]['value'] = $event['Description'];
+      $node->body['und'][0]['format'] = 'filtered_html';
       $node->field_event_cid['und'][0]['value'] = $cid;
       $node->field_event_did['und'][0]['value'] = $did;
       
