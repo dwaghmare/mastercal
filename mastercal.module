@@ -245,46 +245,10 @@ $jobs = array();
  * Test view function.
  */
 function mastercal_testview() {
-  //$events = client()->GetEvents();
-  //print_r($events);
+  $events = client()->GetEvents();
+  print_r($events);
   
-  $result = db_query("SELECT nid FROM {node} WHERE type = :type", array(
-    ':type' => 'node_event',
-  ));
-  //dprint_r($result);
-  foreach ($result as $row) {
-    $nids[] = $row->nid;
-  }
-
-  // Delete all the nodes at once
-  // http://api.drupal.org/api/function/node_delete_multiple/7
-  if (!empty($nids)) {
-    $nodes = node_load_multiple($nids);
   
-    foreach ($nodes as $node) {
-      
-        $event_data = client()->GetEvent($node->field_event_did['und'][0]['value']);
-        if (isset($event_data[0]['Image'])) {
-          print_r($event_data[0]['ImageId']);
-          print_r($event_data[0]['FileExtension']);
-          print_r($event_data[0]['ImageName']);
-          //print_r($event_data[0]['Image']);
-          
-          $image = base64_decode($event_data[0]['Image']);
-          
-          $file = file_save_data($image, 'public://' . $event_data[0]['ImageName'], FILE_EXISTS_REPLACE);
-          $node->field_event_image['und']['0']['fid'] = $file->fid;
-          node_save($node);
-        } 
-    }
-  }
-  else {
-    if (user_access('administer modules')) {
-      drupal_set_message(t("No Events found - Please " . l('configure', 'admin/config/user-interface/mastercal', 
-      array('attributes' => array('class' => 'to-overlay'))) . " then " . l('run cron', 'admin/config/system/cron', 
-      array('attributes' => array('class' => 'to-overlay')))), $type = 'warning');
-    }
-  }
   
   $return = array(
     'calendar' => array(
