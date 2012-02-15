@@ -34,8 +34,8 @@ class mastercalSOAP {
   protected $param;
 
   public function __construct($options = NULL) {
-    $this->un = 'emsapi@uiowa.edu';
-    $this->pw = 'emsapi2011';
+    $this->un = base64_decode('ZW1zYXBpQHVpb3dhLmVkdQ==');
+    $this->pw = base64_decode('ZW1zYXBpMjAxMQ==');
     $this->url = 'https://calendar.uiowa.edu/MCAPI/MCAPIService.asmx?wsdl';
     
   }
