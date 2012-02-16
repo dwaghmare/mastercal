@@ -151,6 +151,10 @@ function mastercal_cron() {
         $node->field_event_date['und'][0]['date_type'] = 'datetime';
 
       }
+      //Sets publisher to first user
+      $node->uid = 1;
+      //workbench id for IP
+      //$node->workbench_access = '38';
       #dprint_r($datetime);
       
       $node->field_event_location['und'][0]['value'] = $event_loc;
