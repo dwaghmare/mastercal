@@ -125,22 +125,30 @@ function mastercal_cron() {
         $count = 0;
         foreach ($event['EventDate'] as $day) {
           //dprint_r($day);
-          $date = explode('T', $day['Date']);
+          $date = explode('T', $day['Start']);
           $time = explode('-', $date[1]);
           $datetime = $date[0] . ' ' . $time[0];
-          $node->field_event_date['und'][$count]['value'] = $datetime;
-          $node->field_event_date['und'][$count]['value2'] = $datetime;
+          $the_date = gmdate('Y-m-d H:i:s', strtotime($datetime));
+          //date_default_timezone_set("UTC");
+          //$UTCdate = (string) date("Y-d-m G:i:00", $the_date);
+          $node->field_event_date['und'][$count]['value'] = $the_date;
+          $node->field_event_date['und'][$count]['value2'] = $the_date;
           //dprint_r($count);
           $count += 1;
         }
       } 
       else {
         //dprint_r($event['EventDate']);
-        $date = explode('T', $event['EventDate'][0]['Date']);
+        $date = explode('T', $event['EventDate'][0]['Start']);
         $time = explode('-', $date[1]);
         $datetime = $date[0] . ' ' . $time[0];
-        $node->field_event_date['und'][0]['value'] = $datetime;
-        $node->field_event_date['und'][0]['value2'] = $datetime;
+        $the_date = gmdate('Y-m-d H:i:s', strtotime($datetime));
+
+        //date_default_timezone_set("UTC");
+        //$UTCdate = (string) date("Y-d-m G:i:00", $the_date);
+        $node->field_event_date['und'][0]['value'] = $the_date;
+        $node->field_event_date['und'][0]['value2'] = $the_date;
+        $node->field_event_date['und'][0]['date_type'] = 'datetime';
 
       }
       #dprint_r($datetime);
@@ -245,8 +253,63 @@ $jobs = array();
  * Test view function.
  */
 function mastercal_testview() {
-  $events = client()->GetEvents();
-  print_r($events);
+  if (variable_get('MASTERCAL_AUTH')) {
+  //initialize an instance of the mastercalSOAP class then call the GetEvents() method
+  //the calendars being queried for the events list are loaded from the database
+    $events = client()->GetEvents();
+    //dprint_r($events);
+    //initialize the JSON string so I can append to it later
+    //there may be a better way to create this JSON
+
+
+    
+    foreach ($events as $id => $event) {
+      $cid = $id;
+      $did = $event['EventDetailID'];
+    //print_r($event);
+
+      $n_dates = count($event['EventDate']);
+      if ($n_dates > 1) {
+        //dprint_r('more');
+        $count = 0;
+        foreach ($event['EventDate'] as $day) {
+          //dprint_r($day);
+          $date = explode('T', $day['Start']);
+         
+          $time = explode('-', $date[1]);
+          $datetime = $date[0] . ' ' . $time[0];
+
+          $the_date = strtotime($datetime);
+          //echo(date_default_timezone_get() . "<br />");
+          //echo(date("Y-d-mTG:i:sz",$the_date) . "<br />");
+          //echo("\n");
+          //echo($datetime);
+          
+          echo(gmdate('Y-m-d H:i:s', $the_date));
+          //dprint_r($count);
+          $count += 1;
+        }
+      } 
+      else {
+        //dprint_r($event['EventDate']);
+        $date = explode('T', $event['EventDate'][0]['Start']);
+        $time = explode('-', $date[1]);
+        $datetime = $date[0] . ' ' . $time[0];
+        $the_date = strtotime($datetime);
+        echo("\n");
+          echo(gmdate('Y-m-d H:i:s', $the_date));
+          
+          //echo(date_default_timezone_get() . "<br />");
+          //echo(date("Y-d-mTG:i:sz",$the_date) . "<br />");
+          
+
+      }
+     
+
+    }
+
+
+  }
   
   
   
