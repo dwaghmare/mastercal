@@ -675,9 +675,11 @@ function _mastercal_installed_instances() {
  * Implements hook_uninstall().
  */
 function mastercal_uninstall() {
-  // Delete system variables.
+  // Delete persistent variables.
   variable_del('MASTERCAL_AUTH');
   variable_del('mastercal_name');
+  variable_del('comment_node_event');
+  variable_del('node_submitted_node_event');
   
   // Gather all the example content that might have been created while this
   // module was enabled.  Simple selects still use db_query().
