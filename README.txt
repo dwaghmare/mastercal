@@ -1,10 +1,11 @@
 ABOUT MASTERCAL
 ---------------
-The MasterCal product is a centralized Calendar Service purchased by the University.  This module leverages the Master Calendar API to pull in event data as Event type nodes.
+The MasterCal product is a centralized Calendar Service purchased by the University. This module
+leverages the Master Calendar API to pull in event data as Event type nodes.
 
 INSTALLATION
 ------------
-1) Download the module to you rpreferred directory:
+1) Download the module to your preferred directory:
 	- /sites/all/modules
 	- sites/all/modules/custom
 	- or sites/example.com/modules
