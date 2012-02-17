@@ -80,7 +80,7 @@ function mastercal_set_add_form_validate($form, &$form_state) {
 function mastercal_set_add_form_submit($form, &$form_state) {
   $cal = client()->GetCal($form_state['values']['mastercal_name']);
   //print_r($title);
-  variable_set('MASTERCAL_AUTH', True);
+  variable_set('mastercal_auth', True);
 
   variable_set('mastercal_name', $cal['Name']);
   mastercal_save($cal);
@@ -127,8 +127,8 @@ function mastercal_set_delete_form_submit($form, &$form_state) {
   $form_state['redirect'] = 'admin/config/user-interface/mastercal';
   drupal_set_message(t('The Calendar has been removed.'));
   
-  // Check whether the {mastercal_source} table is empty. If empty, set MASTERCAL_AUTH to FALSE.
+  // Check whether the {mastercal_source} table is empty. If empty, set mastercal_auth to FALSE.
   if (!records_exist()) {
-    variable_set('MASTERCAL_AUTH', FALSE);
+    variable_set('mastercal_auth', FALSE);
   }
 }

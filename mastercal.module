@@ -78,7 +78,7 @@ function mastercal_menu() {
 }
 
 function mastercal_cron() {
-  if (variable_get('MASTERCAL_AUTH')) {
+  if (variable_get('mastercal_auth')) {
   //initialize an instance of the mastercalSOAP class then call the GetEvents() method
   //the calendars being queried for the events list are loaded from the database
     $events = client()->GetEvents();
@@ -257,7 +257,7 @@ $jobs = array();
  * Test view function.
  */
 function mastercal_testview() {
-  if (variable_get('MASTERCAL_AUTH')) {
+  if (variable_get('mastercal_auth')) {
   //initialize an instance of the mastercalSOAP class then call the GetEvents() method
   //the calendars being queried for the events list are loaded from the database
     $events = client()->GetEvents();
