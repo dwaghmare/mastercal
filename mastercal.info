@@ -4,7 +4,6 @@ package = UI Module Package
 core = 7.x
 files[] = mastercal.module
 scripts[] = js/script.js
-scripts[] = js/fullcalendar.min.js
 stylesheets[all][] = js/fullcalendar.css
 dependencies[] = taxonomy
 dependencies[] = number
