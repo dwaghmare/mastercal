@@ -77,7 +77,6 @@ class mastercalSOAP {
     if ($client->fault) {
         echo '<p><b>Fault: ';
         print_r($response);
-        
         echo '</b></p>';
         
         throw new mastercalSOAPexception('Master Calendar API fault: @fault', array('@fault' => $response['faultstring']));
