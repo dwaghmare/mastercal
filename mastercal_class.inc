@@ -144,7 +144,7 @@ class mastercalSOAP {
   public function GetEvents() {
     $cal_ids = mastercal_load();
     $cal_list = array();
-    //make sure the lsit isnt empty
+    //make sure the list isnt empty
     if (isset($cal_ids)) { 
       //for the soap handler to identify your array as an integer array you have to make an associative array where 'int' => array(12,32,43)
       foreach ($cal_ids as $item) {
