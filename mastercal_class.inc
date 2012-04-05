@@ -255,6 +255,31 @@ class mastercalSOAP {
   }
   
   /**
+   * Return the User Defined Questions(UDQs) for a given event.
+   * 
+   * @param string userName
+   * @param string password
+   * @param int eventId
+   */
+  public function getUDQs($eid) {
+    $param = array(
+      'userName' => $this->un,
+      'password' => $this->pw,
+      'eventId' => $eid,
+    );
+    
+    $result = $this->call('GetUdqs', $param);
+    $respxml = simplexml_load_string($result['GetUdqsResult']);
+    $udqs = array();
+    
+    foreach ($respxml->children() as $udq) {
+      $udqs[(string)$udq->getName()] = (string)$udq;
+    }
+    
+    return $udqs;
+  }
+  
+  /**
    * Helper functions
    */
    //collapses repeat dates of the same event into one item
