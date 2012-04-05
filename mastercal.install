@@ -157,7 +157,31 @@ function mastercal_install() {
 function _mastercal_installed_fields() {
   $t = get_t();
   $fields = array();
-  
+
+  $fields['field_event_featured'] = array(
+  	'active' => '1',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'entity_types' => array(),
+    'field_name' => 'field_event_featured',
+    'foreign keys' => array(),
+    'indexes' => array(
+    	'value' => array(
+        0 => 'value',
+      ),
+    ),
+  	'module' => 'list',
+  	'settings' => array(
+  		'allowed_values' => array(
+        0 => 'No',
+        1 => 'Yes',
+      ),
+  		'allowed_values_function' => '',
+    ),
+  	'translatable' => '0',
+  	'type' => 'list_boolean',
+  );
+
   $fields['field_event_image'] = array(
       'field_name' => 'field_event_image',
       'type'       => 'image',
@@ -362,6 +386,48 @@ function _mastercal_installed_instances() {
       'widget' => array(
         'type'    => 'image_image',
         'weight'  => 2.10,
+      ),
+    ),
+    'field_event_featured' => array(
+      'bundle' => 'node_event',
+      'default_value' => array(
+        0 => array(
+          'value' => 0,
+        ),
+      ),
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'list',
+          'settings' => array(),
+          'type' => 'list_default',
+          'weight' => 1,
+        ),
+        'teaser' => array(
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => 0,
+        ),
+      ),
+      'entity_type' => 'node',
+      'field_name' => 'field_event_featured',
+      'label' => 'Featured event',
+      'description' => 'Select this checkbox to feature the event on the front page.',
+      'required' => 0,
+      'settings' => array(
+        'user_register_form' => FALSE,
+      ),
+      'widget' => array(
+        'active' => 1,
+        'module' => 'options',
+        'settings' => array(
+          'display_label' => 1,
+        ),
+        'type' => 'options_onoff',
+        'weight' => '-4',
       ),
     ),
     'field_event_cid' => array(
