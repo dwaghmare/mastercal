@@ -92,6 +92,12 @@ function mastercal_cron() {
     $widgetData  = '';
     
     foreach ($events as $id => $event) {
+      // Get UDQs, specific to Arts Iowa at the moment
+      $udqs = client()->getUDQs($id);
+      $featured_event = (!empty($udqs['17']) ? 1 : NULL);
+      $youtube_embed_code = (!empty($udqs['19']) ? $udqs['19'] : NULL);
+      $featured_date = (!empty($udqs['18']) ? $udqs['18'] : NULL);
+      
       $cid = $id;
       $did = $event['EventDetailID'];
       $contact_name = $event['ContactName'];
@@ -109,6 +115,12 @@ function mastercal_cron() {
       $node->body['und'][0]['format'] = 'filtered_html';
       $node->field_event_cid['und'][0]['value'] = $cid;
       $node->field_event_did['und'][0]['value'] = $did;
+      
+      // Set UDQ fields, specific to Arts Iowa
+      $node->field_event_featured['und'][0]['value'] = $featured_event;
+      $node->field_event_youtube_embed_code['und'][0]['value'] = $youtube_embed_code;
+      // This date is currently saving to Drupal as one day early
+      $node->field_event_featured_date['und'][0]['value'] = $featured_date;
       
       $event_data = client()->GetEvent($did);
         if (isset($event_data[0]['Image'])) {
