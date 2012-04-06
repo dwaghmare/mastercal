@@ -260,6 +260,14 @@ class mastercalSOAP {
    * @param string userName
    * @param string password
    * @param int eventId
+   * 
+   * UDQIDs
+   * 14 => Event Tag
+   * 15 => Additional Event Tag
+   * 16 => Additional Event Tag
+   * 17 => Featured Event
+   * 19 => YouTube Embed Code 
+   * 18 => Featured Date
    */
   public function getUDQs($eid) {
     $param = array(
@@ -273,7 +281,7 @@ class mastercalSOAP {
     $udqs = array();
     
     foreach ($respxml->children() as $udq) {
-      $udqs[(string)$udq->getName()] = (string)$udq;
+      $udqs[(string)$udq->UDQID] = (string)$udq->Answer;
     }
     
     return $udqs;
