@@ -181,7 +181,33 @@ function _mastercal_installed_fields() {
   	'translatable' => '0',
   	'type' => 'list_boolean',
   );
-
+  
+  $fields['field_event_featured_date'] = array(
+        'active' => '1',
+        'cardinality' => '1',
+        'deleted' => '0',
+        'entity_types' => array(),
+        'field_name' => 'field_event_featured_date',
+        'foreign keys' => array(),
+        'indexes' => array(),
+        'module' => 'date',
+        'settings' => array(
+          'granularity' => array(
+            'day' => 'day',
+            'hour' => 0,
+            'minute' => 0,
+            'month' => 'month',
+            'second' => 0,
+            'year' => 'year',
+  ),
+          'repeat' => 0,
+          'timezone_db' => 'UTC',
+          'todate' => '',
+          'tz_handling' => 'site',
+  ),
+        'type' => 'datetime',
+  );
+  
   $fields['field_event_image'] = array(
       'field_name' => 'field_event_image',
       'type'       => 'image',
@@ -363,7 +389,33 @@ function _mastercal_installed_fields() {
         ),
       ),
     );
-    
+
+  $fields['field_event_youtube_embed_code'] = array(
+        'active' => '1',
+        'cardinality' => '1',
+        'deleted' => '0',
+        'entity_types' => array(),
+        'field_name' => 'field_event_youtube_embed_code',
+        'foreign keys' => array(
+          'format' => array(
+            'columns' => array(
+              'format' => 'format',
+  ),
+            'table' => 'filter_format',
+  ),
+  ),
+        'indexes' => array(
+          'format' => array(
+  0 => 'format',
+  ),
+  ),
+        'module' => 'text',
+        'settings' => array(
+          'max_length' => '255',
+  ),
+        'type' => 'text',
+  );
+  
   return $fields;
 }
 
@@ -430,6 +482,65 @@ function _mastercal_installed_instances() {
         'weight' => '-4',
       ),
     ),
+  'field_event_featured_date' => array(
+        'bundle' => 'node_event',
+        'deleted' => '0',
+        'description' => '',
+        'display' => array(
+          'default' => array(
+            'label' => 'above',
+            'module' => 'date',
+            'settings' => array(
+              'format_type' => 'long',
+              'fromto' => 'both',
+              'multiple_from' => '',
+              'multiple_number' => '',
+              'multiple_to' => '',
+              'show_repeat_rule' => 'show',
+  ),
+            'type' => 'date_default',
+            'weight' => 1,
+  ),
+          'example_node_list' => array(
+            'label' => 'above',
+            'settings' => array(),
+            'type' => 'hidden',
+            'weight' => 0,
+  ),
+          'teaser' => array(
+            'label' => 'above',
+            'settings' => array(),
+            'type' => 'hidden',
+            'weight' => 0,
+  ),
+  ),
+        'entity_type' => 'node',
+        'field_name' => 'field_event_featured_date',
+        'label' => 'Featured date',
+        'required' => 0,
+        'settings' => array(
+          'default_value' => 'now',
+          'default_value2' => 'blank',
+          'default_value_code' => '',
+          'default_value_code2' => '',
+          'user_register_form' => FALSE,
+  ),
+        'widget' => array(
+          'active' => 1,
+          'module' => 'date',
+          'settings' => array(
+            'increment' => '15',
+            'input_format' => 'm/d/Y - H:i:s',
+            'input_format_custom' => '',
+            'label_position' => 'above',
+            'repeat_collapsed' => 0,
+            'text_parts' => array(),
+            'year_range' => '-3:+3',
+  ),
+          'type' => 'date_popup',
+          'weight' => '-3',
+  ),
+  ),
     'field_event_cid' => array(
       'bundle' => 'node_event',
       'default_value' => NULL,
@@ -533,7 +644,51 @@ function _mastercal_installed_instances() {
         'type' => 'text_textfield',
         'weight' => '0',
       ),
-    ),  
+    ),
+  'field_event_youtube_embed_code' => array(
+        'bundle' => 'node_event',
+        'default_value' => NULL,
+        'deleted' => '0',
+        'description' => '',
+        'display' => array(
+          'default' => array(
+            'label' => 'above',
+            'module' => 'text',
+            'settings' => array(),
+            'type' => 'text_default',
+            'weight' => 4,
+  ),
+          'example_node_list' => array(
+            'label' => 'above',
+            'settings' => array(),
+            'type' => 'hidden',
+            'weight' => 0,
+  ),
+          'teaser' => array(
+            'label' => 'above',
+            'settings' => array(),
+            'type' => 'hidden',
+            'weight' => 0,
+  ),
+  ),
+        'entity_type' => 'node',
+        'field_name' => 'field_event_youtube_embed_code',
+        'label' => 'YouTube embed code',
+        'required' => 0,
+        'settings' => array(
+          'text_processing' => '0',
+          'user_register_form' => FALSE,
+  ),
+        'widget' => array(
+          'active' => 1,
+          'module' => 'text',
+          'settings' => array(
+            'size' => '60',
+  ),
+          'type' => 'text_textfield',
+          'weight' => '0',
+  ),
+  ),
     'field_event_date' => array(
       'bundle' => 'node_event',
       'deleted' => '0',
