@@ -261,7 +261,7 @@ class mastercalSOAP {
    * @param string password
    * @param int eventId
    * 
-   * UDQIDs
+   * Arts Iowa UDQIDs
    * 14 => Event Tag
    * 15 => Additional Event Tag
    * 16 => Additional Event Tag
