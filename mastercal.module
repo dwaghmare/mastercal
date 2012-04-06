@@ -94,6 +94,9 @@ function mastercal_cron() {
     foreach ($events as $id => $event) {
       // Get UDQs, specific to Arts Iowa at the moment
       $udqs = client()->getUDQs($id);
+      $event_tag = (!empty($udqs['14']) ? $udqs['14'] : NULL);
+      $event_tag2 = (!empty($udqs['15']) ? $udqs['15'] : NULL);
+      $event_tag3 = (!empty($udqs['16']) ? $udqs['16'] : NULL);
       $featured_event = (!empty($udqs['17']) ? 1 : NULL);
       $youtube_embed_code = (!empty($udqs['19']) ? $udqs['19'] : NULL);
       $featured_date = (!empty($udqs['18']) ? $udqs['18'] : NULL);
@@ -173,8 +176,8 @@ function mastercal_cron() {
       if (!empty($event_loc_url)) {
         $node->field_event_url['und'][0]['value'] = $event_loc_url;
       }
-      if (!empty($event['EventTypeName'])) {
-        $type_name = $event['EventTypeName'];    
+      if (!empty($event_tag)) {
+        $type_name = $event_tag;    
         mastercal_create_terms(array($type_name));
         $tid = db_query_range('SELECT tid FROM {taxonomy_term_data} WHERE name = :name ORDER BY tid DESC', 0, 
           1, array(':name' => $type_name))->fetchField();
@@ -183,6 +186,7 @@ function mastercal_cron() {
           $node->field_event_type['und'][0]['tid'] = $tid;
         }
       }
+      
       $query = new EntityFieldQuery;
       $result = $query
         ->entityCondition('entity_type', 'node')
