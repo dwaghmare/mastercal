@@ -78,10 +78,46 @@ function mastercal_menu() {
 }
 
 function mastercal_cron() {
-  if (variable_get('mastercal_auth')) {
+  $un = base64_decode('QXJ0c19Jb3dhX0FQSQ==');
+  $pw = base64_decode('QXAzZG45IW5leg==');
   //initialize an instance of the mastercalSOAP class then call the GetEvents() method
   //the calendars being queried for the events list are loaded from the database
-    $events = client()->GetEvents();
+   $param = array(
+      'userName' => $un,
+      'password' => $pw, 
+      'startDate' => firstOfMonth(),
+      'endDate' => lastOfMonth(),
+      'location' => '',
+      'eventName' => '',
+      'calendars' => mastercal_load(),
+      'eventTypes' => Null,
+      'udqAnswer' => Null,
+    );
+    $result = mastercal_getEvents($param);
+    $xml = simplexml_load_string(utf8_encode($result->GetEventsResult));
+    $calenss = array();
+    $count = 0;
+    //parse the xml response from the web service using SimpleXML
+    foreach ($xml->children() as $child) {
+      //create an array to store the data
+      $cals = array();
+      foreach ($child->children() as $subchild) {
+        //associate array var['Name of field'] = 'value of field'
+        $cals[$subchild->getName()] = (string) $subchild;
+      }
+      $calens[] = $cals;
+      $count .= 1;
+    }
+    //dprint_r($calens);
+
+
+    //print_r($respxml);
+    if (isset($calens)) {
+      $events = collapseDates($calens);
+    }
+    else {
+      $events = Null;
+    }
     //dprint_r($events);
     //initialize the JSON string so I can append to it later
     //there may be a better way to create this JSON
@@ -89,17 +125,10 @@ function mastercal_cron() {
       'saved' => 0,
       'passed' => 0
     );
-    $widgetData  = '';
     
     foreach ($events as $id => $event) {
       // Get UDQs, specific to Arts Iowa at the moment
-      $udqs = client()->getUDQs($id);
-      $event_tag = (!empty($udqs['14']) ? $udqs['14'] : NULL);
-      $event_tag2 = (!empty($udqs['15']) ? $udqs['15'] : NULL);
-      $event_tag3 = (!empty($udqs['16']) ? $udqs['16'] : NULL);
-      $featured_event = (!empty($udqs['17']) ? 1 : NULL);
-      $youtube_embed_code = (!empty($udqs['19']) ? $udqs['19'] : NULL);
-      $featured_date = (!empty($udqs['18']) ? $udqs['18'] : NULL);
+
       
       $cid = $id;
       $did = $event['EventDetailID'];
@@ -119,13 +148,10 @@ function mastercal_cron() {
       $node->field_event_cid['und'][0]['value'] = $cid;
       $node->field_event_did['und'][0]['value'] = $did;
       
-      // Set UDQ fields, specific to Arts Iowa
-      $node->field_event_featured['und'][0]['value'] = $featured_event;
-      $node->field_event_youtube_embed_code['und'][0]['value'] = $youtube_embed_code;
-      // This date is currently saving to Drupal as one day early
-      $node->field_event_featured_date['und'][0]['value'] = $featured_date;
+      $param['eventDetailId'] = $did;
+  
       
-      $event_data = client()->GetEvent($did);
+      $event_data = mastercal_getEvent($param);
         if (isset($event_data[0]['Image'])) {
           $image = base64_decode($event_data[0]['Image']);
           $file = file_save_data($image, 'public://' . $event_data[0]['ImageName'], FILE_EXISTS_REPLACE);
@@ -176,11 +202,9 @@ function mastercal_cron() {
       if (!empty($event_loc_url)) {
         $node->field_event_url['und'][0]['value'] = $event_loc_url;
       }
-      if (!empty($event_tag)) {
-        $type_name = $event_tag;    
-        mastercal_create_terms(array($type_name));
-        $tid = db_query_range('SELECT tid FROM {taxonomy_term_data} WHERE name = :name ORDER BY tid DESC', 0, 
-          1, array(':name' => $type_name))->fetchField();
+      if (!empty($event['EventTypeName'])) {  
+        $type_name = $event['EventTypeName'];    
+        $tid = mastercal_create_term($type_name);
           
         if (!empty($tid)) {
           $node->field_event_type['und'][0]['tid'] = $tid;
@@ -212,14 +236,120 @@ function mastercal_cron() {
       '@pass' => $nodes['passed'])
       ) 
     );
+  
+}
+ function collapseDates($events) {
+    $collapsed = array();
+    $viewed = array();
+    foreach ($events as $event) {
+      $cid = $event['EventID'];
+      if (isset($viewed[$cid])) {
+        $collapsed[$cid]['EventDate'][] = array(
+          'Date' => $event['EventDate'], 
+          'Start' => $event['TimeEventStart'], 
+          'End' => $event['TimeEventEnd']
+        );
+      }
+      else {
+        $viewed[$cid] = True;
+        $collapsed[$cid] = $event;
+        $collapsed[$cid]['EventDate'] = array();
+        $collapsed[$cid]['EventDate'][] = array('Date' => $event['EventDate'], 'Start' => $event['TimeEventStart'], 'End' => $event['TimeEventEnd']);
+      }
+    }
+    return $collapsed;  
   }
+ 
+  function firstOfMonth() {
+    return date("Y-m-d", strtotime(date('m') . '/01/' . date('Y') . ' 00:00:00'));
+  }
+
+  //date of the last day of the month
+  function lastOfMonth() {
+    return date("Y-m-d", strtotime('-1 second', strtotime('+1 month', strtotime(date('m') . '/01/' . date('Y') . ' 00:00:00'))));
+  }
+
+function mastercal_getCals($param) {
+  $service = wsclient_service_load('calendar');
+  $result = $service->GetCalendars($param);
+  $respxml = simplexml_load_string($result->GetCalendarsResult);
+    
+    //print_r($respxml);
+    $calendars = array();
+    foreach ($respxml->children() as $cal) {
+      $calendars[(string)$cal->CalendarID] = (string)$cal->Name;
+    }
+  return $calendars;
 }
 
+function mastercal_getCal($param) {
+  $service = wsclient_service_load('calendar');
+  $result = $service->GetCalendar($param);
+  $respxml = simplexml_load_string($result->GetCalendarResult);
+    
+    //print_r($respxml);
+    $cals = array();
+    foreach ($respxml->children() as $child) {
+      //print_r($child->calendar);
+      foreach ($child->children() as $subchild) {
+        $cals[$subchild->getName()] = (string) $subchild;
+        //print_r("\n".$subchild->getName().": ".$subchild."");
+      }
+    }
+
+    return $cals;
+}
+function mastercal_getEvents($param) {
+   
+    //print_r($cal_list);
+    //the Camel Case is required and not specified in the API but can be found by examining the request example on the API site /MCAPI/MCAPIService.asmx
+    
+    //dpm($param);
+    $service = wsclient_service_load('calendar');
+    $result = $service->GetEvents($param);
+    return $result;
+}
+function mastercal_getEvent($param) {
+    $service = wsclient_service_load('calendar');
+    $result = $service->GetEvent($param);
+    //$result = $this->call('GetEvent', $param);
+    
+    //print_r($result);
+    $xml = simplexml_load_string(utf8_encode($result->GetEventResult));
+  //print_r($result);
+    $calenss = array();
+    $count = 0;
+    foreach ($xml->children() as $child) {
+      //print_r("\n---------------------------");
+      $cals = array();
+      foreach ($child->children() as $subchild) {
+        $cals[$subchild->getName()] = (string) $subchild;
+        //print_r("\n".$subchild->getName().": ".$subchild."");
+      }
+      $calens[] = $cals;
+      $count .= 1;
+    }
+    //print_r($calens);
+    //$respxml = $this->MakeXml(utf8_encode($result['GetEventsResult']));
+    //print_r(variable_get('mastercal_name', 'poop'));
+    //print_r($respxml);
+    if (isset($calens)) {
+      $calendars = $calens;
+    }
+    else {
+      $calendars = Null;
+    }
+
+    //print_r($calendars);
+    return $calendars;
+  }
+  
+  
 /**
  * Create taxonomy lists.
  */
-function mastercal_create_terms($list) {
-$jobs = array();
+function mastercal_create_term($eventtype) {
+
   //grabs the list of vocabularies  
   $vocabularies = taxonomy_get_vocabularies();
   foreach ($vocabularies as $voc) {
@@ -228,45 +358,28 @@ $jobs = array();
     }
   }
   //grabs the terms from the chosen vocabulary
-  $existing = taxonomy_get_tree($vid);
+  if (!empty($vid)) {
+    $new = array('vid' => $vid, 'name' => $eventtype);
+    $terms = taxonomy_get_term_by_name($new['name']);
+    //dpm($terms);
+    //dpm($new);
+    if (!empty($terms)) {
+      if (count($terms) == 1) {  
+        $tid = key($terms);
+      }
+    } else {
+      // add term and get the tid
+      $term = new stdClass();
+      $term->name = $new['name'];
+      $term->vid = $new['vid'];
+      $status = taxonomy_term_save($term);
+      $tid = $term->tid;
+      //dpm($term);
+    }
+  }
   
-  $loaded_terms = array();
-  foreach ($existing as $job_rank) {           
-    $loaded_terms[] = $job_rank->name;     
-  }
-  foreach ($list as $entry) {
-    if (is_array($entry)) {
-      if (!isset($jobs[$entry['title']])) {
-        $jobs[$entry['title']] = False;
-      }
-    }
-    else {
-      if (!isset($jobs[$entry])) {
-        $jobs[$entry] = False;
-      }
-    }
-  }
+  return $tid;
   
-  if (!empty($loaded_terms)) {
-    foreach ($jobs as $new_term => $val) {
-
-      if (!in_array($new_term, $loaded_terms)) {
-        taxonomy_term_save((object) array(
-          'name' => t($new_term),
-          'vid' => $vid,
-        )); 
-      }
-    }
-  }
-  else { 
-    foreach ($jobs as $new_term => $val) {
-      //print_r($new_term);
-      taxonomy_term_save((object) array(
-        'name' => t($new_term),
-        'vid' => $vid,
-      )); 
-    }
-  }
 }
 
 /**
