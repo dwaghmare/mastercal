@@ -24,4 +24,4 @@ Currently switching the module from nusoap to the Web Services Client module (wh
 TROUBLESHOOTING
 ---------------
 
-Email erin-corson@uiowa.edu
+Email [Erin Corson](mailto:erin-corson@uiowa.edu "Mail Erin Corson")
