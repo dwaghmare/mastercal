@@ -148,8 +148,9 @@ function mastercal_cron() {
       $node->field_event_cid['und'][0]['value'] = $cid;
       $node->field_event_did['und'][0]['value'] = $did;
       
-      $param['eventDetailId'] = $did;
-  
+     $param['eventDetailId'] = $did;
+	
+
       
       $event_data = mastercal_getEvent($param);
         if (isset($event_data[0]['Image'])) {
@@ -202,9 +203,12 @@ function mastercal_cron() {
       if (!empty($event_loc_url)) {
         $node->field_event_url['und'][0]['value'] = $event_loc_url;
       }
-      if (!empty($event['EventTypeName'])) {  
-        $type_name = $event['EventTypeName'];    
-        $tid = mastercal_create_term($type_name);
+      if (!empty($event_tag)) {
+        $type_name = $event_tag;    
+        mastercal_create_terms(array($type_name));
+        $tid = db_query_range('SELECT tid FROM {taxonomy_term_data} WHERE name = :name ORDER BY tid DESC', 0, 
+          1, array(':name' => $type_name))->fetchField();
+
           
         if (!empty($tid)) {
           $node->field_event_type['und'][0]['tid'] = $tid;
@@ -230,13 +234,15 @@ function mastercal_cron() {
         $nodes['passed'] += 1;
       }
     }
+    
 
     drupal_set_message(t("@saved nodes created, @pass events skipped.", array(
       '@saved' => $nodes['saved'], 
       '@pass' => $nodes['passed'])
       ) 
     );
-  
+
+
 }
  function collapseDates($events) {
     $collapsed = array();
@@ -299,6 +305,7 @@ function mastercal_getCal($param) {
 
     return $cals;
 }
+  
 function mastercal_getEvents($param) {
    
     //print_r($cal_list);
@@ -310,13 +317,13 @@ function mastercal_getEvents($param) {
     return $result;
 }
 function mastercal_getEvent($param) {
-    $service = wsclient_service_load('calendar');
+  	$service = wsclient_service_load('calendar');
     $result = $service->GetEvent($param);
     //$result = $this->call('GetEvent', $param);
     
     //print_r($result);
     $xml = simplexml_load_string(utf8_encode($result->GetEventResult));
-  //print_r($result);
+	//print_r($result);
     $calenss = array();
     $count = 0;
     foreach ($xml->children() as $child) {
@@ -345,10 +352,12 @@ function mastercal_getEvent($param) {
   }
   
   
+  
 /**
  * Create taxonomy lists.
  */
-function mastercal_create_term($eventtype) {
+function mastercal_create_terms($list) {
+$jobs = array();
 
   //grabs the list of vocabularies  
   $vocabularies = taxonomy_get_vocabularies();
@@ -358,6 +367,90 @@ function mastercal_create_term($eventtype) {
     }
   }
   //grabs the terms from the chosen vocabulary
+  $existing = taxonomy_get_tree($vid);
+  
+  $loaded_terms = array();
+  foreach ($existing as $job_rank) {           
+    $loaded_terms[] = $job_rank->name;     
+  }
+  foreach ($list as $entry) {
+    if (is_array($entry)) {
+      if (!isset($jobs[$entry['title']])) {
+        $jobs[$entry['title']] = False;
+      }
+    }
+    else {
+      if (!isset($jobs[$entry])) {
+        $jobs[$entry] = False;
+
+
+
+
+
+
+
+
+      }
+
+
+
+
+
+
+
+
+    }
+  }
+  
+  if (!empty($loaded_terms)) {
+    foreach ($jobs as $new_term => $val) {
+
+      if (!in_array($new_term, $loaded_terms)) {
+        taxonomy_term_save((object) array(
+          'name' => t($new_term),
+          'vid' => $vid,
+        )); 
+      }
+    }
+  }
+  else { 
+    foreach ($jobs as $new_term => $val) {
+      //print_r($new_term);
+      taxonomy_term_save((object) array(
+        'name' => t($new_term),
+        'vid' => $vid,
+      )); 
+    }
+  }
+
+
+}
+function mastercal_create_term($eventtype) {
+
+
+  //grabs the list of vocabularies  
+  $vocabularies = taxonomy_get_vocabularies();
+  foreach ($vocabularies as $voc) {
+    if ($voc->machine_name == 'event_types') {
+      $vid = $voc->vid;
+    }
+  }
+  //grabs the terms from the chosen vocabulary
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   if (!empty($vid)) {
     $new = array('vid' => $vid, 'name' => $eventtype);
     $terms = taxonomy_get_term_by_name($new['name']);
@@ -378,98 +471,144 @@ function mastercal_create_term($eventtype) {
     }
   }
   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   return $tid;
   
 }
-
 /**
  * Test view function.
  */
 function mastercal_testview() {
-  if (variable_get('mastercal_auth')) {
-  //initialize an instance of the mastercalSOAP class then call the GetEvents() method
-  //the calendars being queried for the events list are loaded from the database
-    $events = client()->GetEvents();
-    //dprint_r($events);
-    //initialize the JSON string so I can append to it later
-    //there may be a better way to create this JSON
+     //drupal_add_http_header('Content-Type', 'text/plain');
+    //drupal_set_header("Content-type: text/csv; charset=utf-8");
+    //print generate_csv_results();
 
 
-    
-    foreach ($events as $id => $event) {
-      $cid = $id;
-      $did = $event['EventDetailID'];
-    //print_r($event);
-
-      $n_dates = count($event['EventDate']);
-      if ($n_dates > 1) {
-        //dprint_r('more');
-        $count = 0;
-        foreach ($event['EventDate'] as $day) {
-          //dprint_r($day);
-          $date = explode('T', $day['Start']);
-         
-          $time = explode('-', $date[1]);
-          $datetime = $date[0] . ' ' . $time[0];
-
-          $the_date = strtotime($datetime);
-          //echo(date_default_timezone_get() . "<br />");
-          //echo(date("Y-d-mTG:i:sz",$the_date) . "<br />");
-          //echo("\n");
-          //echo($datetime);
-          
-          echo(gmdate('Y-m-d H:i:s', $the_date));
-          //dprint_r($count);
-          $count += 1;
-        }
-      } 
-      else {
-        //dprint_r($event['EventDate']);
-        $date = explode('T', $event['EventDate'][0]['Start']);
-        $time = explode('-', $date[1]);
-        $datetime = $date[0] . ' ' . $time[0];
-        $the_date = strtotime($datetime);
-        echo("\n");
-          echo(gmdate('Y-m-d H:i:s', $the_date));
-          
-          //echo(date_default_timezone_get() . "<br />");
-          //echo(date("Y-d-mTG:i:sz",$the_date) . "<br />");
-          
-
-      }
-     
-
-    }
 
 
-  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     //$result = $service->GetEventTypes($param);
+     $cal_ids = mastercal_load();
+   
+    //print_r($cal_list);
+    //the Camel Case is required and not specified in the API but can be found by examining the request example on the API site /MCAPI/MCAPIService.asmx
+    $param = array(
+      'startDate' => firstOfMonth(),
+      'endDate' => lastOfMonth(),
+      'location' => '',
+      'eventName' => '',
+      'calendars' => $cal_ids,
+      'eventTypes' => Null,
+      'udqAnswer' => Null,
+    );
+     $param['userName'] = 'Arts_Iowa_API';
+     $param['password'] = 'Ap3dn9!nez';
+     $result = mastercal_getCals($param);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     dpm($result);
+     return 'work!';
+}
+
+
+function generate_results() {
+  $service = wsclient_service_load('calendar');
+     $result = $service->GetEventTypes();
+  return 'dsfs';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   
-  
-  
-  $return = array(
-    'calendar' => array(
-      '#markup' => 'Tes',
-      '#prefix' => '<div id="mastercal_page">',
-      '#suffix' => '</div>',
-    ),
-  );
-  
-  return $return;
+
 }
 
 
 
-/**
- * 
- * Instantiate mastercalSOAP client.
- * @return mastercalSOAP
- */
-function client() {
-  require_once('mastercal_class.inc');
-  $client = new mastercalSOAP();
-    
-  return $client;
-}
+
+
+
+
+
+
+
+
+
+
+
+
 
 /**
  * Helper function to check if a calendar already exists in {mastercal_source}.
@@ -508,11 +647,51 @@ function mastercal_save(&$cal) {
 function mastercal_load() {
 //for simple queries it is more economical to use db_query and SQL than to use the new Drupal 7 methods
   $result = db_query("SELECT title, cid FROM {mastercal_source}");
-  return $result;
+
+  $cal_ids = $result;
+    $cal_list = array();
+    //make sure the lsit isnt empty
+    if (isset($cal_ids)) { 
+      //for the soap handler to identify your array as an integer array you have to make an associative array where 'int' => array(12,32,43)
+      foreach ($cal_ids as $item) {
+        $cal_list['int'][] = $item->cid;
+      }
+    return $cal_list;
+    }
+    
 }
 function mastercal_delete($cid) {
   $deleted = db_delete('mastercal_source')
   ->condition('cid', $cid)
   ->execute();
   return $deleted;
+}
+function mastercal_default_wsclient_service() { 
+
+  // Geocoder.us service (SOAP)
+  $service = new WSClientServiceDescription();
+  $service->name = 'calendar';
+  $service->label = 'MasterCal';
+  $service->url = 'https://calendar.uiowa.edu/MCAPI/MCAPIService.asmx?wsdl';
+  $service->type = 'soap';
+  $operation = array();
+   $operation['label'] = 'GetEventTypes';
+   $operation['name'] = 'GetEventTypes';
+   $operation['parameter']['userName'] = array('type' => 'text', 'default value' => 'Arts_Iowa_API');
+   $operation['parameter']['passWord'] = array('type' => 'text', 'default value' => 'Ap3dn9!nez');
+   $operation['result'] = array('type' => 'list\u003cGetEventTypesResponse\u003e', 'label' => 'GetEventTypesResponse');
+   $service->operations['GetEventTypes'] = $operation;
+  try {
+    $service->endpoint()->initializeMetaData();
+    $services[$service->name] = $service;
+  }
+  catch (WSClientException $e) {
+    watchdog('wsclient', $e->__toString());
+  }
+
+ 
+
+
+
+  return $services;
 }
