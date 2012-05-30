@@ -4,4 +4,5 @@ package = UI Module Package
 core = 7.x
 files[] = mastercal.module
 dependencies[] = taxonomy
-dependencies[] = number
+dependencies[] = wsclient
+dependencies[] = entity
