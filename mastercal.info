@@ -3,6 +3,5 @@ description = Include an events stream block or calendar page
 package = UI Module Package
 core = 7.x
 files[] = mastercal.module
-scripts[] = js/script.js
 dependencies[] = taxonomy
 dependencies[] = number
