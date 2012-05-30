@@ -1,5 +1,5 @@
 name = DEA Master Calendar Integration
-description = Include an events stream block or calendar page
+description = Import events from Master Calendar as nodes.
 package = UI Module Package
 core = 7.x
 files[] = mastercal.module
