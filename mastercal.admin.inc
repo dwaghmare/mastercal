@@ -16,8 +16,6 @@ function mastercal_set_admin() {
   foreach ($saved_cals as $cal) {
     $row = array(
       check_plain($cal->title),
-      '',
-      '',
     );
  
     $row[] = l(t('remove'), "admin/config/user-interface/mastercal/$cal->cid/delete");   
