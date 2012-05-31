@@ -349,9 +349,7 @@ function mastercal_getEvent($param) {
 
     //print_r($calendars);
     return $calendars;
-  }
-  
-  
+  } 
   
 /**
  * Create taxonomy lists.
@@ -382,22 +380,7 @@ $jobs = array();
     else {
       if (!isset($jobs[$entry])) {
         $jobs[$entry] = False;
-
-
-
-
-
-
-
-
       }
-
-
-
-
-
-
-
 
     }
   }
@@ -427,7 +410,6 @@ $jobs = array();
 }
 function mastercal_create_term($eventtype) {
 
-
   //grabs the list of vocabularies  
   $vocabularies = taxonomy_get_vocabularies();
   foreach ($vocabularies as $voc) {
@@ -436,21 +418,6 @@ function mastercal_create_term($eventtype) {
     }
   }
   //grabs the terms from the chosen vocabulary
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   if (!empty($vid)) {
     $new = array('vid' => $vid, 'name' => $eventtype);
     $terms = taxonomy_get_term_by_name($new['name']);
@@ -471,26 +438,6 @@ function mastercal_create_term($eventtype) {
     }
   }
   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   return $tid;
   
 }
@@ -501,32 +448,6 @@ function mastercal_testview() {
      //drupal_add_http_header('Content-Type', 'text/plain');
     //drupal_set_header("Content-type: text/csv; charset=utf-8");
     //print generate_csv_results();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
      //$result = $service->GetEventTypes($param);
      $cal_ids = mastercal_load();
    
@@ -545,29 +466,6 @@ function mastercal_testview() {
      $param['password'] = 'Ap3dn9!nez';
      $result = mastercal_getCals($param);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
      dpm($result);
      return 'work!';
 }
@@ -576,39 +474,8 @@ function mastercal_testview() {
 function generate_results() {
   $service = wsclient_service_load('calendar');
      $result = $service->GetEventTypes();
-  return 'dsfs';
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
+  return 'dsfs'; 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /**
  * Helper function to check if a calendar already exists in {mastercal_source}.
