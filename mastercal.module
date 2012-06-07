@@ -40,17 +40,17 @@ function mastercal_menu() {
   $items['admin/config/user-interface/mastercal'] = array(
     'title' => 'Master Calendar',
     'description' => 'Add, remove and configure calendars.',
-    'page callback' => 'mastercal_set_admin',
+    'page callback' => 'mastercal_admin',
     'access arguments' => array('administer mastercal'),
     'file' => 'mastercal.admin.inc',
   );
     
   //callback url for adding a new calendar
-  //the function mastercal_set_add_form() in the admin.inc file provides the form
+  //the function mastercal_add_form() in the admin.inc file provides the form
   $items['admin/config/user-interface/mastercal/add-set'] = array(
     'title' => 'Add a calendar.',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('mastercal_set_add_form'),
+    'page arguments' => array('mastercal_add_form'),
     'access arguments' => array('administer mastercal'),
     'type' => MENU_LOCAL_ACTION,
     'file' => 'mastercal.admin.inc',
@@ -61,7 +61,7 @@ function mastercal_menu() {
   $items['admin/config/user-interface/mastercal/%/delete'] = array(
     'title' => 'Delete a calendar.',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('mastercal_set_delete_form', 4),
+    'page arguments' => array('mastercal_delete_form', 4),
     'access callback' => True,
     'access arguments' => array('administer mastercal'),
     'file' => 'mastercal.admin.inc',

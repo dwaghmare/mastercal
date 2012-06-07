@@ -8,7 +8,7 @@
  * Menu page callback: builds the page for administering the site's DEA MasterCalendar integration.
  */
  //create the table of calendars with remove button seen at /admin/config/user-interface/mastercal
-function mastercal_set_admin() {
+function mastercal_admin() {
   $saved_cals = mastercal_load();
   $header = array(t('Name'), array('data' => t('options'), 'colspan' => 4));
 
@@ -37,10 +37,10 @@ function mastercal_set_admin() {
  *   An array representing the form definition.
  *
  * @ingroup forms
- * @see mastercal_set_add_form_validate()
- * @see mastercal_set_add_form_submit()
+ * @see mastercal_add_form_validate()
+ * @see mastercal_add_form_submit()
  */
-function mastercal_set_add_form($form, &$form_state) {
+function mastercal_add_form($form, &$form_state) {
 
   $calendars = client()->GetCals();
    //select box where the value of the selection = the calendar id number
@@ -63,9 +63,9 @@ function mastercal_set_add_form($form, &$form_state) {
 }
 
 /**
- * Validation handler for mastercal_set_add_form().
+ * Validation handler for mastercal_add_form().
  */
-function mastercal_set_add_form_validate($form, &$form_state) {
+function mastercal_add_form_validate($form, &$form_state) {
   // Check to prevent a duplicate.
   if (cal_exists($form_state['values']['mastercal_name'])) {
     form_set_error('new', t('The calendar %name already exists. Choose another.', array('%name' => $form_state['values']['mastercal_name'])));
@@ -73,9 +73,9 @@ function mastercal_set_add_form_validate($form, &$form_state) {
 }
 
 /**
- * Submit handler for mastercal_set_add_form().
+ * Submit handler for mastercal_add_form().
  */
-function mastercal_set_add_form_submit($form, &$form_state) {
+function mastercal_add_form_submit($form, &$form_state) {
   $cal = client()->GetCal($form_state['values']['mastercal_name']);
   //print_r($title);
   variable_set('mastercal_auth', True);
@@ -100,7 +100,7 @@ function mastercal_set_add_form_submit($form, &$form_state) {
  * @ingroup forms
  * @see shortcut_set_delete_form_submit()
  */
-function mastercal_set_delete_form($form, &$form_state, $cid) {
+function mastercal_delete_form($form, &$form_state, $cid) {
   $form['cid'] = array(
     '#type' => 'value',
     '#value' => $cid,
@@ -117,9 +117,9 @@ function mastercal_set_delete_form($form, &$form_state, $cid) {
 }
 
 /**
- * Submit handler for mastercal_set_delete_form().
+ * Submit handler for mastercal_delete_form().
  */
-function mastercal_set_delete_form_submit($form, &$form_state) {
+function mastercal_delete_form_submit($form, &$form_state) {
   $cid = $form_state['values']['cid'];
   mastercal_delete($cid);
   $form_state['redirect'] = 'admin/config/user-interface/mastercal';
