@@ -3,6 +3,7 @@ description = Import events from Master Calendar as nodes.
 package = UI Module Package
 core = 7.x
 files[] = mastercal.module
+dependencies[] = date
 dependencies[] = taxonomy
 dependencies[] = wsclient
 dependencies[] = entity
