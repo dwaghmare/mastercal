@@ -1,28 +1,65 @@
 <?php
+
+$un = base64_decode('QXJ0c19Jb3dhX0FQSQ==');
+$pw = base64_decode('QXAzZG45IW5leg==');
+//initialize an instance of the mastercalSOAP class then call the GetEvents() method
+//the calendars being queried for the events list are loaded from the database
+$param = array(
+'userName' => $un,
+'password' => $pw,
+'startDate' => firstOfMonth(),
+'endDate' => lastOfMonth(),
+'location' => '',
+'eventName' => '',
+'calendars' => mastercal_load(),
+'eventTypes' => Null,
+'udqAnswer' => Null,
+);
+
 /**
  * @file
  * Administrative page callbacks
  */
 
+function mastercal_uiowa_form($form, &$form_state) {
+  $form['test'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Test'),
+    '#default_value' => 'Test',
+    '#size' => 60,
+  );
+  
+  return $form;
+}
+
 /**
  * Menu page callback: builds the page for administering the site's DEA MasterCalendar integration.
  */
  //create the table of calendars with remove button seen at /admin/config/user-interface/mastercal
-function mastercal_admin() {
-  $saved_cals = mastercal_load();
+function mastercal_admin_form($form, &$form_state) {
   $header = array(t('Name'), array('data' => t('options'), 'colspan' => 4));
-
-  $rows = array();
-  foreach ($saved_cals as $cal) {
-    $row = array(
-      check_plain($cal->title),
-    );
- 
-    $row[] = l(t('remove'), "admin/config/user-interface/mastercal/$cal->cid/delete");   
-    $rows[] = $row;
-  }
-
-  return theme('table', array('header' => $header, 'rows' => $rows));
+  $calendars_in_drupal = mastercal_load();
+  
+  $calendars = mastercal_getCals($param);
+  
+  $form['calendars'] = array(
+    
+  );
+  
+  $form['table'] = array(
+    '#type' => 'tableselect',
+    '#header' => $header,
+    '#options' => $options,
+    '#multiple' => FALSE,
+    '#empty' => t('No calendars found.'),
+  );
+  
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Configure'),
+  );
+  
+  return $form;
 }
 
 /**

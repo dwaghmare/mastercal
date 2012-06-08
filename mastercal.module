@@ -35,12 +35,24 @@ function mastercal_permission() {
  */
 function mastercal_menu() {
   $items = array();
-
+  
+  $items['admin/config/uiowa'] = array(
+    'title' => 'UIowa Module Package',
+    'description' => 'Custom modules developed by ITS Web Services.',
+    'position' => 'left',
+    'weight' => '4',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('mastercal_uiowa_form'),
+    'access arguments' => array('administer_mastercal'),
+    'file' => 'mastercal.admin.inc',
+  );
+  
   //path to config
-  $items['admin/config/user-interface/mastercal'] = array(
+  $items['admin/config/uiowa/mastercal'] = array(
     'title' => 'Master Calendar',
     'description' => 'Add, remove and configure calendars.',
-    'page callback' => 'mastercal_admin',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('mastercal_admin_form'),
     'access arguments' => array('administer mastercal'),
     'file' => 'mastercal.admin.inc',
   );
