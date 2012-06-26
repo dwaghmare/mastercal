@@ -5,6 +5,23 @@
  * needs to reference.
  */
 
+// Obscure the username and password.
+$un = base64_decode('QXJ0c19Jb3dhX0FQSQ==');
+$pw = base64_decode('QXAzZG45IW5leg==');
+
+// Declare a global variable to be used in the WSClient function calls.
+$_mastercal_param = array(
+  'userName' => $un,
+  'password' => $pw,
+  'startDate' => firstOfMonth(),
+  'endDate' => lastOfMonth(),
+  'location' => '',
+  'eventName' => '',
+  'calendars' => mastercal_load(),
+  'eventTypes' => NULL,
+  'udqAnswer' => NULL,
+);
+
 /**
  * Implements hook_default_wsclient_service().
  * 
