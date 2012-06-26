@@ -1,6 +1,4 @@
 <?php
-// $Id$
-
 /**
  * @file
  * A module integrating UIowa Master Calendar with Drupal.

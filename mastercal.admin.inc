@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * This file holds administrative callback functions for the Mastercal module. 
+ */
 
 // Obscure the username and password.
 $un = base64_decode('QXJ0c19Jb3dhX0FQSQ==');
@@ -18,10 +22,8 @@ $_mastercal_param = array(
 );
 
 /**
- * @file
- * Administrative page callbacks
+ * UIowa Module Package configuration callback.
  */
-
 function mastercal_uiowa_form($form, &$form_state) {
   $form['description'] = array(
     '#type' => 'item',
@@ -51,12 +53,19 @@ function mastercal_admin_form($form, &$form_state) {
   $calendars = mastercal_getCals($_mastercal_param);
   
   $form['calendars'] = array(
-    
+    '#type' => 'select',
+    '#options' => $calendars,
+  );
+  
+  $form['add'] = array(
+    '#type' => 'button',
+    '#value' => t('Add calendar'),
   );
   
   $form['table'] = array(
     '#type' => 'tableselect',
     '#header' => $header,
+    //'#options' => $options,
     '#multiple' => FALSE,
     '#empty' => t('No calendars found.'),
   );
