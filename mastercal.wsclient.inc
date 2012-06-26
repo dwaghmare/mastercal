@@ -12,7 +12,7 @@
  */
 function mastercal_default_wsclient_service() {
 
-  // Geocoder.us service (SOAP)
+  // UIowa master calendar service (SOAP).
   $service = new WSClientServiceDescription();
   $service->name = 'calendar';
   $service->label = 'MasterCal';
@@ -36,7 +36,12 @@ function mastercal_default_wsclient_service() {
   return $services;
 }
 
-function mastercal_getCals($param) {
+/**
+ * Returns an array of calendars available on the UIowa Master Calendar.
+ * 
+ * @param array $param
+ */
+function mastercal_get_cals($param) {
   $service = wsclient_service_load('calendar');
   $result = $service->GetCalendars($param);
   $respxml = simplexml_load_string($result->GetCalendarsResult);
@@ -49,6 +54,11 @@ function mastercal_getCals($param) {
   return $calendars;
 }
 
+/**
+ * Returns array of specified calendar.
+ * 
+ * @param unknown_type $param
+ */
 function mastercal_getCal($param) {
   $service = wsclient_service_load('calendar');
   $result = $service->GetCalendar($param);
@@ -67,6 +77,11 @@ function mastercal_getCal($param) {
   return $cals;
 }
 
+/**
+ * Returns array of events from specified calendar.
+ * 
+ * @param unknown_type $param
+ */
 function mastercal_getEvents($param) {
    
   //print_r($cal_list);
@@ -77,6 +92,12 @@ function mastercal_getEvents($param) {
   $result = $service->GetEvents($param);
   return $result;
 }
+
+/**
+ * Returns array of specified event.
+ * 
+ * @param unknown_type $param
+ */
 function mastercal_getEvent($param) {
   $service = wsclient_service_load('calendar');
   $result = $service->GetEvent($param);
