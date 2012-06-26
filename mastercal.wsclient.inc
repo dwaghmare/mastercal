@@ -18,6 +18,8 @@ function mastercal_default_wsclient_service() {
   $service->label = 'MasterCal';
   $service->url = 'https://calendar.uiowa.edu/MCAPI/MCAPIService.asmx?wsdl';
   $service->type = 'soap';
+  
+  // GetEventTypes operation.
   $operation = array();
   $operation['label'] = 'GetEventTypes';
   $operation['name'] = 'GetEventTypes';
@@ -59,7 +61,7 @@ function mastercal_get_cals($param) {
  * 
  * @param unknown_type $param
  */
-function mastercal_getCal($param) {
+function mastercal_get_cal($param) {
   $service = wsclient_service_load('calendar');
   $result = $service->GetCalendar($param);
   $respxml = simplexml_load_string($result->GetCalendarResult);
@@ -82,7 +84,7 @@ function mastercal_getCal($param) {
  * 
  * @param unknown_type $param
  */
-function mastercal_getEvents($param) {
+function mastercal_get_events($param) {
    
   //print_r($cal_list);
   //the Camel Case is required and not specified in the API but can be found by examining the request example on the API site /MCAPI/MCAPIService.asmx
@@ -98,7 +100,7 @@ function mastercal_getEvents($param) {
  * 
  * @param unknown_type $param
  */
-function mastercal_getEvent($param) {
+function mastercal_get_event($param) {
   $service = wsclient_service_load('calendar');
   $result = $service->GetEvent($param);
   //$result = $this->call('GetEvent', $param);
