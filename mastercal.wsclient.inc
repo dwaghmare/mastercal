@@ -19,14 +19,6 @@ function mastercal_default_wsclient_service() {
   $service->url = 'https://calendar.uiowa.edu/MCAPI/MCAPIService.asmx?wsdl';
   $service->type = 'soap';
   
-  // GetEventTypes operation.
-  $operation = array();
-  $operation['label'] = 'GetEventTypes';
-  $operation['name'] = 'GetEventTypes';
-  $operation['parameter']['userName'] = array('type' => 'text', 'default value' => 'Arts_Iowa_API');
-  $operation['parameter']['passWord'] = array('type' => 'text', 'default value' => 'Ap3dn9!nez');
-  $operation['result'] = array('type' => 'list\u003cGetEventTypesResponse\u003e', 'label' => 'GetEventTypesResponse');
-  $service->operations['GetEventTypes'] = $operation;
   try {
     $service->endpoint()->initializeMetaData();
     $services[$service->name] = $service;
