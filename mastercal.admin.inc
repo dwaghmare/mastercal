@@ -1,10 +1,11 @@
 <?php
 
+// Obscure the username and password.
 $un = base64_decode('QXJ0c19Jb3dhX0FQSQ==');
 $pw = base64_decode('QXAzZG45IW5leg==');
-//initialize an instance of the mastercalSOAP class then call the GetEvents() method
-//the calendars being queried for the events list are loaded from the database
-$param = array(
+
+// Declare a global variable to be used in the WSClient function calls.
+$_mastercal_param = array(
 'userName' => $un,
 'password' => $pw,
 'startDate' => firstOfMonth(),
@@ -33,14 +34,21 @@ function mastercal_uiowa_form($form, &$form_state) {
 }
 
 /**
- * Menu page callback: builds the page for administering the site's DEA MasterCalendar integration.
+ * Menu page callback: builds the page for administering the site's UIowa Master
+ * Calendar integration.
  */
- //create the table of calendars with remove button seen at /admin/config/user-interface/mastercal
 function mastercal_admin_form($form, &$form_state) {
+  // Use the global parameter.
+  global $_mastercal_param;
+  
+  // Create the header.
   $header = array(t('Name'), array('data' => t('options'), 'colspan' => 4));
+  
+  // Get any calendars that have been added already.
   $calendars_in_drupal = mastercal_load();
   
-  $calendars = mastercal_getCals($param);
+  // Get a list of all calendars available.
+  $calendars = mastercal_getCals($_mastercal_param);
   
   $form['calendars'] = array(
     
