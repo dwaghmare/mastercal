@@ -59,7 +59,7 @@ function mastercal_menu() {
     
   //callback url for adding a new calendar
   //the function mastercal_add_form() in the admin.inc file provides the form
-  $items['admin/config/user-interface/mastercal/add-set'] = array(
+  $items['admin/config/uiowa/mastercal/add'] = array(
     'title' => 'Add a calendar.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('mastercal_add_form'),
@@ -70,7 +70,7 @@ function mastercal_menu() {
   
   //passes the calendar id of the item you are trying to remove
   //the access callback should be changed to be more restrictive
-  $items['admin/config/user-interface/mastercal/%/delete'] = array(
+  $items['admin/config/uiowa/mastercal/%/delete'] = array(
     'title' => 'Delete a calendar.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('mastercal_delete_form', 4),
