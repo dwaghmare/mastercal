@@ -13,8 +13,8 @@ $_mastercal_param = array(
   'location' => '',
   'eventName' => '',
   'calendars' => mastercal_load(),
-  'eventTypes' => Null,
-  'udqAnswer' => Null,
+  'eventTypes' => NULL,
+  'udqAnswer' => NULL,
 );
 
 /**
