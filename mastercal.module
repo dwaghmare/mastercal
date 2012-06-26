@@ -3,9 +3,9 @@
 
 /**
  * @file
- * A module integrating DEA Master Calendar with Drupal.
+ * A module integrating UIowa Master Calendar with Drupal.
  *
- * This module provides a block with an events stream and a page that displays the same events in a calendar format. 
+ * This module imports University of Iowa Master Calendar events as nodes into Drupal.
  * 
  */
  
@@ -14,7 +14,7 @@
  */
 function mastercal_help($path, $arg) {
   if ($path == 'admin/help#mastercal') {
-    return t('A module to display Calendar data from Master Calendar.');
+    return t('A module to import events as nodes from the University of Iowa Master Calendar.');
   }
 }
 
@@ -39,7 +39,7 @@ function mastercal_menu() {
   $items['admin/config/uiowa'] = array(
     'title' => 'UIowa Module Package',
     'description' => 'Custom modules developed by ITS Web Services.',
-    'position' => 'left',
+    'position' => 'right',
     'weight' => '4',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('mastercal_uiowa_form'),

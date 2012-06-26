@@ -1,6 +1,6 @@
-name = DEA Master Calendar Integration
+name = UIowa Master Calendar Integration
 description = Import events from Master Calendar as nodes.
-package = UI Module Package
+package = UIowa Module Package
 core = 7.x
 files[] = mastercal.module
 dependencies[] = date

@@ -22,11 +22,11 @@ $param = array(
  */
 
 function mastercal_uiowa_form($form, &$form_state) {
-  $form['test'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Test'),
-    '#default_value' => 'Test',
-    '#size' => 60,
+  $form['description'] = array(
+    '#type' => 'item',
+    '#title' => t('University of Iowa Module Package'),
+    '#markup' => '<p>This package contains various modules developed by ITS
+     Web Services.</p>',
   );
   
   return $form;
