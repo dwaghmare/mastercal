@@ -6,15 +6,15 @@ $pw = base64_decode('QXAzZG45IW5leg==');
 
 // Declare a global variable to be used in the WSClient function calls.
 $_mastercal_param = array(
-'userName' => $un,
-'password' => $pw,
-'startDate' => firstOfMonth(),
-'endDate' => lastOfMonth(),
-'location' => '',
-'eventName' => '',
-'calendars' => mastercal_load(),
-'eventTypes' => Null,
-'udqAnswer' => Null,
+  'userName' => $un,
+  'password' => $pw,
+  'startDate' => firstOfMonth(),
+  'endDate' => lastOfMonth(),
+  'location' => '',
+  'eventName' => '',
+  'calendars' => mastercal_load(),
+  'eventTypes' => Null,
+  'udqAnswer' => Null,
 );
 
 /**
