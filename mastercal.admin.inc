@@ -57,7 +57,6 @@ function mastercal_admin_form($form, &$form_state) {
   $form['table'] = array(
     '#type' => 'tableselect',
     '#header' => $header,
-    '#options' => $options,
     '#multiple' => FALSE,
     '#empty' => t('No calendars found.'),
   );
