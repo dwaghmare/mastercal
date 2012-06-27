@@ -7,6 +7,9 @@
  * 
  */
  
+// Include the WSCLient functions.
+include_once drupal_get_path('module', 'mastercal') . '/mastercal.wsclient.inc';
+
 /**
  * Implements hook_help().
  */
