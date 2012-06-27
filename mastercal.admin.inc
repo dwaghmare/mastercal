@@ -4,6 +4,9 @@
  * This file holds administrative callback functions for the Mastercal module. 
  */
 
+// Include the WSCLient functions.
+include_once drupal_get_path('module', 'mastercal') . '/mastercal.wsclient.inc';
+
 /**
  * UIowa Module Package configuration callback.
  */
@@ -33,7 +36,7 @@ function mastercal_admin_form($form, &$form_state) {
   $calendars_in_drupal = mastercal_load();
   
   // Get a list of all calendars available.
-  $calendars = mastercal_getCals($_mastercal_param);
+  $calendars = mastercal_get_cals($_mastercal_param);
   
   $form['calendars'] = array(
     '#type' => 'select',
