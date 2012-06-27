@@ -66,22 +66,20 @@ function mastercal_get_cals($param) {
 }
 
 /**
- * Returns array of specified calendar.
+ * Returns array of the specified calendar.
  * 
- * @param unknown_type $param
+ * @param array $param
  */
 function mastercal_get_cal($param) {
   $service = wsclient_service_load('calendar');
   $result = $service->GetCalendar($param);
   $respxml = simplexml_load_string($result->GetCalendarResult);
 
-  //print_r($respxml);
   $cals = array();
+  
   foreach ($respxml->children() as $child) {
-    //print_r($child->calendar);
     foreach ($child->children() as $subchild) {
       $cals[$subchild->getName()] = (string) $subchild;
-      //print_r("\n".$subchild->getName().": ".$subchild."");
     }
   }
 
@@ -89,16 +87,14 @@ function mastercal_get_cal($param) {
 }
 
 /**
- * Returns array of events from specified calendar.
+ * Returns array of events from the specified calendar.
  * 
- * @param unknown_type $param
+ * @param array $param
  */
 function mastercal_get_events($param) {
-   
-  //print_r($cal_list);
-  //the Camel Case is required and not specified in the API but can be found by examining the request example on the API site /MCAPI/MCAPIService.asmx
+  // The Camel Case is required but not specified in the API. It can be found
+  // by examining the request example on the API site /MCAPI/MCAPIService.asmx.
 
-  //dpm($param);
   $service = wsclient_service_load('calendar');
   $result = $service->GetEvents($param);
   return $result;
@@ -112,27 +108,20 @@ function mastercal_get_events($param) {
 function mastercal_get_event($param) {
   $service = wsclient_service_load('calendar');
   $result = $service->GetEvent($param);
-  //$result = $this->call('GetEvent', $param);
 
-  //print_r($result);
   $xml = simplexml_load_string(utf8_encode($result->GetEventResult));
-  //print_r($result);
+
   $calenss = array();
   $count = 0;
   foreach ($xml->children() as $child) {
-    //print_r("\n---------------------------");
     $cals = array();
     foreach ($child->children() as $subchild) {
       $cals[$subchild->getName()] = (string) $subchild;
-      //print_r("\n".$subchild->getName().": ".$subchild."");
     }
     $calens[] = $cals;
     $count .= 1;
   }
-  //print_r($calens);
-  //$respxml = $this->MakeXml(utf8_encode($result['GetEventsResult']));
-  //print_r(variable_get('mastercal_name', 'poop'));
-  //print_r($respxml);
+  
   if (isset($calens)) {
     $calendars = $calens;
   }
@@ -140,6 +129,5 @@ function mastercal_get_event($param) {
     $calendars = Null;
   }
 
-  //print_r($calendars);
   return $calendars;
 }
