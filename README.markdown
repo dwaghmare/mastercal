@@ -17,7 +17,7 @@ INSTALLATION
 5. Add one or more Calendars
 6. Run Cron
 
-DURRENT DEVELOPMENT
+CURRENT DEVELOPMENT
 -------------------
 
 Currently switching the module from nusoap to the Web Services Client module (which can be found [here](http://drupal.org/project/wsclient "Web Services Client module page"))
