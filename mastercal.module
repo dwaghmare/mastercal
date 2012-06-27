@@ -88,22 +88,7 @@ function mastercal_menu() {
 }
 
 function mastercal_cron() {
-  $un = base64_decode('QXJ0c19Jb3dhX0FQSQ==');
-  $pw = base64_decode('QXAzZG45IW5leg==');
-  //initialize an instance of the mastercalSOAP class then call the GetEvents() method
-  //the calendars being queried for the events list are loaded from the database
-   $param = array(
-      'userName' => $un,
-      'password' => $pw, 
-      'startDate' => firstOfMonth(),
-      'endDate' => lastOfMonth(),
-      'location' => '',
-      'eventName' => '',
-      'calendars' => mastercal_load(),
-      'eventTypes' => Null,
-      'udqAnswer' => Null,
-    );
-    $result = mastercal_getEvents($param);
+    $result = mastercal_get_events($param);
     $xml = simplexml_load_string(utf8_encode($result->GetEventsResult));
     $calenss = array();
     $count = 0;
