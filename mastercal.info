@@ -6,4 +6,5 @@ files[] = mastercal.module
 dependencies[] = date
 dependencies[] = taxonomy
 dependencies[] = wsclient
+dependencies[] = wsclient_soap
 dependencies[] = entity
