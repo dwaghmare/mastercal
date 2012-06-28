@@ -71,7 +71,7 @@ function mastercal_install() {
 
   // Define the node type.
   $node_mastercal_event = array(
-    'type' => 'node_mc_event',
+    'type' => 'node_mastercal_event',
     'name' => $t('Master Calendar Event'),
     'module' => 'mastercal',
     'base' => 'node_content',
