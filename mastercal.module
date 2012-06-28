@@ -106,17 +106,13 @@ function mastercal_cron() {
       $calens[] = $cals;
       $count .= 1;
     }
-    //dprint_r($calens);
 
-
-    //print_r($respxml);
     if (isset($calens)) {
       $events = _mastercal_collapse_dates($calens);
     }
     else {
       $events = Null;
     }
-    //dprint_r($events);
     //initialize the JSON string so I can append to it later
     //there may be a better way to create this JSON
     $nodes = array(
@@ -125,9 +121,6 @@ function mastercal_cron() {
     );
     
     foreach ($events as $id => $event) {
-      // Get UDQs, specific to Arts Iowa at the moment
-
-      
       $cid = $id;
       $did = $event['EventDetailID'];
       $contact_name = $event['ContactName'];
@@ -153,47 +146,37 @@ function mastercal_cron() {
           $image = base64_decode($event_data[0]['Image']);
           $file = file_save_data($image, 'public://' . $event_data[0]['ImageName'], FILE_EXISTS_REPLACE);
           $node->field_event_image['und']['0']['fid'] = $file->fid;
-          //node_save($node);
         }
       
       $node->field_event_contact['und'][0]['value'] = $contact_name;
       $n_dates = count($event['EventDate']);
       if ($n_dates > 1) {
-        //dprint_r('more');
         $count = 0;
         foreach ($event['EventDate'] as $day) {
-          //dprint_r($day);
           $date = explode('T', $day['Start']);
           $time = explode('-', $date[1]);
           $datetime = $date[0] . ' ' . $time[0];
           $the_date = gmdate('Y-m-d H:i:s', strtotime($datetime));
-          //date_default_timezone_set("UTC");
-          //$UTCdate = (string) date("Y-d-m G:i:00", $the_date);
+          
           $node->field_event_date['und'][$count]['value'] = $the_date;
           $node->field_event_date['und'][$count]['value2'] = $the_date;
-          //dprint_r($count);
+         
           $count += 1;
         }
       } 
       else {
-        //dprint_r($event['EventDate']);
         $date = explode('T', $event['EventDate'][0]['Start']);
         $time = explode('-', $date[1]);
         $datetime = $date[0] . ' ' . $time[0];
         $the_date = gmdate('Y-m-d H:i:s', strtotime($datetime));
 
-        //date_default_timezone_set("UTC");
-        //$UTCdate = (string) date("Y-d-m G:i:00", $the_date);
         $node->field_event_date['und'][0]['value'] = $the_date;
         $node->field_event_date['und'][0]['value2'] = $the_date;
         $node->field_event_date['und'][0]['date_type'] = 'datetime';
-
       }
-      //Sets publisher to first user
+      
+      // Sets publisher to first user.
       $node->uid = 1;
-      //workbench id for IP
-      //$node->workbench_access = '38';
-      #dprint_r($datetime);
       
       $node->field_event_location['und'][0]['value'] = $event_loc;
       if (!empty($event_loc_url)) {
@@ -218,7 +201,6 @@ function mastercal_cron() {
         ->fieldCondition('field_event_cid', 'value', $cid, '=')
         ->execute();
         
-      //dprint_r($result);
       if (empty($result)) {
         node_submit($node);
         node_save($node);
@@ -237,9 +219,8 @@ function mastercal_cron() {
       '@pass' => $nodes['passed'])
       ) 
     );
-
-
 }
+
  function _mastercal_collapse_dates($events) {
     $collapsed = array();
     $viewed = array();
@@ -309,7 +290,6 @@ $jobs = array();
   }
   else { 
     foreach ($jobs as $new_term => $val) {
-      //print_r($new_term);
       taxonomy_term_save((object) array(
         'name' => t($new_term),
         'vid' => $vid,
@@ -332,8 +312,6 @@ function _mastercal_create_term($event_type) {
   if (!empty($vid)) {
     $new = array('vid' => $vid, 'name' => $event_type);
     $terms = taxonomy_get_term_by_name($new['name']);
-    //dpm($terms);
-    //dpm($new);
     if (!empty($terms)) {
       if (count($terms) == 1) {  
         $tid = key($terms);
@@ -346,12 +324,10 @@ function _mastercal_create_term($event_type) {
       $term->vid = $new['vid'];
       $status = taxonomy_term_save($term);
       $tid = $term->tid;
-      //dpm($term);
     }
   }
   
   return $tid;
-  
 }
 
 /**

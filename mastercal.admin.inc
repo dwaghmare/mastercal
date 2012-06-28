@@ -33,7 +33,7 @@ function mastercal_admin_form($form, &$form_state) {
   $header = array(t('Name'), array('data' => t('options'), 'colspan' => 4));
   
   // Get any calendars that have been added already.
-  //$calendars_in_drupal = mastercal_load();
+  //$calendars_in_drupal = _mastercal_load();
   
   // Get a list of all calendars available.
   $calendars = mastercal_get_cals($_mastercal_param);
@@ -106,7 +106,7 @@ function mastercal_add_form($form, &$form_state) {
  */
 function mastercal_add_form_validate($form, &$form_state) {
   // Check to prevent a duplicate.
-  if (cal_exists($form_state['values']['mastercal_name'])) {
+  if (_mastercal_calendar_exists($form_state['values']['mastercal_name'])) {
     form_set_error('new', t('The calendar %name already exists. Choose another.', array('%name' => $form_state['values']['mastercal_name'])));
   }
 }
@@ -120,7 +120,7 @@ function mastercal_add_form_submit($form, &$form_state) {
   variable_set('mastercal_auth', True);
 
   variable_set('mastercal_name', $cal['Name']);
-  mastercal_save($cal);
+  _mastercal_save($cal);
   drupal_set_message(t('The Calendar %cal has been created. You can edit it from this page.', array('%cal' => $cal['Name'])));
   $form_state['redirect'] = 'admin/config/user-interface/mastercal/';
 }
@@ -164,8 +164,9 @@ function mastercal_delete_form_submit($form, &$form_state) {
   $form_state['redirect'] = 'admin/config/user-interface/mastercal';
   drupal_set_message(t('The Calendar has been removed.'));
   
-  // Check whether the {mastercal_source} table is empty. If empty, set mastercal_auth to FALSE.
-  if (!records_exist()) {
+  // Check whether the {mastercal_source} table is empty. If empty, set 
+  // mastercal_auth to FALSE.
+  if (!_mastercal_records_exist()) {
     variable_set('mastercal_auth', FALSE);
   }
 }
