@@ -1,28 +1,58 @@
 <?php
 
+// Include the WSCLient functions.
+include_once drupal_get_path('module', 'mastercal') . '/mastercal.wsclient.inc';
+
 /**
  * @file
- * Install, update and uninstall functions for the aggregator module.
+ * Install and uninstall functions for the mastercal module.
  */
 /**
  * Implements hook_schema().
  */
 function mastercal_schema() {
-
-  $schema['mastercal_source'] = array(
-    'description' => 'Stores information about sets of Calendars.',
+  $schema['mastercal_calendar'] = array(
+    'description' => 'Stores information about calendars.',
     'fields' => array(
       'title' => array(
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
-        'description' => 'Title of the Calendar.',
+        'description' => 'Title of the calendar.',
       ),
-       'cid' => array(
+        'cid' => array(
         'description' => 'Calendar ID number.',
         'type' => 'int',
-        'not null' => TRUE
+        'not null' => TRUE,
+      ),
+      'username' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The API username for this calendar.'
+      ),
+      'password' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The API password associated with the username.',
+      ),
+      'start_date' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'length' => 11,
+        'default' => '0',
+        'description' => 'The UNIX timestamp of the start date for this calendar.',
+      ),
+      'end_date' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'length' => 11,
+        'default' => '0',
+        'description' => 'The UNIX timestamp of the end date for this calendar.',
       ),
     ),
     'primary key' => array('cid'),
@@ -32,12 +62,15 @@ function mastercal_schema() {
 }
 
 function mastercal_install() {
+  // Create the web service record in the wsclient table.
+  mastercal_default_wsclient_service();
+  
   // Outside of the .install file we would use drupal_write_record() to
   // populate the database, but it cannot be used here, so we'll use
   // db_insert().
- // use get_t() to get the name of our localization function for translation
+  // Use get_t() to get the name of our localization function for translation
   // during install, when t() is not available.
-  drupal_install_schema('mastercal_source');
+  
   $t = get_t();
 
   // Define the node type.
