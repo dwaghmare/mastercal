@@ -65,21 +65,18 @@ function mastercal_install() {
   // Create the web service record in the wsclient table.
   mastercal_default_wsclient_service();
   
-  // Outside of the .install file we would use drupal_write_record() to
-  // populate the database, but it cannot be used here, so we'll use
-  // db_insert().
   // Use get_t() to get the name of our localization function for translation
   // during install, when t() is not available.
-  
   $t = get_t();
 
   // Define the node type.
-  $node_event = array(
-    'type' => 'node_event',
-    'name' => $t('Event node'),
+  $node_mastercal_event = array(
+    'type' => 'node_mc_event',
+    'name' => $t('Master Calendar Event'),
     'module' => 'mastercal',
     'base' => 'node_content',
-    'description' => $t('This is an Event content-type for use with the Calendar.'),
+    'description' => $t('This is an event content type imported by the UIowa 
+     Master Calendar module.'),
     'has_title' => TRUE,
     'title_label' => $t('Name'),
   );
@@ -87,27 +84,27 @@ function mastercal_install() {
   // Complete the node type definition by setting any defaults not explicitly
   // declared above.
   // http://api.drupal.org/api/function/node_type_set_defaults/7
-  $content_type = node_type_set_defaults($node_event);
+  $content_type = node_type_set_defaults($node_mastercal_event);
   node_add_body_field($content_type);
 
   // Save the content type
   node_type_save($content_type);
 
-  // hide comments for this node. 
-  //http://api.drupal.org/api/drupal/modules--comment--comment.module/7
-  variable_set('comment_node_event', 'COMMENT_NODE_HIDDEN');
+  // Hide comments for this node. 
+  // http://api.drupal.org/api/drupal/modules--comment--comment.module/7
+  variable_set('comment_node_mastercal_event', 'COMMENT_NODE_HIDDEN');
 
-  // Hide date and author information
-  variable_set('node_submitted_node_event', FALSE);
-  // Load the instance definition for our content type's body
+  // Hide date and author information.
+  variable_set('node_submitted_node_mastercal_event', FALSE);
+  
+  // Load the instance definition for our content type's body.
   // http://api.drupal.org/api/function/field_info_instance/7
-  $body_instance = field_info_instance('node', 'body', 'node_event');
+  $body_instance = field_info_instance('node', 'body', 'node_mastercal_event');
 
   // Add our person_node_list view mode to the body instance display by
-  // instructing the body to display as a summary
-
+  // instructing the body to display as a summary.
   $body_instance = array(
-    'bundle' => 'node_event',
+    'bundle' => 'node_mastercal_event',
       'default_value' => NULL,
       'deleted' => '0',
       'description' => '',
@@ -185,61 +182,11 @@ function mastercal_install() {
  * Returns a structured array defining the fields created by this content type.
  *
  * This is packaged in a function so it can be used in both
- * ecv_install() and ecv_uninstall().
+ * hook_install() and hook_uninstall().
  */
 function _mastercal_installed_fields() {
   $t = get_t();
   $fields = array();
-
-  $fields['field_event_featured'] = array(
-  	'active' => '1',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'entity_types' => array(),
-    'field_name' => 'field_event_featured',
-    'foreign keys' => array(),
-    'indexes' => array(
-    	'value' => array(
-        0 => 'value',
-      ),
-    ),
-  	'module' => 'list',
-  	'settings' => array(
-  		'allowed_values' => array(
-        0 => 'No',
-        1 => 'Yes',
-      ),
-  		'allowed_values_function' => '',
-    ),
-  	'translatable' => '0',
-  	'type' => 'list_boolean',
-  );
-  
-  $fields['field_event_featured_date'] = array(
-        'active' => '1',
-        'cardinality' => '1',
-        'deleted' => '0',
-        'entity_types' => array(),
-        'field_name' => 'field_event_featured_date',
-        'foreign keys' => array(),
-        'indexes' => array(),
-        'module' => 'date',
-        'settings' => array(
-          'granularity' => array(
-            'day' => 'day',
-            'hour' => 0,
-            'minute' => 0,
-            'month' => 'month',
-            'second' => 0,
-            'year' => 'year',
-  ),
-          'repeat' => 0,
-          'timezone_db' => 'UTC',
-          'todate' => '',
-          'tz_handling' => 'site',
-  ),
-        'type' => 'datetime',
-  );
   
   $fields['field_event_image'] = array(
       'field_name' => 'field_event_image',
@@ -422,32 +369,6 @@ function _mastercal_installed_fields() {
         ),
       ),
     );
-
-  $fields['field_event_youtube_embed_code'] = array(
-        'active' => '1',
-        'cardinality' => '1',
-        'deleted' => '0',
-        'entity_types' => array(),
-        'field_name' => 'field_event_youtube_embed_code',
-        'foreign keys' => array(
-          'format' => array(
-            'columns' => array(
-              'format' => 'format',
-  ),
-            'table' => 'filter_format',
-  ),
-  ),
-        'indexes' => array(
-          'format' => array(
-  0 => 'format',
-  ),
-  ),
-        'module' => 'text',
-        'settings' => array(
-          'max_length' => '255',
-  ),
-        'type' => 'text',
-  );
   
   return $fields;
 }
@@ -473,107 +394,6 @@ function _mastercal_installed_instances() {
         'weight'  => 2.10,
       ),
     ),
-    'field_event_featured' => array(
-      'bundle' => 'node_event',
-      'default_value' => array(
-        0 => array(
-          'value' => 0,
-        ),
-      ),
-      'deleted' => '0',
-      'description' => '',
-      'display' => array(
-        'default' => array(
-          'label' => 'above',
-          'module' => 'list',
-          'settings' => array(),
-          'type' => 'list_default',
-          'weight' => 1,
-        ),
-        'teaser' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => 0,
-        ),
-      ),
-      'entity_type' => 'node',
-      'field_name' => 'field_event_featured',
-      'label' => 'Featured event',
-      'description' => 'Select this checkbox to feature the event on the front page.',
-      'required' => 0,
-      'settings' => array(
-        'user_register_form' => FALSE,
-      ),
-      'widget' => array(
-        'active' => 1,
-        'module' => 'options',
-        'settings' => array(
-          'display_label' => 1,
-        ),
-        'type' => 'options_onoff',
-        'weight' => '-4',
-      ),
-    ),
-  'field_event_featured_date' => array(
-        'bundle' => 'node_event',
-        'deleted' => '0',
-        'description' => '',
-        'display' => array(
-          'default' => array(
-            'label' => 'above',
-            'module' => 'date',
-            'settings' => array(
-              'format_type' => 'long',
-              'fromto' => 'both',
-              'multiple_from' => '',
-              'multiple_number' => '',
-              'multiple_to' => '',
-              'show_repeat_rule' => 'show',
-  ),
-            'type' => 'date_default',
-            'weight' => 1,
-  ),
-          'example_node_list' => array(
-            'label' => 'above',
-            'settings' => array(),
-            'type' => 'hidden',
-            'weight' => 0,
-  ),
-          'teaser' => array(
-            'label' => 'above',
-            'settings' => array(),
-            'type' => 'hidden',
-            'weight' => 0,
-  ),
-  ),
-        'entity_type' => 'node',
-        'field_name' => 'field_event_featured_date',
-        'label' => 'Featured date',
-        'required' => 0,
-        'settings' => array(
-          'default_value' => 'now',
-          'default_value2' => 'blank',
-          'default_value_code' => '',
-          'default_value_code2' => '',
-          'user_register_form' => FALSE,
-  ),
-        'widget' => array(
-          'active' => 1,
-          'module' => 'date',
-          'settings' => array(
-            'increment' => '15',
-            'input_format' => 'm/d/Y - H:i:s',
-            'input_format_custom' => '',
-            'label_position' => 'above',
-            'repeat_collapsed' => 0,
-            'text_parts' => array(),
-            'year_range' => '-3:+3',
-  ),
-          'type' => 'date_popup',
-          'weight' => '-3',
-  ),
-  ),
     'field_event_cid' => array(
       'bundle' => 'node_event',
       'default_value' => NULL,
@@ -678,50 +498,6 @@ function _mastercal_installed_instances() {
         'weight' => '0',
       ),
     ),
-  'field_event_youtube_embed_code' => array(
-        'bundle' => 'node_event',
-        'default_value' => NULL,
-        'deleted' => '0',
-        'description' => '',
-        'display' => array(
-          'default' => array(
-            'label' => 'above',
-            'module' => 'text',
-            'settings' => array(),
-            'type' => 'text_default',
-            'weight' => 4,
-  ),
-          'example_node_list' => array(
-            'label' => 'above',
-            'settings' => array(),
-            'type' => 'hidden',
-            'weight' => 0,
-  ),
-          'teaser' => array(
-            'label' => 'above',
-            'settings' => array(),
-            'type' => 'hidden',
-            'weight' => 0,
-  ),
-  ),
-        'entity_type' => 'node',
-        'field_name' => 'field_event_youtube_embed_code',
-        'label' => 'YouTube embed code',
-        'required' => 0,
-        'settings' => array(
-          'text_processing' => '0',
-          'user_register_form' => FALSE,
-  ),
-        'widget' => array(
-          'active' => 1,
-          'module' => 'text',
-          'settings' => array(
-            'size' => '60',
-  ),
-          'type' => 'text_textfield',
-          'weight' => '0',
-  ),
-  ),
     'field_event_date' => array(
       'bundle' => 'node_event',
       'deleted' => '0',
@@ -932,20 +708,20 @@ function mastercal_uninstall() {
   // Delete persistent variables.
   variable_del('mastercal_auth');
   variable_del('mastercal_name');
-  variable_del('comment_node_event');
-  variable_del('node_submitted_node_event');
+  variable_del('comment_node_mastercal_event');
+  variable_del('node_submitted_node_mastercal_event');
   
-  // Gather all the example content that might have been created while this
-  // module was enabled.  Simple selects still use db_query().
+  // Gather all the content that might have been created while this
+  // module was enabled. Simple selects still use db_query().
   // http://api.drupal.org/api/function/db_query/7
   $sql = 'SELECT nid FROM {node} n WHERE n.type = :type';
-  $result = db_query($sql, array(':type' => 'node_event'));
+  $result = db_query($sql, array(':type' => 'node_mastercal_event'));
   $nids = array();
   foreach ($result as $row) {
     $nids[] = $row->nid;
   }
 
-  // Delete all the nodes at once
+  // Delete all the nodes at once.
   // http://api.drupal.org/api/function/node_delete_multiple/7
   node_delete_multiple($nids);
 
@@ -956,20 +732,22 @@ function mastercal_uninstall() {
     field_delete_field($field);
   }
 
-  // Loop over any remaining field instances attached to the node_example
-  // content type (such as the body field) and delete them individually.
+  // Loop over any remaining field instances attached to the 
+  // node_mastercal_event content type (such as the body field) and delete them
+  // individually.
   // http://api.drupal.org/api/function/field_delete_field/7
-  $instances = field_info_instances('node', 'node_event');
+  $instances = field_info_instances('node', 'node_mastercal_event');
   foreach ($instances as $instance_name => $instance) {
     field_delete_instance($instance);
   }
 
-  // Delete our content type
+  // Delete the node_mastercal_event content type.
   // http://api.drupal.org/api/function/node_type_delete/7
-  node_type_delete('node_event');
+  node_type_delete('node_mastercal_event');
   $vid = db_query("SELECT vid FROM {taxonomy_vocabulary} WHERE machine_name = 'event_types'")->fetchField();
   taxonomy_vocabulary_delete($vid);
-  // Purge all field infromation
+  
+  // Purge all field information.
   // http://api.drupal.org/api/function/field_purge_batch/7
   field_purge_batch(1000);
 }
