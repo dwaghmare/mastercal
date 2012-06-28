@@ -33,7 +33,7 @@ function mastercal_admin_form($form, &$form_state) {
   $header = array(t('Name'), array('data' => t('options'), 'colspan' => 4));
   
   // Get any calendars that have been added already.
-  //$calendars_in_drupal = _mastercal_load();
+  $calendars_in_drupal = _mastercal_load();
   
   // Get a list of all calendars available.
   $calendars = mastercal_get_cals($_mastercal_param);
