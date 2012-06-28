@@ -5,30 +5,12 @@
  * needs to reference.
  */
 
-// Obscure the username and password.
-$un = base64_decode('QXJ0c19Jb3dhX0FQSQ==');
-$pw = base64_decode('QXAzZG45IW5leg==');
-
-// Declare a global variable to be used in the WSClient function calls.
-$_mastercal_param = array(
-  'userName' => $un,
-  'password' => $pw,
-  'startDate' => firstOfMonth(),
-  'endDate' => lastOfMonth(),
-  'location' => '',
-  'eventName' => '',
-  'calendars' => mastercal_load(),
-  'eventTypes' => NULL,
-  'udqAnswer' => NULL,
-);
-
 /**
  * Implements hook_default_wsclient_service().
  * 
  * Initialize the calendar service that uses the MC API.
  */
 function mastercal_default_wsclient_service() {
-
   // UIowa master calendar service (SOAP).
   $service = new WSClientServiceDescription();
   $service->name = 'calendar';
