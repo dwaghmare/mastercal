@@ -8,7 +8,7 @@
  */
  
 // Include the WSCLient functions.
-include_once drupal_get_path('module', 'mastercal') . '/mastercal.wsclient.inc';
+//include_once drupal_get_path('module', 'mastercal') . '/mastercal.wsclient.inc';
 
 /**
  * Implements hook_help().
@@ -263,15 +263,6 @@ function mastercal_cron() {
     }
     return $collapsed;  
   }
- 
-  function firstOfMonth() {
-    return date("Y-m-d", strtotime(date('m') . '/01/' . date('Y') . ' 00:00:00'));
-  }
-
-  //date of the last day of the month
-  function lastOfMonth() {
-    return date("Y-m-d", strtotime('-1 second', strtotime('+1 month', strtotime(date('m') . '/01/' . date('Y') . ' 00:00:00'))));
-  }
   
 /**
  * Create taxonomy lists.
@@ -363,34 +354,7 @@ function mastercal_create_term($eventtype) {
   return $tid;
   
 }
-/**
- * Test view function.
- */
-function mastercal_testview() {
-     //drupal_add_http_header('Content-Type', 'text/plain');
-    //drupal_set_header("Content-type: text/csv; charset=utf-8");
-    //print generate_csv_results();
-     //$result = $service->GetEventTypes($param);
-     $cal_ids = mastercal_load();
-   
-    //print_r($cal_list);
-    //the Camel Case is required and not specified in the API but can be found by examining the request example on the API site /MCAPI/MCAPIService.asmx
-    $param = array(
-      'startDate' => firstOfMonth(),
-      'endDate' => lastOfMonth(),
-      'location' => '',
-      'eventName' => '',
-      'calendars' => $cal_ids,
-      'eventTypes' => Null,
-      'udqAnswer' => Null,
-    );
-     $param['userName'] = 'Arts_Iowa_API';
-     $param['password'] = 'Ap3dn9!nez';
-     $result = mastercal_getCals($param);
 
-     dpm($result);
-     return 'work!';
-}
 
 
 function generate_results() {
