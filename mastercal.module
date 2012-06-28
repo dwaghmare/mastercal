@@ -111,7 +111,7 @@ function mastercal_cron() {
 
     //print_r($respxml);
     if (isset($calens)) {
-      $events = collapseDates($calens);
+      $events = _mastercal_collapse_dates($calens);
     }
     else {
       $events = Null;
@@ -147,8 +147,6 @@ function mastercal_cron() {
       $node->field_event_did['und'][0]['value'] = $did;
       
      $param['eventDetailId'] = $did;
-	
-
       
       $event_data = mastercal_getEvent($param);
         if (isset($event_data[0]['Image'])) {
@@ -203,7 +201,7 @@ function mastercal_cron() {
       }
       if (!empty($event_tag)) {
         $type_name = $event_tag;    
-        mastercal_create_terms(array($type_name));
+        _mastercal_create_terms(array($type_name));
         $tid = db_query_range('SELECT tid FROM {taxonomy_term_data} WHERE name = :name ORDER BY tid DESC', 0, 
           1, array(':name' => $type_name))->fetchField();
 
@@ -242,7 +240,7 @@ function mastercal_cron() {
 
 
 }
- function collapseDates($events) {
+ function _mastercal_collapse_dates($events) {
     $collapsed = array();
     $viewed = array();
     foreach ($events as $event) {
@@ -267,7 +265,7 @@ function mastercal_cron() {
 /**
  * Create taxonomy lists.
  */
-function mastercal_create_terms($list) {
+function _mastercal_create_terms($list) {
 $jobs = array();
 
   //grabs the list of vocabularies  
@@ -321,7 +319,7 @@ $jobs = array();
 
 
 }
-function mastercal_create_term($eventtype) {
+function _mastercal_create_term($event_type) {
 
   //grabs the list of vocabularies  
   $vocabularies = taxonomy_get_vocabularies();
@@ -332,7 +330,7 @@ function mastercal_create_term($eventtype) {
   }
   //grabs the terms from the chosen vocabulary
   if (!empty($vid)) {
-    $new = array('vid' => $vid, 'name' => $eventtype);
+    $new = array('vid' => $vid, 'name' => $event_type);
     $terms = taxonomy_get_term_by_name($new['name']);
     //dpm($terms);
     //dpm($new);
@@ -340,7 +338,8 @@ function mastercal_create_term($eventtype) {
       if (count($terms) == 1) {  
         $tid = key($terms);
       }
-    } else {
+    } 
+    else {
       // add term and get the tid
       $term = new stdClass();
       $term->name = $new['name'];
@@ -355,14 +354,6 @@ function mastercal_create_term($eventtype) {
   
 }
 
-
-
-function generate_results() {
-  $service = wsclient_service_load('calendar');
-     $result = $service->GetEventTypes();
-  return 'dsfs'; 
-}
-
 /**
  * Helper function to check if a calendar already exists in {mastercal_source}.
  *   
@@ -370,7 +361,7 @@ function generate_results() {
  *   TRUE if calendar exists.
  *   FALSE if calendar does not exist.
  */
-function cal_exists($cid) {
+function _mastercal_calendar_exists($cid) {
   return (bool) db_query_range('SELECT 1 FROM {mastercal_source} WHERE cid = :cid', 0, 1, array(':cid' => $cid))->fetchField();
 }
 
@@ -381,11 +372,11 @@ function cal_exists($cid) {
  *   TRUE if any records exist.
  *   FALSE if table is empty.
  */ 
-function records_exist() {
+function _mastercal_records_exist() {
   return (bool) db_query_range('SELECT 1 FROM {mastercal_source}', 0, 1)->fetchField();
 }
 
-function mastercal_save(&$cal) {
+function _mastercal_save(&$cal) {
   // Save the calendar ID and its name to teh database
  $return = db_insert('mastercal_source')
             ->fields(array(
@@ -397,7 +388,7 @@ function mastercal_save(&$cal) {
   return $return;
 }
 
-function mastercal_load() {
+function _mastercal_load() {
 //for simple queries it is more economical to use db_query and SQL than to use the new Drupal 7 methods
   $result = db_query("SELECT title, cid FROM {mastercal_source}");
 
@@ -413,7 +404,7 @@ function mastercal_load() {
     }
     
 }
-function mastercal_delete($cid) {
+function _mastercal_delete($cid) {
   $deleted = db_delete('mastercal_source')
   ->condition('cid', $cid)
   ->execute();
