@@ -6,9 +6,12 @@
  * This module imports University of Iowa Master Calendar events as nodes into Drupal.
  * 
  */
- 
+
+// Include the helper functions.
+include_once drupal_get_path('module', 'mastercal') . '/mastercal.helper.inc';
+
 // Include the WSCLient functions.
-//include_once drupal_get_path('module', 'mastercal') . '/mastercal.wsclient.inc';
+include_once drupal_get_path('module', 'mastercal') . '/mastercal.wsclient.inc';
 
 /**
  * Implements hook_help().
