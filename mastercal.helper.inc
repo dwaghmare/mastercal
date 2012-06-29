@@ -64,7 +64,7 @@ function _mastercal_create_terms($list) {
       $vid = $voc->vid;
     }
   }
-  // Grabs the terms from the chosen vocabulary/
+  // Grabs the terms from the chosen vocabulary.
   $existing = taxonomy_get_tree($vid);
 
   $loaded_terms = array();
