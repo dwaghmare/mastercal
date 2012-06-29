@@ -27,15 +27,37 @@ function mastercal_uiowa_form($form, &$form_state) {
  */
 function mastercal_admin_form($form, &$form_state) {
   // Create the header.
-  $header = array(t('Name'), array('data' => t('options'), 'colspan' => 4));
+  $header = array(
+    'title' => array(
+      'data' => t('Title'),
+    ),
+    'username' => array(
+      'data' => t('Username'),
+    ),
+    'password' => array(
+      'data' => t('Password'),
+    ),
+  );
   
   // Get any calendars that have been added already.
-  $calendars_in_drupal = _mastercal_load();
+  $calendars = _mastercal_load();
+  
+  // Initialize an empty array.
+  $options = array();
+  
+  // Loop through the individual calendars.
+  foreach ($calendars as $calendar) {
+    $options[$calendar->cid] = array(
+      'title' => $calendar->title,
+      'username' => $calendar->username,
+      'password' => $calendar->password,
+    );
+  }
   
   $form['table'] = array(
     '#type' => 'tableselect',
     '#header' => $header,
-    //'#options' => $options,
+    '#options' => $options,
     '#multiple' => FALSE,
     '#empty' => t('No calendars found.'),
   );
@@ -67,14 +89,14 @@ function mastercal_add_form($form, &$form_state) {
   // Get a list of all calendars available.
   $calendars = _mastercal_get_cals(variable_get('mastercal_default_parameter'));
   
-  $form['calendars'] = array(
+  $form['calendar_id'] = array(
     '#type' => 'select',
     '#title' => t('Calendars'),
     '#options' => $calendars,
     '#default_value' => 0,
     '#description' => t('Select a calendar to add.'),
   );
-
+  
   $form['actions'] = array('#type' => 'actions');
   
   // Create submit button.
@@ -91,8 +113,8 @@ function mastercal_add_form($form, &$form_state) {
  */
 function mastercal_add_form_validate($form, &$form_state) {
   // Check to prevent a duplicate.
-  if (_mastercal_calendar_exists($form_state['values']['mastercal_name'])) {
-    form_set_error('new', t('The calendar %name already exists. Choose another.', array('%name' => $form_state['values']['mastercal_name'])));
+  if (_mastercal_calendar_exists($form_state['values']['calendar_id'])) {
+    form_set_error('new', t('The calendar %name already exists. Choose another.', array('%name' => $form_state['values']['calendar_id'])));
   }
 }
 
@@ -100,14 +122,21 @@ function mastercal_add_form_validate($form, &$form_state) {
  * Submit handler for mastercal_add_form().
  */
 function mastercal_add_form_submit($form, &$form_state) {
-  $cal = client()->GetCal($form_state['values']['mastercal_name']);
+  // Return the same calendar from the MC API as an array.
+  $calendar = _mastercal_get_cal($calendar_id = $form_state['values']['calendar_id']);
  
-  variable_set('mastercal_auth', True);
-
-  variable_set('mastercal_name', $cal['Name']);
-  _mastercal_save($cal);
-  drupal_set_message(t('The Calendar %cal has been created. You can edit it from this page.', array('%cal' => $cal['Name'])));
-  $form_state['redirect'] = 'admin/config/user-interface/mastercal/';
+  // Set persistent variables.
+  variable_set('mastercal_auth', TRUE);
+  variable_set('mastercal_name', $calendar['Name']);
+  
+  // Save the calendar in the database.
+  _mastercal_save($calendar);
+  
+  // Set a confirmation message.
+  drupal_set_message(t('The Calendar %calendar has been created. You can edit it from this page.', array('%calendar' => $calendar['Name'])));
+  
+  // Redirect the user back to the calendar overview page.
+  $form_state['redirect'] = 'admin/config/uiowa/mastercal/';
 }
 
 /**
