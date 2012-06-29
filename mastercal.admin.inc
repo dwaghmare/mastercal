@@ -32,19 +32,6 @@ function mastercal_admin_form($form, &$form_state) {
   // Get any calendars that have been added already.
   $calendars_in_drupal = _mastercal_load();
   
-  // Get a list of all calendars available.
-  $calendars = _mastercal_get_cals(variable_get('mastercal_default_parameter'));
-  
-  $form['calendars'] = array(
-    '#type' => 'select',
-    '#options' => $calendars,
-  );
-  
-  $form['add'] = array(
-    '#type' => 'button',
-    '#value' => t('Add calendar'),
-  );
-  
   $form['table'] = array(
     '#type' => 'tableselect',
     '#header' => $header,
@@ -77,19 +64,20 @@ function mastercal_admin_form($form, &$form_state) {
  * @see mastercal_add_form_submit()
  */
 function mastercal_add_form($form, &$form_state) {
-
-  $calendars = client()->GetCals();
-   //select box where the value of the selection = the calendar id number
-   $form['mastercal_name'] = array(
-       '#type' => 'select',
-       '#title' => t('Calendar'),
-       '#options' => $calendars,
-       '#default_value' => 0,
-       '#description' => t('Master Calendar to add to this site.'),
-   );
+  // Get a list of all calendars available.
+  $calendars = _mastercal_get_cals(variable_get('mastercal_default_parameter'));
+  
+  $form['calendars'] = array(
+    '#type' => 'select',
+    '#title' => t('Calendars'),
+    '#options' => $calendars,
+    '#default_value' => 0,
+    '#description' => t('Select a calendar to add.'),
+  );
 
   $form['actions'] = array('#type' => 'actions');
-  //create submit button
+  
+  // Create submit button.
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Add Calendar'),
@@ -113,7 +101,7 @@ function mastercal_add_form_validate($form, &$form_state) {
  */
 function mastercal_add_form_submit($form, &$form_state) {
   $cal = client()->GetCal($form_state['values']['mastercal_name']);
-  //print_r($title);
+ 
   variable_set('mastercal_auth', True);
 
   variable_set('mastercal_name', $cal['Name']);
