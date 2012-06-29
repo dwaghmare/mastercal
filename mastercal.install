@@ -1,5 +1,8 @@
 <?php
 
+// Include the helper functions.
+include_once drupal_get_path('module', 'mastercal') . '/mastercal.helper.inc';
+
 // Include the WSCLient functions.
 include_once drupal_get_path('module', 'mastercal') . '/mastercal.wsclient.inc';
 
@@ -64,6 +67,26 @@ function mastercal_schema() {
 function mastercal_install() {
   // Create the web service record in the wsclient table.
   mastercal_default_wsclient_service();
+  
+  // Obscure the default username and password.
+  $un = base64_decode('QXJ0c19Jb3dhX0FQSQ==');
+  $pw = base64_decode('QXAzZG45IW5leg==');
+  
+  // Create the array.
+  $mastercal_default_parameter = array(
+    'userName' => $un,
+    'password' => $pw,
+    'startDate' => _mastercal_first_of_month(),
+    'endDate' => _mastercal_last_of_month(),
+    'location' => '',
+    'eventName' => '',
+    'calendars' => _mastercal_load(),
+    'eventTypes' => NULL,
+    'udqAnswer' => NULL,
+  );
+  
+  // Set the mastercal default parameter in the variable table.
+  variable_set('mastercal_default_parameter', $mastercal_default_parameter);
   
   // Use get_t() to get the name of our localization function for translation
   // during install, when t() is not available.
