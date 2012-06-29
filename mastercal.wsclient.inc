@@ -18,8 +18,8 @@ $pw = base64_decode('QXAzZG45IW5leg==');
 $_mastercal_param = array(
   'userName' => $un,
   'password' => $pw,
-  'startDate' => firstOfMonth(),
-  'endDate' => lastOfMonth(),
+  'startDate' => _mastercal_first_of_month(),
+  'endDate' => _mastercal_last_of_month(),
   'location' => '',
   'eventName' => '',
   'calendars' => _mastercal_load(),
