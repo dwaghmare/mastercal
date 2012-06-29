@@ -87,6 +87,8 @@ function mastercal_install() {
   
   // Set the mastercal default parameter in the variable table.
   variable_set('mastercal_default_parameter', $mastercal_default_parameter);
+  variable_set('mastercal_default_username', $un);
+  variable_set('mastercal_default_password', $pw);
   
   // Use get_t() to get the name of our localization function for translation
   // during install, when t() is not available.
