@@ -1,10 +1,10 @@
 <?php
 /**
  * @file
- * A module integrating UIowa Master Calendar with Drupal.
+ * A module integrating UIowa Master Calendar with Drupal by importing events
+ * as nodes for one or multiple calendars.
  *
- * This module imports University of Iowa Master Calendar events as nodes into Drupal.
- * 
+ * This file includes mastercal implementations of Drupal hooks.
  */
 
 // Include the helper functions.
@@ -51,7 +51,7 @@ function mastercal_menu() {
     'file' => 'mastercal.admin.inc',
   );
   
-  //path to config
+  // Path to the mastercal configuration page.
   $items['admin/config/uiowa/mastercal'] = array(
     'title' => 'Master Calendar',
     'description' => 'Add, remove and configure calendars.',
@@ -61,8 +61,7 @@ function mastercal_menu() {
     'file' => 'mastercal.admin.inc',
   );
     
-  //callback url for adding a new calendar
-  //the function mastercal_add_form() in the admin.inc file provides the form
+  // Callback URL for adding a new calendar.
   $items['admin/config/uiowa/mastercal/add'] = array(
     'title' => 'Add a calendar.',
     'page callback' => 'drupal_get_form',
@@ -72,38 +71,37 @@ function mastercal_menu() {
     'file' => 'mastercal.admin.inc',
   );
   
-  //passes the calendar id of the item you are trying to remove
-  //the access callback should be changed to be more restrictive
+  // Passes the CID of the calendar you are removing.
+  // @TODO: The access callback should be changed to be more restrictive.
   $items['admin/config/uiowa/mastercal/%/delete'] = array(
     'title' => 'Delete a calendar.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('mastercal_delete_form', 4),
-    'access callback' => True,
+    'access callback' => TRUE,
     'access arguments' => array('administer mastercal'),
     'file' => 'mastercal.admin.inc',
-  );
-  
-  
-  $items['org/testcal'] = array(
-    'title' => 'Tests',
-    'page callback' => 'mastercal_testview',
-    'access callback' => TRUE,
   );
   
   return $items;
 }
 
+/**
+ * Implements hook_cron().
+ * 
+ * Imports and updates all events in the database.
+ */
 function mastercal_cron() {
     $result = _mastercal_get_events($param);
     $xml = simplexml_load_string(utf8_encode($result->GetEventsResult));
     $calenss = array();
     $count = 0;
-    //parse the xml response from the web service using SimpleXML
+    
+    // Parse the XML response from the web service using SimpleXML.
     foreach ($xml->children() as $child) {
-      //create an array to store the data
+      // Create an array to store the data.
       $cals = array();
       foreach ($child->children() as $subchild) {
-        //associate array var['Name of field'] = 'value of field'
+        // Associate array var['Name of field'] = 'value of field'.
         $cals[$subchild->getName()] = (string) $subchild;
       }
       $calens[] = $cals;
@@ -116,8 +114,8 @@ function mastercal_cron() {
     else {
       $events = Null;
     }
-    //initialize the JSON string so I can append to it later
-    //there may be a better way to create this JSON
+    // Initialize the JSON string so I can append to it later.
+    // @TODO: There may be a better way to create this JSON
     $nodes = array(
       'saved' => 0,
       'passed' => 0

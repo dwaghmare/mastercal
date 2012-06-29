@@ -57,14 +57,14 @@ function _mastercal_collapse_dates($events) {
 function _mastercal_create_terms($list) {
   $jobs = array();
 
-  //grabs the list of vocabularies
+  // Grabs the list of vocabularies.
   $vocabularies = taxonomy_get_vocabularies();
   foreach ($vocabularies as $voc) {
     if ($voc->machine_name == 'event_types') {
       $vid = $voc->vid;
     }
   }
-  //grabs the terms from the chosen vocabulary
+  // Grabs the terms from the chosen vocabulary/
   $existing = taxonomy_get_tree($vid);
 
   $loaded_terms = array();
@@ -115,14 +115,14 @@ function _mastercal_create_terms($list) {
  */
 function _mastercal_create_term($event_type) {
 
-  //grabs the list of vocabularies
+  // Grabs the list of vocabularies.
   $vocabularies = taxonomy_get_vocabularies();
   foreach ($vocabularies as $voc) {
     if ($voc->machine_name == 'event_types') {
       $vid = $voc->vid;
     }
   }
-  //grabs the terms from the chosen vocabulary
+  // Grabs the terms from the chosen vocabulary.
   if (!empty($vid)) {
     $new = array('vid' => $vid, 'name' => $event_type);
     $terms = taxonomy_get_term_by_name($new['name']);
@@ -132,7 +132,7 @@ function _mastercal_create_term($event_type) {
       }
     }
     else {
-      // add term and get the tid
+      // Add term and get the tid.
       $term = new stdClass();
       $term->name = $new['name'];
       $term->vid = $new['vid'];
@@ -167,7 +167,7 @@ function _mastercal_records_exist() {
 }
 
 function _mastercal_save(&$cal) {
-  // Save the calendar ID and its name to teh database
+  // Save the calendar properties to the database.
   $return = db_insert('mastercal_calendar')
   ->fields(array(
     'title' => $cal['Name'],
@@ -188,7 +188,7 @@ function _mastercal_save(&$cal) {
  * @return array $cal_list
  */
 function _mastercal_load() {
-  // Read all fields from the dbtng_example table.
+  // Read all fields from the mastercal_calendar table.
   $select = db_select('mastercal_calendar', 'calendar');
   $select->fields('calendar');
   
