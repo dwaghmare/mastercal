@@ -5,6 +5,28 @@
  * needs to reference.
  */
 
+// Include the helper functions.
+include_once drupal_get_path('module', 'mastercal') . '/mastercal.helper.inc';
+
+/**
+ * Declare a global default paramater for MC API calls.
+ */
+// Obscure the username and password.
+$un = base64_decode('QXJ0c19Jb3dhX0FQSQ==');
+$pw = base64_decode('QXAzZG45IW5leg==');
+
+$_mastercal_param = array(
+  'userName' => $un,
+  'password' => $pw,
+  'startDate' => firstOfMonth(),
+  'endDate' => lastOfMonth(),
+  'location' => '',
+  'eventName' => '',
+  'calendars' => _mastercal_load(),
+  'eventTypes' => NULL,
+  'udqAnswer' => NULL,
+);
+
 /**
  * Implements hook_default_wsclient_service().
  * 
