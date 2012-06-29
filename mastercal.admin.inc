@@ -28,15 +28,9 @@ function mastercal_uiowa_form($form, &$form_state) {
 function mastercal_admin_form($form, &$form_state) {
   // Create the header.
   $header = array(
-    'title' => array(
-      'data' => t('Title'),
-    ),
-    'username' => array(
-      'data' => t('Username'),
-    ),
-    'password' => array(
-      'data' => t('Password'),
-    ),
+    'title' => t('Title'),
+    'username' => t('Username'),
+    'password' => t('Password'),
   );
   
   // Get any calendars that have been added already.
