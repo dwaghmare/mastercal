@@ -29,8 +29,10 @@ function mastercal_admin_form($form, &$form_state) {
   // Create the header.
   $header = array(
     'title' => t('Title'),
-    'username' => t('Username'),
-    'password' => t('Password'),
+    'username' => t('API Username'),
+    'password' => t('API Password'),
+    'start_date' => t('Start Date'),
+    'end_date' => t('End Date'),
   );
   
   // Get any calendars that have been added already.
@@ -45,6 +47,8 @@ function mastercal_admin_form($form, &$form_state) {
       'title' => $calendar->title,
       'username' => $calendar->username,
       'password' => $calendar->password,
+      'start_date' => $calendar->start_date,
+      'end_date' => $calendar->end_date,
     );
   }
   
