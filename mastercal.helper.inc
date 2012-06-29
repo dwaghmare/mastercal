@@ -127,30 +127,30 @@ function _mastercal_create_term($event_type) {
 }
 
 /**
- * Helper function to check if a calendar already exists in {mastercal_source}.
+ * Helper function to check if a calendar already exists in {mastercal_calendar}.
  *
  * @return boolean
  *   TRUE if calendar exists.
  *   FALSE if calendar does not exist.
  */
 function _mastercal_calendar_exists($cid) {
-  return (bool) db_query_range('SELECT 1 FROM {mastercal_source} WHERE cid = :cid', 0, 1, array(':cid' => $cid))->fetchField();
+  return (bool) db_query_range('SELECT 1 FROM {mastercal_calendar} WHERE cid = :cid', 0, 1, array(':cid' => $cid))->fetchField();
 }
 
 /**
- * Helper function to check if {mastercal_source} is empty.
+ * Helper function to check if {mastercal_calendar} is empty.
  *
  * @return boolean
  *   TRUE if any records exist.
  *   FALSE if table is empty.
  */
 function _mastercal_records_exist() {
-  return (bool) db_query_range('SELECT 1 FROM {mastercal_source}', 0, 1)->fetchField();
+  return (bool) db_query_range('SELECT 1 FROM {mastercal_calendar}', 0, 1)->fetchField();
 }
 
 function _mastercal_save(&$cal) {
   // Save the calendar ID and its name to teh database
-  $return = db_insert('mastercal_source')
+  $return = db_insert('mastercal_calendar')
   ->fields(array(
     'title' => $cal['Name'],
     'cid' => (int)$cal['CalendarID'],
@@ -167,7 +167,7 @@ function _mastercal_save(&$cal) {
  */
 function _mastercal_load() {
   //for simple queries it is more economical to use db_query and SQL than to use the new Drupal 7 methods
-  $result = db_query("SELECT title, cid FROM {mastercal_source}");
+  $result = db_query("SELECT title, cid FROM {mastercal_calendar}");
 
   $cal_ids = $result;
   $cal_list = array();
@@ -190,7 +190,7 @@ function _mastercal_load() {
  * @return boolean $deleted
  */
 function _mastercal_delete($cid) {
-  $deleted = db_delete('mastercal_source')
+  $deleted = db_delete('mastercal_calendar')
   ->condition('cid', $cid)
   ->execute();
   return $deleted;

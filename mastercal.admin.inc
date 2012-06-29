@@ -161,7 +161,7 @@ function mastercal_delete_form_submit($form, &$form_state) {
   $form_state['redirect'] = 'admin/config/user-interface/mastercal';
   drupal_set_message(t('The Calendar has been removed.'));
   
-  // Check whether the {mastercal_source} table is empty. If empty, set 
+  // Check whether the {mastercal_calendar} table is empty. If empty, set 
   // mastercal_auth to FALSE.
   if (!_mastercal_records_exist()) {
     variable_set('mastercal_auth', FALSE);
