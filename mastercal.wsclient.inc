@@ -9,25 +9,6 @@
 include_once drupal_get_path('module', 'mastercal') . '/mastercal.helper.inc';
 
 /**
- * Declare a global default paramater for MC API calls.
- */
-// Obscure the username and password.
-$un = base64_decode('QXJ0c19Jb3dhX0FQSQ==');
-$pw = base64_decode('QXAzZG45IW5leg==');
-
-$_mastercal_default_parameter = array(
-  'userName' => $un,
-  'password' => $pw,
-  'startDate' => _mastercal_first_of_month(),
-  'endDate' => _mastercal_last_of_month(),
-  'location' => '',
-  'eventName' => '',
-  'calendars' => _mastercal_load(),
-  'eventTypes' => NULL,
-  'udqAnswer' => NULL,
-);
-
-/**
  * Implements hook_default_wsclient_service().
  * 
  * Initialize the calendar service that uses the MC API.
