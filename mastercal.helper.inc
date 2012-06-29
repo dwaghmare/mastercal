@@ -172,6 +172,10 @@ function _mastercal_save(&$cal) {
   ->fields(array(
     'title' => $cal['Name'],
     'cid' => (int)$cal['CalendarID'],
+    'username' => variable_get('mastercal_default_username'),
+    'password' => variable_get('mastercal_default_password'),
+    'start_date' => 0,
+    'end_date' => 0,
   )
   )
   ->execute();
@@ -184,20 +188,12 @@ function _mastercal_save(&$cal) {
  * @return array $cal_list
  */
 function _mastercal_load() {
-  //for simple queries it is more economical to use db_query and SQL than to use the new Drupal 7 methods
-  $result = db_query("SELECT title, cid FROM {mastercal_calendar}");
-
-  $cal_ids = $result;
-  $cal_list = array();
-  //make sure the lsit isnt empty
-  if (isset($cal_ids)) {
-    //for the soap handler to identify your array as an integer array you have to make an associative array where 'int' => array(12,32,43)
-    foreach ($cal_ids as $item) {
-      $cal_list['int'][] = $item->cid;
-    }
-    return $cal_list;
-  }
-
+  // Read all fields from the dbtng_example table.
+  $select = db_select('mastercal_calendar', 'calendar');
+  $select->fields('calendar');
+  
+  // Return the result in object format.
+  return $select->execute()->fetchAll();
 }
 
 /**
