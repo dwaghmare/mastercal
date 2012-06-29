@@ -34,7 +34,7 @@ function mastercal_default_wsclient_service() {
  * 
  * @param array $param
  */
-function mastercal_get_cals($param) {
+function _mastercal_get_cals($param) {
   $service = wsclient_service_load('calendar');
   $result = $service->GetCalendars($param);
   $respxml = simplexml_load_string($result->GetCalendarsResult);
@@ -51,7 +51,7 @@ function mastercal_get_cals($param) {
  * 
  * @param array $param
  */
-function mastercal_get_cal($param) {
+function _mastercal_get_cal($param) {
   $service = wsclient_service_load('calendar');
   $result = $service->GetCalendar($param);
   $respxml = simplexml_load_string($result->GetCalendarResult);
@@ -72,7 +72,7 @@ function mastercal_get_cal($param) {
  * 
  * @param array $param
  */
-function mastercal_get_events($param) {
+function _mastercal_get_events($param) {
   // The Camel Case is required but not specified in the API. It can be found
   // by examining the request example on the API site /MCAPI/MCAPIService.asmx.
   $service = wsclient_service_load('calendar');
@@ -85,7 +85,7 @@ function mastercal_get_events($param) {
  * 
  * @param unknown_type $param
  */
-function mastercal_get_event($param) {
+function _mastercal_get_event($param) {
   $service = wsclient_service_load('calendar');
   $result = $service->GetEvent($param);
 

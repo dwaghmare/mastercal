@@ -94,7 +94,7 @@ function mastercal_menu() {
 }
 
 function mastercal_cron() {
-    $result = mastercal_get_events($param);
+    $result = _mastercal_get_events($param);
     $xml = simplexml_load_string(utf8_encode($result->GetEventsResult));
     $calenss = array();
     $count = 0;
@@ -144,7 +144,7 @@ function mastercal_cron() {
       
      $param['eventDetailId'] = $did;
       
-      $event_data = mastercal_getEvent($param);
+      $event_data = _mastercal_get_event($param);
         if (isset($event_data[0]['Image'])) {
           $image = base64_decode($event_data[0]['Image']);
           $file = file_save_data($image, 'public://' . $event_data[0]['ImageName'], FILE_EXISTS_REPLACE);
