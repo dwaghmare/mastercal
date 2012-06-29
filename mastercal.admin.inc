@@ -33,7 +33,7 @@ function mastercal_admin_form($form, &$form_state) {
   $calendars_in_drupal = _mastercal_load();
   
   // Get a list of all calendars available.
-  $calendars = _mastercal_get_cals();
+  $calendars = _mastercal_get_cals(variable_get('mastercal_default_parameter'));
   
   $form['calendars'] = array(
     '#type' => 'select',
