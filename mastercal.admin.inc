@@ -26,9 +26,6 @@ function mastercal_uiowa_form($form, &$form_state) {
  * Calendar integration.
  */
 function mastercal_admin_form($form, &$form_state) {
-  // Use the global parameter.
-  global $_mastercal_param;
-  
   // Create the header.
   $header = array(t('Name'), array('data' => t('options'), 'colspan' => 4));
   
@@ -36,7 +33,7 @@ function mastercal_admin_form($form, &$form_state) {
   $calendars_in_drupal = _mastercal_load();
   
   // Get a list of all calendars available.
-  $calendars = mastercal_get_cals($_mastercal_param);
+  $calendars = mastercal_get_cals();
   
   $form['calendars'] = array(
     '#type' => 'select',
