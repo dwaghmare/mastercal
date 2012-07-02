@@ -79,19 +79,19 @@ function mastercal_admin_form($form, &$form_state) {
  */
 function mastercal_admin_form_validate($form, &$form_state) {
   // Return an error if no calendar is selected from the table.
-  // BUG: Required radios with no selection throw odd error message. 
+  // BUG: Required radios with no selection throw an odd error message. 
   // See: http://drupal.org/node/811542
   if ($form_state['values']['table'] == '') {
     form_set_error('table', t('Please select a calendar.'));
   }
   
   // If the 'Configure' submit button is clicked, redirect to the calendar
-  // configuration form with the table select value passed as argument[0].
+  // configuration form with the table select value passed as an argument.
   if ($form_state['clicked_button']['#value'] == $form_state['values']['configure']) {
     $form_state['redirect'] = 'admin/config/uiowa/mastercal/' . $form_state['values']['table'] . '/configure';
   }
   // If the 'Delete' submit button is clicked, redirect to the delete
-  // confirmation page with the table select value passed as argument[0].
+  // confirmation page with the table select value passed as an argument.
   else if ($form_state['clicked_button']['#value'] == $form_state['values']['delete']) {
     $form_state['redirect'] = 'admin/config/uiowa/mastercal/' . $form_state['values']['table'] . '/delete';
   }
