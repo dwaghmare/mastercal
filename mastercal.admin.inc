@@ -101,7 +101,7 @@ function mastercal_admin_form_validate($form, &$form_state) {
 }
 
 /**
- * Form callback: builds the form for adding a Calendar.
+ * Form callback: builds the form for adding a calendar.
  *
  * @param $form
  *   An associative array containing the structure of the form.
@@ -163,7 +163,7 @@ function mastercal_add_form_submit($form, &$form_state) {
   _mastercal_save($calendar);
   
   // Set a confirmation message.
-  drupal_set_message(t('The Calendar %calendar has been created. You can edit it from this page.', array('%calendar' => $calendar['Name'])));
+  drupal_set_message(t('The calendar %calendar has been created. You can edit it from this page.', array('%calendar' => $calendar['Name'])));
   
   // Redirect the user back to the calendar overview page.
   $form_state['redirect'] = 'admin/config/uiowa/mastercal/';
@@ -245,7 +245,7 @@ function mastercal_delete_form($form, &$form_state, $cid) {
 
   return confirm_form(
     $form,
-    t('Are you sure you want to delete the Calendar %title?', array('%title' => $cid)),
+    t('Are you sure you want to delete the calendar %title?', array('%title' => $cid)),
     'admin/config/user-interface/mastercal/' . $cid,
     t('This action cannot be undone.'),
     t('Delete'),
