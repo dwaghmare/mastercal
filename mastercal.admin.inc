@@ -60,9 +60,9 @@ function mastercal_admin_form($form, &$form_state) {
     '#empty' => t('No calendars found.'),
   );
   
-  $form['configure'] = array(
+  $form['edit'] = array(
     '#type' => 'submit',
-    '#value' => t('Configure'),
+    '#value' => t('Edit'),
   );
   
   $form['delete'] = array(
@@ -85,10 +85,10 @@ function mastercal_admin_form_validate($form, &$form_state) {
     form_set_error('table', t('Please select a calendar.'));
   }
   
-  // If the 'Configure' submit button is clicked, redirect to the calendar
-  // configuration form with the table select value passed as an argument.
-  if ($form_state['clicked_button']['#value'] == $form_state['values']['configure']) {
-    $form_state['redirect'] = 'admin/config/uiowa/mastercal/' . $form_state['values']['table'] . '/configure';
+  // If the 'Edit' submit button is clicked, redirect to the calendar
+  // edit form with the table select value passed as an argument.
+  if ($form_state['clicked_button']['#value'] == $form_state['values']['edit']) {
+    $form_state['redirect'] = 'admin/config/uiowa/mastercal/' . $form_state['values']['table'] . '/edit';
   }
   // If the 'Delete' submit button is clicked, redirect to the delete
   // confirmation page with the table select value passed as an argument.
@@ -167,7 +167,61 @@ function mastercal_add_form_submit($form, &$form_state) {
 }
 
 /**
- * Form callback: builds the confirmation form for deleting a calendart.
+ * Form callback: builds the form for configuring a calendar.
+ *
+ * @param $form
+ *   An associative array containing the structure of the form.
+ * @param $form_state
+ *   An associative array containing the current state of the form.
+ *
+ * @return
+ *   An array representing the form definition.
+ *
+ * @ingroup forms
+ * @see shortcut_set_delete_form_submit()
+ */
+function mastercal_edit_form($form, &$form_state, $cid) {
+  $form['cid'] = array(
+    '#type' => 'value',
+    '#value' => $cid,
+  );
+  
+  $form['api_username'] = array(
+    '#type' => 'textfield',
+    '#title' => t('API Username'),
+    // @TODO: '#default_value' => _mastercal_get_field($cid, 'username'),
+    '#required' => TRUE,
+  );
+  
+  $form['api_password'] = array(
+    '#type' => 'password_confirm',
+    '#title' => t('API Password'),
+  );
+  
+  $form['start_date'] = array(
+    '#type' => 'date',
+    '#title' => t('Start date'),
+    '#description' => t('The date this calendar should start importing events from.'),
+    '#required' => TRUE,
+  );
+  
+  $form['end_date'] = array(
+    '#type' => 'date',
+    '#title' => t('End date'),
+    '#description' => t('The date this calendar should stop importing events.'),
+    '#required' => TRUE,
+  );
+  
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit'),
+  );
+  
+  return $form;
+}
+
+/**
+ * Form callback: builds the confirmation form for deleting a calendar.
  *
  * @param $form
  *   An associative array containing the structure of the form.
