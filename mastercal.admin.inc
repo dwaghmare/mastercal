@@ -189,7 +189,7 @@ function mastercal_edit_form($form, &$form_state, $cid) {
   $form['api_username'] = array(
     '#type' => 'textfield',
     '#title' => t('API Username'),
-    // @TODO: '#default_value' => _mastercal_get_field($cid, 'username'),
+    // @TODO: '#default_value' => _mastercal_get_calendar_data($cid, 'username'),
     '#required' => TRUE,
   );
   
@@ -255,8 +255,8 @@ function mastercal_delete_form($form, &$form_state, $cid) {
  */
 function mastercal_delete_form_submit($form, &$form_state) {
   $cid = $form_state['values']['cid'];
-  mastercal_delete($cid);
-  $form_state['redirect'] = 'admin/config/user-interface/mastercal';
+  _mastercal_delete($cid);
+  $form_state['redirect'] = 'admin/config/uiowa/mastercal';
   drupal_set_message(t('The Calendar has been removed.'));
   
   // Check whether the {mastercal_calendar} table is empty. If empty, set 
