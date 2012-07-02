@@ -4,6 +4,9 @@
  * This file holds administrative callback functions for the Mastercal module. 
  */
 
+// Include the helper functions.
+include_once drupal_get_path('module', 'mastercal') . '/mastercal.helper.inc';
+
 // Include the WSCLient functions.
 include_once drupal_get_path('module', 'mastercal') . '/mastercal.wsclient.inc';
 
