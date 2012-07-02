@@ -5,6 +5,19 @@
  */
 
 /**
+ * Helper function to get a field from an existing calendar entry.
+ * 
+ * return $data
+ *   An array of the requested field, or if $field is empty, an array of all
+ *   the fields associated with the $cid.
+ */
+function _mastercal_get_calendar_data($cid, $field = 'all') {
+  if ($field == 'all') {
+    
+  }
+}
+
+/**
  * Helper function to find first day of the current month.
  * 
  * @return date

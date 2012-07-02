@@ -257,7 +257,7 @@ function mastercal_delete_form_submit($form, &$form_state) {
   $cid = $form_state['values']['cid'];
   _mastercal_delete($cid);
   $form_state['redirect'] = 'admin/config/uiowa/mastercal';
-  drupal_set_message(t('The Calendar has been removed.'));
+  drupal_set_message(t('The calendar has been removed.'));
   
   // Check whether the {mastercal_calendar} table is empty. If empty, set 
   // mastercal_auth to FALSE.
