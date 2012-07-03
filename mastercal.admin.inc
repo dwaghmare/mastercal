@@ -184,6 +184,19 @@ function mastercal_add_form_submit($form, &$form_state) {
  * @see shortcut_set_delete_form_submit()
  */
 function mastercal_edit_form($form, &$form_state, $cid) {
+  // Require jQuery dependencies for building a datepicker.
+  //dpm(drupal_get_library('system'));
+  
+  drupal_add_library('system', 'ui.datepicker');
+  
+  drupal_add_js('jQuery(document).ready(function(){jQuery(".pickadate").datepicker({
+    dateFormat: "dd/mm/yy",
+    autoSize: true
+  });});', 'inline');
+  
+  // Get the calendar from the database as an object.
+  $calendar = _mastercal_load($cid);
+  
   $form['cid'] = array(
     '#type' => 'value',
     '#value' => $cid,
@@ -192,7 +205,7 @@ function mastercal_edit_form($form, &$form_state, $cid) {
   $form['api_username'] = array(
     '#type' => 'textfield',
     '#title' => t('API Username'),
-    // @TODO: '#default_value' => _mastercal_get_calendar_data($cid, 'username'),
+    '#default_value' => $calendar->username,
     '#required' => TRUE,
   );
   
@@ -202,17 +215,19 @@ function mastercal_edit_form($form, &$form_state, $cid) {
   );
   
   $form['start_date'] = array(
-    '#type' => 'date',
+    '#type' => 'textfield',
     '#title' => t('Start date'),
     '#description' => t('The date this calendar should start importing events from.'),
     '#required' => TRUE,
+    '#attributes' => array('class' => array('pickadate')),
   );
   
   $form['end_date'] = array(
-    '#type' => 'date',
+    '#type' => 'textfield',
     '#title' => t('End date'),
     '#description' => t('The date this calendar should stop importing events.'),
     '#required' => TRUE,
+    '#attributes' => array('class' => array('pickadate')),
   );
   
   $form['submit'] = array(
