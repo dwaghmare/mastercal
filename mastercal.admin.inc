@@ -185,10 +185,9 @@ function mastercal_add_form_submit($form, &$form_state) {
  */
 function mastercal_edit_form($form, &$form_state, $cid) {
   // Require jQuery dependencies for building a datepicker.
-  //dpm(drupal_get_library('system'));
-  
   drupal_add_library('system', 'ui.datepicker');
   
+  // Add inline JavaScript to change text fields to datepickers.
   drupal_add_js('jQuery(document).ready(function(){jQuery(".pickadate").datepicker({
     dateFormat: "dd/mm/yy",
     autoSize: true
