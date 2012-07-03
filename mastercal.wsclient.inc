@@ -116,8 +116,27 @@ function _mastercal_get_event($param) {
     $calendars = $calens;
   }
   else {
-    $calendars = Null;
+    $calendars = NULL;
   }
 
   return $calendars;
+}
+
+/**
+ * Returns array of user-defined questions (UDQ) for calendar.
+ * 
+ * @param int $event_id
+ */
+function _mastercal_get_udqs($event_id) {
+  // Construct the API parameter.
+  $param = array(
+    'userName' => variable_get('mastercal_default_username'),
+    'password' => variable_get('mastercal_default_password'),
+    'eventId' => $event_id,
+  );
+  
+  $service = wsclient_service_load('calendar');
+  $result = $service->GetUdqs($param);
+  
+  return $result;
 }
