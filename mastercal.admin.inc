@@ -170,7 +170,7 @@ function mastercal_add_form_submit($form, &$form_state) {
 }
 
 /**
- * Form callback: builds the form for configuring a calendar.
+ * Form callback: builds the form for editing a calendar.
  *
  * @param $form
  *   An associative array containing the structure of the form.
