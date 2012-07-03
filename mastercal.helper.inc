@@ -5,19 +5,6 @@
  */
 
 /**
- * Helper function to get a field from an existing calendar entry.
- * 
- * return $data
- *   An array of the requested field, or if $field is empty, an array of all
- *   the fields associated with the $cid.
- */
-function _mastercal_get_calendar_data($cid, $field = 'all') {
-  if ($field == 'all') {
-    
-  }
-}
-
-/**
  * Helper function to find first day of the current month.
  * 
  * @return date
@@ -196,17 +183,29 @@ function _mastercal_save(&$cal) {
 }
 
 /**
- * Helper function to load calendars from database.
+ * Helper function to load calendars from the database.
  *
- * @return array $cal_list
+ * @return object
+ *   If no $calendar_id is passed, the default action is to return all calendars
+ *   in the database. 
  */
-function _mastercal_load() {
-  // Read all fields from the mastercal_calendar table.
-  $select = db_select('mastercal_calendar', 'calendar');
-  $select->fields('calendar');
-  
-  // Return the result in object format.
-  return $select->execute()->fetchAll();
+function _mastercal_load($calendar_id = 'c') {
+  if ($calendar_id == 'c') {
+    // Read all fields from the mastercal_calendar table.
+    $query = db_select('mastercal_calendar', 'c');
+    $query->fields('c');
+    
+    // Return the result in object format.
+    return $query->execute()->fetchAll();
+  }
+  else {
+    $query = db_select('mastercal_calendar', 'c');
+    $query
+      ->condition('c.cid', $calendar_id, '=')
+      ->fields('c');
+    
+    return $query->execute()->fetch();
+  }
 }
 
 /**
