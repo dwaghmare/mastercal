@@ -192,6 +192,18 @@ function _mastercal_save($calendar_name, $cid, $api_username, $api_password, $st
   // Check to see if the calendar is in the database.
   if (_mastercal_calendar_exists($cid)) {
     // Update the fields for the existing calendar.
+    $return = db_update('mastercal_calendar')
+      ->fields(array(
+        'name' => $calendar_name,
+        'cid' => (int)$cid,
+        'api_username' => $api_username,
+        'api_password' => $api_password,
+        'start_date' => $start_date,
+        'range' => $range,
+      ))
+    ->execute();
+    
+    return $return;
   }
   else {
     // Save the new calendar to the database.

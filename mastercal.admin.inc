@@ -264,6 +264,13 @@ function mastercal_edit_form_submit($form, &$form_state) {
   // Load the calendar from the database as an object.
   $calendar = _mastercal_load($cid);
   
+  // If the API password has not been changed, load the password from the 
+  // database and just re-save it again.
+  if (!isset($api_password)) {
+    $api_password = $calendar->api_password;
+  }
+  
+  // Save the calendar.
   _mastercal_save($calendar->name, $cid, $api_username, $api_password, $start_date, $range);
   
 }
