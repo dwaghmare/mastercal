@@ -85,7 +85,7 @@ function _mastercal_get_cal($cid) {
 /**
  * Returns array of events from the specified calendar.
  * 
- * @param array $param
+ * @param $cid
  */
 function _mastercal_get_events($cid) {
   // Load the calendar as an object.
@@ -96,6 +96,7 @@ function _mastercal_get_events($cid) {
     'userName' => $calendar->username,
     'password' => $calendar->password,
     'startDate' => $calendar->start_date,
+    // @TODO: implement this function.
     'endDate' => _mastercal_end_date($calendar->start_date, $calendar->time_range),
     'eventName' => '',
     'location' => '',

@@ -102,7 +102,11 @@ function mastercal_menu() {
  * Imports and updates all events in the database.
  */
 function mastercal_cron() {
-    $result = _mastercal_get_events($param);
+    // @TODO: Refactor cron functionality.
+    // Foreach calendar in the database, run get_events.
+    // Assign response to node fields.
+    
+    $result = _mastercal_get_events();
     $xml = simplexml_load_string(utf8_encode($result->GetEventsResult));
     $calenss = array();
     $count = 0;
