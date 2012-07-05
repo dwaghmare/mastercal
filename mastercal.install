@@ -17,12 +17,12 @@ function mastercal_schema() {
   $schema['mastercal_calendar'] = array(
     'description' => 'Stores information about calendars.',
     'fields' => array(
-      'title' => array(
+      'name' => array(
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
-        'description' => 'Title of the calendar.',
+        'description' => 'Name of the calendar.',
       ),
         'cid' => array(
         'description' => 'Calendar ID number.',
@@ -50,12 +50,12 @@ function mastercal_schema() {
         'default' => '0',
         'description' => 'The UNIX timestamp of the start date for this calendar.',
       ),
-      'end_date' => array(
+      'range' => array(
         'type' => 'int',
         'not null' => TRUE,
-        'length' => 11,
+        'length' => 2,
         'default' => '0',
-        'description' => 'The UNIX timestamp of the end date for this calendar.',
+        'description' => 'The number of months into the future events should be imported.',
       ),
     ),
     'primary key' => array('cid'),
