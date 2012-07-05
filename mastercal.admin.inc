@@ -296,6 +296,11 @@ function mastercal_edit_form_submit($form, &$form_state) {
   // Save the calendar.
   _mastercal_save($calendar->name, $cid, $username, $password, $start_date, $time_range);
   
+  // Set a confirmation message.
+  drupal_set_message(t('The %calendar_name calendar has been saved.', array('%calendar_name' => $calendar->name)));
+  
+  // Redirect to mastercal admin form.
+  $form_state['redirect'] = 'admin/config/uiowa/mastercal';
 }
 
 /**
