@@ -177,20 +177,37 @@ function _mastercal_records_exist() {
   return (bool) db_query_range('SELECT 1 FROM {mastercal_calendar}', 0, 1)->fetchField();
 }
 
-function _mastercal_save(&$cal) {
-  // Save the calendar properties to the database.
-  $return = db_insert('mastercal_calendar')
-  ->fields(array(
-    'title' => $cal['Name'],
+/**
+ * Helper function to save a calendar to database. If the $cid does not exist, 
+ * a new record is created. Otherwise the fields for the existing calendar are 
+ * updated.
+ * 
+ * @param $cid
+ * @param $api_username
+ * @param $api_password
+ * @param $start_date
+ * @param $range
+ */
+function _mastercal_save($cid, $api_username, $api_password, $start_date, $range) {
+  // Check to see if the calendar is in the database.
+  if (_mastercal_calendar_exists($cid)) {
+    // Update the fields for the existing calendar.
+  }
+  else {
+    // Save the new calendar to the database.
+    $return = db_insert('mastercal_calendar')
+    ->fields(array(
+    'name' => $cid,
     'cid' => (int)$cal['CalendarID'],
     'username' => variable_get('mastercal_default_username'),
     'password' => variable_get('mastercal_default_password'),
     'start_date' => 0,
     'end_date' => 0,
-  )
-  )
-  ->execute();
-  return $return;
+    )
+    )
+    ->execute();
+    return $return;
+  }
 }
 
 /**
