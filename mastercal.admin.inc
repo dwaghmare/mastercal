@@ -221,12 +221,19 @@ function mastercal_edit_form($form, &$form_state, $cid) {
     '#attributes' => array('class' => array('pickadate')),
   );
   
-  $form['end_date'] = array(
-    '#type' => 'textfield',
-    '#title' => t('End date'),
-    '#description' => t('The date this calendar should stop importing events.'),
+  $form['range'] = array(
+    '#type' => 'select',
+    '#title' => t('Range'),
+    '#description' => t('How far into the future events should be imported. 
+    Calculated daily, i.e. todays date plus 3 months.'),
     '#required' => TRUE,
-    '#attributes' => array('class' => array('pickadate')),
+    '#options' => array(
+      0 => '1 month',
+      1 => '2 months',
+      2 => '3 months',
+      3 => '6 months',
+      4 => '1 year',
+    ),
   );
   
   $form['submit'] = array(
