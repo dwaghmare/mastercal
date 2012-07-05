@@ -188,7 +188,7 @@ function _mastercal_records_exist() {
  * @param $start_date
  * @param $range
  */
-function _mastercal_save($cid, $api_username, $api_password, $start_date, $range) {
+function _mastercal_save($calendar_name, $cid, $api_username, $api_password, $start_date, $range) {
   // Check to see if the calendar is in the database.
   if (_mastercal_calendar_exists($cid)) {
     // Update the fields for the existing calendar.
@@ -196,16 +196,16 @@ function _mastercal_save($cid, $api_username, $api_password, $start_date, $range
   else {
     // Save the new calendar to the database.
     $return = db_insert('mastercal_calendar')
-    ->fields(array(
-    'name' => $cid,
-    'cid' => (int)$cal['CalendarID'],
-    'username' => variable_get('mastercal_default_username'),
-    'password' => variable_get('mastercal_default_password'),
-    'start_date' => 0,
-    'end_date' => 0,
-    )
-    )
+      ->fields(array(
+        'name' => $calendar_name,
+        'cid' => (int)$cid,
+        'api_username' => $api_username,
+        'api_password' => $api_password,
+        'start_date' => $start_date,
+        'range' => $range,
+      ))
     ->execute();
+    
     return $return;
   }
 }
