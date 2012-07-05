@@ -35,7 +35,7 @@ function mastercal_admin_form($form, &$form_state) {
     'username' => t('API Username'),
     'password' => t('API Password'),
     'start_date' => t('Start Date'),
-    'end_date' => t('End Date'),
+    'time_range' => t('Range'),
   );
   
   // Get any calendars that have been added already.
@@ -51,7 +51,7 @@ function mastercal_admin_form($form, &$form_state) {
       'username' => $calendar->username,
       'password' => $calendar->password,
       'start_date' => $calendar->start_date,
-      'end_date' => $calendar->end_date,
+      'time_range' => $calendar->time_range,
     );
   }
   
@@ -159,7 +159,7 @@ function mastercal_add_form_submit($form, &$form_state) {
   variable_set('mastercal_auth', TRUE);
   
   // Save the calendar in the database.
-  _mastercal_save($calendar['Name'], $calendar['cid']);
+  _mastercal_save($calendar['Name'], $form_state['values']['cid'], NULL, NULL, NULL, NULL);
   
   // Set a confirmation message.
   drupal_set_message(t('The calendar %calendar has been created. You can edit it from this page.', array('%calendar' => $calendar['Name'])));
@@ -204,14 +204,14 @@ function mastercal_edit_form($form, &$form_state, $cid) {
     '#value' => $cid,
   );
   
-  $form['api_username'] = array(
+  $form['username'] = array(
     '#type' => 'textfield',
     '#title' => t('API Username'),
     '#default_value' => $calendar->username,
     '#required' => TRUE,
   );
   
-  $form['api_password'] = array(
+  $form['password'] = array(
     '#type' => 'password_confirm',
     '#title' => t('API Password'),
   );
@@ -224,7 +224,7 @@ function mastercal_edit_form($form, &$form_state, $cid) {
     '#attributes' => array('class' => array('pickadate')),
   );
   
-  $form['range'] = array(
+  $form['time_range'] = array(
     '#type' => 'select',
     '#title' => t('Range'),
     '#description' => t("How far into the future events should be imported. 
@@ -256,22 +256,22 @@ function mastercal_edit_form($form, &$form_state, $cid) {
 function mastercal_edit_form_submit($form, &$form_state) {
   // Assign the form elements to variables.
   $cid = $form_state['values']['cid'];
-  $api_username = $form_state['values']['api_username'];
-  $api_password = $form_state['values']['api_password'];
+  $username = $form_state['values']['username'];
+  $password = $form_state['values']['password'];
   $start_date = $form_state['values']['start_date'];
-  $range = $form_state['values']['range'];
+  $time_range = $form_state['values']['time_range'];
   
   // Load the calendar from the database as an object.
   $calendar = _mastercal_load($cid);
   
   // If the API password has not been changed, load the password from the 
   // database and just re-save it again.
-  if (!isset($api_password)) {
-    $api_password = $calendar->api_password;
+  if (!isset($password)) {
+    $password = $calendar->password;
   }
   
   // Save the calendar.
-  _mastercal_save($calendar->name, $cid, $api_username, $api_password, $start_date, $range);
+  _mastercal_save($calendar->name, $cid, $username, $password, $start_date, $time_range);
   
 }
 

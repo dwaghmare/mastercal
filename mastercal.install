@@ -47,13 +47,12 @@ function mastercal_schema() {
         'type' => 'int',
         'not null' => TRUE,
         'length' => 11,
-        'default' => '0',
         'description' => 'The UNIX timestamp of the start date for this calendar.',
       ),
-      'range' => array(
+      'time_range' => array(
         'type' => 'int',
         'not null' => TRUE,
-        'length' => 2,
+        'length' => 11,
         'default' => '0',
         'description' => 'The number of months into the future events should be imported.',
       ),

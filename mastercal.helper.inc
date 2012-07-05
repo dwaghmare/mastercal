@@ -23,13 +23,13 @@ function _mastercal_last_of_month() {
 }
 
 /**
- * Helper function to return an end date give a start date and a range.
+ * Helper function to return an end date give a start date and a time_range.
  * 
  * @param date $start_date
- * @param int $range
+ * @param int $time_range
  *   In number of months.
  */
-function _mastercal_end_date($start_date, $range) {
+function _mastercal_end_date($start_date, $time_range) {
   
 }
 
@@ -183,12 +183,12 @@ function _mastercal_records_exist() {
  * updated.
  * 
  * @param $cid
- * @param $api_username
- * @param $api_password
+ * @param $username
+ * @param $password
  * @param $start_date
- * @param $range
+ * @param $time_range
  */
-function _mastercal_save($calendar_name, $cid, $api_username, $api_password, $start_date, $range) {
+function _mastercal_save($calendar_name, $cid, $username, $password, $start_date, $time_range) {
   // Check to see if the calendar is in the database.
   if (_mastercal_calendar_exists($cid)) {
     // Update the fields for the existing calendar.
@@ -196,10 +196,10 @@ function _mastercal_save($calendar_name, $cid, $api_username, $api_password, $st
       ->fields(array(
         'name' => $calendar_name,
         'cid' => (int)$cid,
-        'api_username' => $api_username,
-        'api_password' => $api_password,
+        'username' => $username,
+        'password' => $password,
         'start_date' => $start_date,
-        'range' => $range,
+        'time_range' => $time_range,
       ))
     ->execute();
     
@@ -211,11 +211,9 @@ function _mastercal_save($calendar_name, $cid, $api_username, $api_password, $st
       ->fields(array(
         'name' => $calendar_name,
         'cid' => (int)$cid,
-        'api_username' => $api_username,
-        'api_password' => $api_password,
-        'start_date' => $start_date,
-        'range' => $range,
+        'start_date' => REQUEST_TIME,
       ))
+      ->useDefaults(array('username', 'password', 'time_range'))
     ->execute();
     
     return $return;
