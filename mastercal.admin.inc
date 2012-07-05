@@ -232,11 +232,11 @@ function mastercal_edit_form($form, &$form_state, $cid) {
     Calculated daily, i.e. today's date plus 3 months, tomorrow's date plus 3 months, etc."),
     '#required' => TRUE,
     '#options' => array(
-      0 => '1 month',
-      1 => '2 months',
-      2 => '3 months',
-      3 => '6 months',
-      4 => '1 year',
+      '1' => '1 month',
+      '2' => '2 months',
+      '3' => '3 months',
+      '6' => '6 months',
+      '12' => '1 year',
     ),
   );
   

@@ -21,7 +21,18 @@ function _mastercal_first_of_month() {
 function _mastercal_last_of_month() {
   return date("Y-m-d", strtotime('-1 second', strtotime('+1 month', strtotime(date('m') . '/01/' . date('Y') . ' 00:00:00'))));
 }
-    
+
+/**
+ * Helper function to return an end date give a start date and a range.
+ * 
+ * @param date $start_date
+ * @param int $range
+ *   In number of months.
+ */
+function _mastercal_end_date($start_date, $range) {
+  
+}
+
 /**
  * Helper function to collapse dates.
  *
