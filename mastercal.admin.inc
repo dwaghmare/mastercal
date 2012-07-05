@@ -260,6 +260,17 @@ function mastercal_edit_form($form, &$form_state, $cid) {
 }
 
 /**
+ * Edit form validation handler. Verifies that the API username and password
+ * can connect to the Master Calendar server. If not, returns an error.
+ * 
+ * @param $form
+ * @param $form_state
+ */
+function mastercal_edit_form_validate($form, &$form_state) {
+  
+}
+
+/**
  * Submit handler for edit form.
  * 
  * @param $form
