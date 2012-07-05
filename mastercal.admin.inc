@@ -31,7 +31,7 @@ function mastercal_uiowa_form($form, &$form_state) {
 function mastercal_admin_form($form, &$form_state) {
   // Create the header.
   $header = array(
-    'title' => t('Title'),
+    'name' => t('Name'),
     'username' => t('API Username'),
     'password' => t('API Password'),
     'start_date' => t('Start Date'),
@@ -47,7 +47,7 @@ function mastercal_admin_form($form, &$form_state) {
   // Loop through the individual calendars.
   foreach ($calendars as $calendar) {
     $options[$calendar->cid] = array(
-      'title' => $calendar->title,
+      'name' => $calendar->name,
       'username' => $calendar->username,
       'password' => $calendar->password,
       'start_date' => $calendar->start_date,
@@ -197,7 +197,7 @@ function mastercal_edit_form($form, &$form_state, $cid) {
   $calendar = _mastercal_load($cid);
   
   $form['title'] = array(
-    '#markup' => t('<h2>%calendar_name</h2>', array('%calendar_name' => $calendar->title)),
+    '#markup' => t('<h2>%calendar_name</h2>', array('%calendar_name' => $calendar->name)),
   );
   
   $form['cid'] = array(
@@ -249,6 +249,22 @@ function mastercal_edit_form($form, &$form_state, $cid) {
 }
 
 /**
+ * Submit handler for edit form.
+ * 
+ * @param $form
+ * @param $form_state
+ */
+function mastercal_edit_form_submit($form, &$form_state) {
+  // Assign the form elements to variables.
+  $cid = $form_state['values']['cid'];
+  $api_username = $form_state['values']['api_username'];
+  $api_password =
+  
+  _mastercal_save($cal);
+  
+}
+
+/**
  * Form callback: builds the confirmation form for deleting a calendar.
  *
  * @param $form
@@ -273,7 +289,7 @@ function mastercal_delete_form($form, &$form_state, $cid) {
 
   return confirm_form(
     $form,
-    t('Are you sure you want to delete the calendar %title?', array('%title' => $calendar->title)),
+    t('Are you sure you want to delete the calendar %calendar_name?', array('%calendar_name' => $calendar->name)),
     'admin/config/user-interface/mastercal/' . $cid,
     t('This action cannot be undone.'),
     t('Delete'),
