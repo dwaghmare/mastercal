@@ -259,6 +259,9 @@ function mastercal_edit_form($form, &$form_state, $cid) {
  * @see shortcut_set_delete_form_submit()
  */
 function mastercal_delete_form($form, &$form_state, $cid) {
+  // Load the calendar as an object.
+  $calendar = _mastercal_load($cid);
+  
   $form['cid'] = array(
     '#type' => 'value',
     '#value' => $cid,
@@ -266,7 +269,7 @@ function mastercal_delete_form($form, &$form_state, $cid) {
 
   return confirm_form(
     $form,
-    t('Are you sure you want to delete the calendar %title?', array('%title' => $cid)),
+    t('Are you sure you want to delete the calendar %title?', array('%title' => $calendar->title)),
     'admin/config/user-interface/mastercal/' . $cid,
     t('This action cannot be undone.'),
     t('Delete'),
