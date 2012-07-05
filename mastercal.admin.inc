@@ -119,7 +119,7 @@ function mastercal_add_form($form, &$form_state) {
   // Get a list of all calendars available.
   $calendars = _mastercal_get_cals(variable_get('mastercal_default_parameter'));
   
-  $form['calendar_id'] = array(
+  $form['cid'] = array(
     '#type' => 'select',
     '#title' => t('Calendars'),
     '#options' => $calendars,
@@ -143,8 +143,8 @@ function mastercal_add_form($form, &$form_state) {
  */
 function mastercal_add_form_validate($form, &$form_state) {
   // Check to prevent a duplicate.
-  if (_mastercal_calendar_exists($form_state['values']['calendar_id'])) {
-    form_set_error('new', t('The calendar %name already exists. Choose another.', array('%name' => $form_state['values']['calendar_id'])));
+  if (_mastercal_calendar_exists($form_state['values']['cid'])) {
+    form_set_error('new', t('The calendar %name already exists. Choose another.', array('%name' => $form_state['values']['cid'])));
   }
 }
 
@@ -153,13 +153,13 @@ function mastercal_add_form_validate($form, &$form_state) {
  */
 function mastercal_add_form_submit($form, &$form_state) {
   // Return the same calendar from the MC API as an array.
-  $calendar = _mastercal_get_cal($cid = $form_state['values']['calendar_id']);
+  $calendar = _mastercal_get_cal($cid = $form_state['values']['cid']);
  
   // Set persistent variables.
   variable_set('mastercal_auth', TRUE);
   
   // Save the calendar in the database.
-  _mastercal_save($calendar);
+  _mastercal_save($calendar['Name'], $calendar['cid']);
   
   // Set a confirmation message.
   drupal_set_message(t('The calendar %calendar has been created. You can edit it from this page.', array('%calendar' => $calendar['Name'])));
