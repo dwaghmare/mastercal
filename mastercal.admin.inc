@@ -261,7 +261,7 @@ function mastercal_edit_form_submit($form, &$form_state) {
   $start_date = $form_state['values']['start_date'];
   $range = $form_state['values']['range'];
   
-  // Load the calendar form the database as an object.
+  // Load the calendar from the database as an object.
   $calendar = _mastercal_load($cid);
   
   _mastercal_save($calendar->name, $cid, $api_username, $api_password, $start_date, $range);
