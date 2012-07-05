@@ -49,9 +49,9 @@ function mastercal_admin_form($form, &$form_state) {
     $options[$calendar->cid] = array(
       'name' => $calendar->name,
       'username' => $calendar->username,
-      'password' => $calendar->password,
-      'start_date' => $calendar->start_date,
-      'time_range' => $calendar->time_range,
+      'password' => (!empty($calendar->password)) ? '************' : '',
+      'start_date' => format_date($calendar->start_date, $type='custom', $format='m/d/Y'),
+      'time_range' => $calendar->time_range . ' month(s)',
     );
   }
   
@@ -195,15 +195,18 @@ function mastercal_edit_form($form, &$form_state, $cid) {
   // Get the calendar from the database as an object.
   $calendar = _mastercal_load($cid);
   
+  // Display the name of the calendar.
   $form['title'] = array(
     '#markup' => t('<h2>%calendar_name</h2>', array('%calendar_name' => $calendar->name)),
   );
   
+  // Store the cid.
   $form['cid'] = array(
     '#type' => 'value',
     '#value' => $cid,
   );
   
+  // API username
   $form['username'] = array(
     '#type' => 'textfield',
     '#title' => t('API Username'),
@@ -211,19 +214,23 @@ function mastercal_edit_form($form, &$form_state, $cid) {
     '#required' => TRUE,
   );
   
+  // API password
   $form['password'] = array(
     '#type' => 'password_confirm',
     '#title' => t('API Password'),
   );
   
+  // Start date
   $form['start_date'] = array(
     '#type' => 'textfield',
     '#title' => t('Start date'),
     '#description' => t('The date this calendar should start importing events from.'),
     '#required' => TRUE,
     '#attributes' => array('class' => array('pickadate')),
+    '#default_value' => format_date($calendar->start_date, $type='custom', $format='d/m/Y'),
   );
   
+  // Time range
   $form['time_range'] = array(
     '#type' => 'select',
     '#title' => t('Range'),
@@ -237,8 +244,10 @@ function mastercal_edit_form($form, &$form_state, $cid) {
       '6' => '6 months',
       '12' => '1 year',
     ),
+    '#default_value' => $calendar->time_range,
   );
   
+  // Submit button
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Submit'),

@@ -53,7 +53,7 @@ function mastercal_schema() {
         'type' => 'int',
         'not null' => TRUE,
         'length' => 11,
-        'default' => '0',
+        'default' => '1',
         'description' => 'The number of months into the future events should be imported.',
       ),
     ),
