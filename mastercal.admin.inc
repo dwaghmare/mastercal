@@ -55,6 +55,7 @@ function mastercal_admin_form($form, &$form_state) {
     );
   }
   
+  // Construct the table select which stores the cid in the selected value.
   $form['table'] = array(
     '#type' => 'tableselect',
     '#header' => $header,
@@ -63,11 +64,13 @@ function mastercal_admin_form($form, &$form_state) {
     '#empty' => t('No calendars found.'),
   );
   
+  // Edit button.
   $form['edit'] = array(
     '#type' => 'submit',
     '#value' => t('Edit'),
   );
   
+  // Delete button.
   $form['delete'] = array(
     '#type' => 'submit',
     '#value' => t('Delete'),
