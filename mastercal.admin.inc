@@ -196,6 +196,10 @@ function mastercal_edit_form($form, &$form_state, $cid) {
   // Get the calendar from the database as an object.
   $calendar = _mastercal_load($cid);
   
+  $form['title'] = array(
+    '#markup' => t('<h2>%calendar_name</h2>', array('%calendar_name' => $calendar->title)),
+  );
+  
   $form['cid'] = array(
     '#type' => 'value',
     '#value' => $cid,
