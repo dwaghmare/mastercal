@@ -30,6 +30,7 @@ function mastercal_uiowa_form($form, &$form_state) {
  */
 function mastercal_admin_form($form, &$form_state) {
   // Create the header.
+  // @TODO: Sort this by calendar name.
   $header = array(
     'name' => t('Name'),
     'username' => t('API Username'),
@@ -49,8 +50,8 @@ function mastercal_admin_form($form, &$form_state) {
     $options[$calendar->cid] = array(
       'name' => $calendar->name,
       'username' => $calendar->username,
-      'password' => (!empty($calendar->password)) ? '************' : '',
-      'start_date' => format_date($calendar->start_date, $type='custom', $format='m/d/Y'),
+      'password' => (!empty($calendar->password)) ? t('************') : '',
+      'start_date' => format_date($calendar->start_date, $type='custom', $format='F d, Y'),
       'time_range' => $calendar->time_range . ' month(s)',
     );
   }
@@ -191,7 +192,7 @@ function mastercal_edit_form($form, &$form_state, $cid) {
   
   // Add inline JavaScript to change text fields to datepickers.
   drupal_add_js('jQuery(document).ready(function(){jQuery(".pickadate").datepicker({
-    dateFormat: "dd/mm/yy",
+    dateFormat: "mm/dd/yy",
     autoSize: true
   });});', 'inline');
   
@@ -230,7 +231,7 @@ function mastercal_edit_form($form, &$form_state, $cid) {
     '#description' => t('The date this calendar should start importing events from.'),
     '#required' => TRUE,
     '#attributes' => array('class' => array('pickadate')),
-    '#default_value' => format_date($calendar->start_date, $type='custom', $format='d/m/Y'),
+    '#default_value' => format_date($calendar->start_date, $type='custom', $format='m/d/Y'),
   );
   
   // Time range
