@@ -224,8 +224,8 @@ function mastercal_edit_form($form, &$form_state, $cid) {
   $form['range'] = array(
     '#type' => 'select',
     '#title' => t('Range'),
-    '#description' => t('How far into the future events should be imported. 
-    Calculated daily, i.e. todays date plus 3 months.'),
+    '#description' => t("How far into the future events should be imported. 
+    Calculated daily, i.e. today's date plus 3 months, tomorrow's date plus 3 months, etc."),
     '#required' => TRUE,
     '#options' => array(
       0 => '1 month',
