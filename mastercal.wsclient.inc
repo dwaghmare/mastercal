@@ -3,6 +3,11 @@
  * @file
  * This file includes all the WSClient functionality that the Mastercal module
  * needs to reference.
+ * 
+ * NOTE: the camelCase in the array keys for the API parameter is required by
+ * the Master Calendar API, though not specified.
+ * 
+ * https://calendar.uiowa.edu/MCAPI/MCAPIService.asmx
  */
 
 // Include the helper functions.
@@ -82,11 +87,30 @@ function _mastercal_get_cal($cid) {
  * 
  * @param array $param
  */
-function _mastercal_get_events($param) {
-  // The Camel Case is required but not specified in the API. It can be found
-  // by examining the request example on the API site /MCAPI/MCAPIService.asmx.
+function _mastercal_get_events($cid) {
+  // Load the calendar as an object.
+  $calendar = _mastercal_load($cid);
+  
+  // Construct the API paramter as an array for the GetEvents call.
+  $param = array(
+    'userName' => $calendar->username,
+    'password' => $calendar->password,
+    'startDate' => $calendar->start_date,
+    'endDate' => _mastercal_end_date($calendar->start_date, $calendar->time_range),
+    'eventName' => '',
+    'location' => '',
+    'calendars' => array('int' => $cid),
+    'eventTypes' => NULL,
+    'udqAnswer' => NULL,
+  );
+  
+  // Load the WSClient calendar service.
   $service = wsclient_service_load('calendar');
+  
+  // Get the result.
   $result = $service->GetEvents($param);
+  
+  // Return the result.
   return $result;
 }
 
