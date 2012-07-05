@@ -671,7 +671,6 @@ function _mastercal_installed_instances() {
 function mastercal_uninstall() {
   // Delete persistent variables.
   variable_del('mastercal_auth');
-  variable_del('mastercal_name');
   variable_del('comment_node_mastercal_event');
   variable_del('node_submitted_node_mastercal_event');
   

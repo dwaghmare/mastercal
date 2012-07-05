@@ -157,7 +157,6 @@ function mastercal_add_form_submit($form, &$form_state) {
  
   // Set persistent variables.
   variable_set('mastercal_auth', TRUE);
-  variable_set('mastercal_name', $calendar['Name']);
   
   // Save the calendar in the database.
   _mastercal_save($calendar);
