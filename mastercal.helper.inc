@@ -214,11 +214,11 @@ function _mastercal_save($calendar_name, $cid, $api_username, $api_password, $st
  * Helper function to load calendars from the database.
  *
  * @return object
- *   If no $calendar_id is passed, the default action is to return all calendars
+ *   If no $cid is passed, the default action is to return all calendars
  *   in the database. 
  */
-function _mastercal_load($calendar_id = 'c') {
-  if ($calendar_id == 'c') {
+function _mastercal_load($cid = 'c') {
+  if ($cid == 'c') {
     // Read all fields from the mastercal_calendar table.
     $query = db_select('mastercal_calendar', 'c');
     $query->fields('c');
@@ -229,7 +229,7 @@ function _mastercal_load($calendar_id = 'c') {
   else {
     $query = db_select('mastercal_calendar', 'c');
     $query
-      ->condition('c.cid', $calendar_id, '=')
+      ->condition('c.cid', $cid, '=')
       ->fields('c');
     
     return $query->execute()->fetch();

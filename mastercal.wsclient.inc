@@ -52,14 +52,14 @@ function _mastercal_get_cals($param) {
 /**
  * Returns array of the specified calendar.
  * 
- * @param int $calendar_id
+ * @param int $cid
  */
-function _mastercal_get_cal($calendar_id) {
+function _mastercal_get_cal($cid) {
   // Create array parameter for the MC GetCalendar API function.
   $param = array(
     'userName' => variable_get('mastercal_default_username'),
     'password' => variable_get('mastercal_default_password'),
-    'calendarId' => $calendar_id,
+    'calendarId' => $cid,
   );
   
   $service = wsclient_service_load('calendar');

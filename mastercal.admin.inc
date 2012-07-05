@@ -153,7 +153,7 @@ function mastercal_add_form_validate($form, &$form_state) {
  */
 function mastercal_add_form_submit($form, &$form_state) {
   // Return the same calendar from the MC API as an array.
-  $calendar = _mastercal_get_cal($calendar_id = $form_state['values']['calendar_id']);
+  $calendar = _mastercal_get_cal($cid = $form_state['values']['calendar_id']);
  
   // Set persistent variables.
   variable_set('mastercal_auth', TRUE);
@@ -257,9 +257,14 @@ function mastercal_edit_form_submit($form, &$form_state) {
   // Assign the form elements to variables.
   $cid = $form_state['values']['cid'];
   $api_username = $form_state['values']['api_username'];
-  $api_password =
+  $api_password = $form_state['values']['api_password'];
+  $start_date = $form_state['values']['start_date'];
+  $range = $form_state['values']['range'];
   
-  _mastercal_save($cal);
+  // Load the calendar form the database as an object.
+  $calendar = _mastercal_load($cid);
+  
+  _mastercal_save($calendar->name, $cid, $api_username, $api_password, $start_date, $range);
   
 }
 
