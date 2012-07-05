@@ -198,7 +198,7 @@ function _mastercal_save($calendar_name, $cid, $username, $password, $start_date
         'cid' => (int)$cid,
         'username' => $username,
         'password' => $password,
-        'start_date' => $start_date,
+        'start_date' => strtotime($start_date),
         'time_range' => $time_range,
       ))
     ->execute();
