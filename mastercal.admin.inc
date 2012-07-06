@@ -290,7 +290,7 @@ function mastercal_edit_form_submit($form, &$form_state) {
   
   // If the API password has not been changed, load the password from the 
   // database and just re-save it again.
-  if (!isset($password)) {
+  if (empty($password)) {
     $password = $calendar->password;
   }
   
