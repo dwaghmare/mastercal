@@ -254,10 +254,7 @@ function mastercal_cron() {
   }
   
   // Set confirmation message with number of nodes created and updated.
-  drupal_set_message(t("@saved events created, @updated events updated.", array(
-  '@saved' => $nodes['saved'],
-  '@updated' => $nodes['updated'])
-  )
-  );
+  drupal_set_message(t("@saved events created, @updated events updated.", 
+  array('@saved' => $nodes['saved'], '@updated' => $nodes['updated'])));
 }
 
