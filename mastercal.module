@@ -102,49 +102,57 @@ function mastercal_menu() {
  * Imports and updates all events in the database.
  */
 function mastercal_cron() {
-    // @TODO: Refactor cron functionality.
-    // Foreach calendar in the database, run get_events.
-    // Assign response to node fields.
+  // @TODO: Refactor cron functionality.
     
-    $result = _mastercal_get_events();
+  // Initialize the JSON string so I can append to it later.
+  // @TODO: There may be a better way to create this JSON
+  $nodes = array(
+    'saved' => 0,
+    'updated' => 0
+  );
+  
+  // Load the calendars from the database.
+  $calendars = _mastercal_load();
+    
+  // For each calendar in the database, run get_events.
+  foreach ($calendars as $calendar) {
+    // Get the result from the MC API.
+    $result = _mastercal_get_events($calendar->cid);
+      
+    // Load the response as XML.
     $xml = simplexml_load_string(utf8_encode($result->GetEventsResult));
-    $calenss = array();
-    $count = 0;
     
     // Parse the XML response from the web service using SimpleXML.
     foreach ($xml->children() as $child) {
       // Create an array to store the data.
-      $cals = array();
+      $temp = array();
       foreach ($child->children() as $subchild) {
         // Associate array var['Name of field'] = 'value of field'.
-        $cals[$subchild->getName()] = (string) $subchild;
+        $temp[$subchild->getName()] = (string) $subchild;
       }
-      $calens[] = $cals;
-      $count .= 1;
+      // Assign the $temp fields to the $cals array.
+      $cals[] = $temp;
     }
-
-    if (isset($calens)) {
-      $events = _mastercal_collapse_dates($calens);
+    
+    // Collapse the dates if $cals is set.
+    if (isset($cals)) {
+      $events = _mastercal_collapse_dates($cals);
     }
     else {
-      $events = Null;
+      $events = NULL;
     }
-    // Initialize the JSON string so I can append to it later.
-    // @TODO: There may be a better way to create this JSON
-    $nodes = array(
-      'saved' => 0,
-      'passed' => 0
-    );
     
+    // Iterate over each event.
     foreach ($events as $id => $event) {
+      // Assign XML fields to variables if not empty, otherwise NULL.
       $cid = $id;
       $did = $event['EventDetailID'];
       $contact_name = $event['ContactName'];
       $contact_email = $event['ContactEmail'];
-      
       $event_loc = (!empty($event['Location'])) ? $event['Location'] : NULL;
       $event_loc_url = (!empty($event['LocationURL'])) ? $event['LocationURL'] : NULL;
       
+      // Prepare the node object.
       $node = new stdClass();
       $node->type = 'node_event';
       $node->language = LANGUAGE_NONE;
@@ -155,17 +163,46 @@ function mastercal_cron() {
       $node->field_event_cid['und'][0]['value'] = $cid;
       $node->field_event_did['und'][0]['value'] = $did;
       
-     $param['eventDetailId'] = $did;
+      // Sets publisher to first user.
+      $node->uid = 1;
       
+      // @TODO: What does this do?
+      $param['eventDetailId'] = $did;
       $event_data = _mastercal_get_event($param);
-        if (isset($event_data[0]['Image'])) {
-          $image = base64_decode($event_data[0]['Image']);
-          $file = file_save_data($image, 'public://' . $event_data[0]['ImageName'], FILE_EXISTS_REPLACE);
-          $node->field_event_image['und']['0']['fid'] = $file->fid;
-        }
       
+      // If the event has an image, decode it, save it to the public file
+      // system and assign it to the corresponding node.
+      // NOTE : This uses the 'Add an image' link under the body field of the
+      // Master Calendar submit form.
+      if (isset($event_data[0]['Image'])) {
+        $image = base64_decode($event_data[0]['Image']);
+        $file = file_save_data($image, 'public://' . $event_data[0]['ImageName'], FILE_EXISTS_REPLACE);
+        $node->field_event_image['und']['0']['fid'] = $file->fid;
+      }
+      
+      // Assign variables to node fields.
       $node->field_event_contact['und'][0]['value'] = $contact_name;
+      $node->field_event_location['und'][0]['value'] = $event_loc;
+      if (!empty($event_loc_url)) {
+        $node->field_event_url['und'][0]['value'] = $event_loc_url;
+      }
+      
+      // Create the taxonomy term for this event based on event type.
+      if (!empty($event_tag)) {
+        $type_name = $event_tag;
+        _mastercal_create_terms(array($type_name));
+        $tid = db_query_range('SELECT tid FROM {taxonomy_term_data} WHERE name = :name ORDER BY tid DESC', 0,
+        1, array(':name' => $type_name))->fetchField();
+      
+        if (!empty($tid)) {
+          $node->field_event_type['und'][0]['tid'] = $tid;
+        }
+      }
+      
+      // Count the number of dates.
       $n_dates = count($event['EventDate']);
+      
+      // If multiple dates, iterate over each and assign it to the node properly.
       if ($n_dates > 1) {
         $count = 0;
         foreach ($event['EventDate'] as $day) {
@@ -173,67 +210,54 @@ function mastercal_cron() {
           $time = explode('-', $date[1]);
           $datetime = $date[0] . ' ' . $time[0];
           $the_date = gmdate('Y-m-d H:i:s', strtotime($datetime));
-          
+    
           $node->field_event_date['und'][$count]['value'] = $the_date;
           $node->field_event_date['und'][$count]['value2'] = $the_date;
-         
+           
           $count += 1;
         }
-      } 
+      }
       else {
         $date = explode('T', $event['EventDate'][0]['Start']);
         $time = explode('-', $date[1]);
         $datetime = $date[0] . ' ' . $time[0];
         $the_date = gmdate('Y-m-d H:i:s', strtotime($datetime));
-
+    
         $node->field_event_date['und'][0]['value'] = $the_date;
         $node->field_event_date['und'][0]['value2'] = $the_date;
         $node->field_event_date['und'][0]['date_type'] = 'datetime';
       }
-      
-      // Sets publisher to first user.
-      $node->uid = 1;
-      
-      $node->field_event_location['und'][0]['value'] = $event_loc;
-      if (!empty($event_loc_url)) {
-        $node->field_event_url['und'][0]['value'] = $event_loc_url;
-      }
-      if (!empty($event_tag)) {
-        $type_name = $event_tag;    
-        _mastercal_create_terms(array($type_name));
-        $tid = db_query_range('SELECT tid FROM {taxonomy_term_data} WHERE name = :name ORDER BY tid DESC', 0, 
-          1, array(':name' => $type_name))->fetchField();
-
-          
-        if (!empty($tid)) {
-          $node->field_event_type['und'][0]['tid'] = $tid;
-        }
-      }
-      
+    
+      // See if the event already exists as a node in Drupal.
       $query = new EntityFieldQuery;
       $result = $query
-        ->entityCondition('entity_type', 'node')
-        ->propertyCondition('type', 'node_event')
-        ->fieldCondition('field_event_cid', 'value', $cid, '=')
-        ->execute();
-        
+      ->entityCondition('entity_type', 'node')
+      ->propertyCondition('type', 'node_event')
+      ->fieldCondition('field_event_cid', 'value', $cid, '=')
+      ->execute();
+    
+      // If not, create and save the node.
       if (empty($result)) {
         node_submit($node);
         node_save($node);
         $nodes['saved'] += 1;
+        
+        // Resave the node to set the input filter.
         $node_re = node_load($node->nid);
         node_save($node_re);
       }
+      // Otherwise, update the existing node.
       else {
-        $nodes['passed'] += 1;
+        $nodes['updated'] += 1;
       }
     }
-    
-
-    drupal_set_message(t("@saved nodes created, @pass events skipped.", array(
-      '@saved' => $nodes['saved'], 
-      '@pass' => $nodes['passed'])
-      ) 
-    );
+  }
+  
+  // Set confirmation message with number of nodes created and updated.
+  drupal_set_message(t("@saved events created, @updated events updated.", array(
+  '@saved' => $nodes['saved'],
+  '@updated' => $nodes['updated'])
+  )
+  );
 }
 
