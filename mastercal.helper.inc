@@ -30,7 +30,7 @@ function _mastercal_last_of_month() {
  *   In number of months.
  */
 function _mastercal_end_date($start_date, $time_range) {
-  
+  //@TODO: Implement this functionality.
 }
 
 /**

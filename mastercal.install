@@ -1,4 +1,9 @@
 <?php
+/**
+ * @file
+ *
+ * Install and uninstall functions for the mastercal module.
+ */
 
 // Include the helper functions.
 include_once drupal_get_path('module', 'mastercal') . '/mastercal.helper.inc';
@@ -6,10 +11,6 @@ include_once drupal_get_path('module', 'mastercal') . '/mastercal.helper.inc';
 // Include the WSCLient functions.
 include_once drupal_get_path('module', 'mastercal') . '/mastercal.wsclient.inc';
 
-/**
- * @file
- * Install and uninstall functions for the mastercal module.
- */
 /**
  * Implements hook_schema().
  */
