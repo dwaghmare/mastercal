@@ -87,8 +87,7 @@ function mastercal_install() {
     'name' => $t('Master Calendar Event'),
     'module' => 'mastercal',
     'base' => 'node_content',
-    'description' => $t('This is an event content type imported by the UIowa 
-     Master Calendar module.'),
+    'description' => $t('This is an event content type imported by the UIowa Master Calendar module.'),
     'has_title' => TRUE,
     'title_label' => $t('Name'),
   );
@@ -108,7 +107,9 @@ function mastercal_install() {
 
   // Hide date and author information.
   variable_set('node_submitted_node_mastercal_event', FALSE);
-
+  
+  
+  
   // Create all the fields we are adding to our content type.
   // http://api.drupal.org/api/function/field_create_field/7
   foreach (_mastercal_installed_fields() as $field) {
