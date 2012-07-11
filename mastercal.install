@@ -69,8 +69,8 @@ function mastercal_install() {
   mastercal_default_wsclient_service();
   
   // Obscure the default username and password.
-  $un = base64_decode('QXJ0c19Jb3dhX0FQSQ==');
-  $pw = base64_decode('QXAzZG45IW5leg==');
+  $un = base64_decode('aXRzX3dlYl9zZXJ2aWNlcw==');
+  $pw = base64_decode('U3duWnlETllhdmRScmhK');
   
   // Create the array.
   $mastercal_default_parameter = array(
