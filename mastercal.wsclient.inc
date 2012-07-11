@@ -91,16 +91,22 @@ function _mastercal_get_events($cid) {
   // Load the calendar as an object.
   $calendar = _mastercal_load($cid);
   
+  // Create the end date.
+  $end_date = _mastercal_end_date($calendar->start_date, $calendar->time_range);
+  
+  // Construct the calendar list in the format required by the API.
+  $calendar_list = array();
+  $calendar_list['int'][] = $cid;
+  
   // Construct the API paramter as an array for the GetEvents call.
   $param = array(
     'userName' => $calendar->username,
     'password' => $calendar->password,
-    'startDate' => $calendar->start_date,
-    // @TODO: implement this function.
-    'endDate' => _mastercal_end_date($calendar->start_date, $calendar->time_range),
+    'startDate' => date('Y-m-d', $calendar->start_date),
+    'endDate' => $end_date,
     'eventName' => '',
     'location' => '',
-    'calendars' => array('int' => $cid),
+    'calendars' => $calendar_list,
     'eventTypes' => NULL,
     'udqAnswer' => NULL,
   );
