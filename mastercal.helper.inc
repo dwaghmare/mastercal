@@ -23,14 +23,22 @@ function _mastercal_last_of_month() {
 }
 
 /**
- * Helper function to return an end date give a start date and a time_range.
+ * Helper function to return an end date given a start date and a time_range.
+ * Format is YYYY-MM-DD
  * 
  * @param date $start_date
  * @param int $time_range
  *   In number of months.
  */
 function _mastercal_end_date($start_date, $time_range) {
-  //@TODO: Implement this functionality.
+  // Add however many months to the start date.
+  $start_date_plus_range = strtotime('+' . $time_range .' month', $start_date);
+  
+  // Convert the new date to the correct format.
+  $end_date = date('Y-m-d', $start_date_plus_range);
+  
+  // Return the end date.
+  return $end_date;
 }
 
 /**
