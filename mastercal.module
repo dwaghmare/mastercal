@@ -152,19 +152,51 @@ function mastercal_cron() {
       $event_loc = (!empty($event['Location'])) ? $event['Location'] : NULL;
       $event_loc_url = (!empty($event['LocationURL'])) ? $event['LocationURL'] : NULL;
       
-      // Prepare the node object.
-      $node = new stdClass();
-      $node->type = 'node_event';
-      $node->language = LANGUAGE_NONE;
-      node_object_prepare($node);
-      $node->title = $event['Title'];
+      // Create updated time variables.
+      // @TODO: Use these to only update events if they have changed.
+      $event_updated_date = $event['EventUpdatedDate'];
+      $event_detail_updated_date = $event['EventDetailUpdatedDate'];
+      
+      // See if the event already exists as a node in Drupal.
+      $query = new EntityFieldQuery;
+      $result = $query
+      ->entityCondition('entity_type', 'node')
+      ->propertyCondition('type', 'node_mastercal_event')
+      ->fieldCondition('field_event_cid', 'value', $cid, '=')
+      ->execute();
+      
+      // If not, create and prepare a new node.
+      if (empty($result)) {
+        // Prepare the node object.
+        $node = new stdClass();
+        $node->type = 'node_mastercal_event';
+        $node->language = LANGUAGE_NONE;
+        node_object_prepare($node);
+        $node->title = $event['Title'];
+        
+        // Set the eventID and detailsID.
+        $node->field_event_cid['und'][0]['value'] = $cid;
+        $node->field_event_did['und'][0]['value'] = $did;
+        
+        // Sets publisher to first user.
+        $node->uid = 1;
+        
+        // Add one to the created count.
+        $nodes['saved'] += 1;
+      }
+      // Otherwise, update the existing node.
+      else {
+        // Load the the existing node.
+        $node_data = reset($result['node']);
+        $node = node_load($node_data->nid);
+        
+        // Add one to the updated count.
+        $nodes['updated'] += 1;
+      }
+      
+      // Prepare the body field.
       $node->body['und'][0]['value'] = $event['Description'];
       $node->body['und'][0]['format'] = 'filtered_html';
-      $node->field_event_cid['und'][0]['value'] = $cid;
-      $node->field_event_did['und'][0]['value'] = $did;
-      
-      // Sets publisher to first user.
-      $node->uid = 1;
       
       // @TODO: What does this do?
       $param['eventDetailId'] = $did;
@@ -228,28 +260,9 @@ function mastercal_cron() {
         $node->field_event_date['und'][0]['date_type'] = 'datetime';
       }
     
-      // See if the event already exists as a node in Drupal.
-      $query = new EntityFieldQuery;
-      $result = $query
-      ->entityCondition('entity_type', 'node')
-      ->propertyCondition('type', 'node_event')
-      ->fieldCondition('field_event_cid', 'value', $cid, '=')
-      ->execute();
-    
-      // If not, create and save the node.
-      if (empty($result)) {
-        node_submit($node);
-        node_save($node);
-        $nodes['saved'] += 1;
-        
-        // Resave the node to set the input filter.
-        $node_re = node_load($node->nid);
-        node_save($node_re);
-      }
-      // Otherwise, update the existing node.
-      else {
-        $nodes['updated'] += 1;
-      }
+      // Save the node.
+      node_submit($node);
+      node_save($node);
     }
   }
   
