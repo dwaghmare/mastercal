@@ -72,21 +72,8 @@ function mastercal_install() {
   $un = base64_decode('aXRzX3dlYl9zZXJ2aWNlcw==');
   $pw = base64_decode('U3duWnlETllhdmRScmhK');
   
-  // Create the array.
-  $mastercal_default_parameter = array(
-    'userName' => $un,
-    'password' => $pw,
-    'startDate' => _mastercal_first_of_month(),
-    'endDate' => _mastercal_last_of_month(),
-    'location' => '',
-    'eventName' => '',
-    'calendars' => _mastercal_load(),
-    'eventTypes' => NULL,
-    'udqAnswer' => NULL,
-  );
   
   // Set the mastercal default parameter in the variable table.
-  variable_set('mastercal_default_parameter', $mastercal_default_parameter);
   variable_set('mastercal_default_username', $un);
   variable_set('mastercal_default_password', $pw);
   
