@@ -158,9 +158,6 @@ function mastercal_add_form_validate($form, &$form_state) {
 function mastercal_add_form_submit($form, &$form_state) {
   // Return the same calendar from the MC API as an array.
   $calendar = _mastercal_get_cal($cid = $form_state['values']['cid']);
- 
-  // Set persistent variables.
-  variable_set('mastercal_auth', TRUE);
   
   // Save the calendar in the database.
   _mastercal_save($calendar['Name'], $form_state['values']['cid'], NULL, NULL, NULL, NULL);
@@ -345,10 +342,4 @@ function mastercal_delete_form_submit($form, &$form_state) {
   _mastercal_delete($cid);
   $form_state['redirect'] = 'admin/config/uiowa/mastercal';
   drupal_set_message(t('The calendar has been removed.'));
-  
-  // Check whether the {mastercal_calendar} table is empty. If empty, set 
-  // mastercal_auth to FALSE.
-  if (!_mastercal_load()) {
-    variable_set('mastercal_auth', FALSE);
-  }
 }
