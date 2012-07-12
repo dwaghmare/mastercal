@@ -5,24 +5,6 @@
  */
 
 /**
- * Helper function to find first day of the current month.
- * 
- * @return date
- */
-function _mastercal_first_of_month() {
-  return date("Y-m-d", strtotime(date('m') . '/01/' . date('Y') . ' 00:00:00'));
-}
-
-/**
- * Helper function to find last day of the current month.
- * 
- * @return date
- */
-function _mastercal_last_of_month() {
-  return date("Y-m-d", strtotime('-1 second', strtotime('+1 month', strtotime(date('m') . '/01/' . date('Y') . ' 00:00:00'))));
-}
-
-/**
  * Helper function to return an end date given a start date and a time_range.
  * Format is YYYY-MM-DD
  * 
