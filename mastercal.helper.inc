@@ -270,14 +270,24 @@ function _mastercal_delete($cid) {
 }
 
 /**
- * Helper function to format a string by replacing symbols with their HTML
- * encoded equivalent.
+ * Helper function to format a string by replacing certain symbols.
  * 
- * This is only necessary because the Master Calendar does not properly encode
- * HTML characters.
+ * @TODO: Look into encodings. The returned strings from the MC API are 
+ * looking funkny after running utf8_encode. Removed for now.
  * 
  * @param $string
  */
-function _mastercal_replace_symbols($string) {
-  return str_replace(array(chr(145), chr(146), chr(147), chr(148), chr(150), chr(151), chr(133)), array("'", "'", '"', '"', '-', '--', '...'), $string);
+function _mastercal_format($unformatted_string) {
+  // Create array of characters to be replaced.
+  $targets = array("\n");
+  
+  // Create array of replacments. Must be in order.
+  $replacments = array(" ");
+  
+  // Replace the symbols and create a new string.
+  $formatted_string = str_replace($targets, $replacments, $unformatted_string);
+  
+  // Return the formatted string.
+  return $formatted_string;
 }
+
