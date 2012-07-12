@@ -146,17 +146,6 @@ function _mastercal_create_term($event_type) {
 }
 
 /**
- * Helper function to check if {mastercal_calendar} is empty.
- *
- * @return boolean
- *   TRUE if any records exist.
- *   FALSE if table is empty.
- */
-function _mastercal_records_exist() {
-  return (bool) db_query_range('SELECT 1 FROM {mastercal_calendar}', 0, 1)->fetchField();
-}
-
-/**
  * Helper function to save a calendar to database. If the $cid does not exist, 
  * a new record is created. Otherwise the fields for the existing calendar are 
  * updated.

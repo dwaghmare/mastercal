@@ -348,7 +348,7 @@ function mastercal_delete_form_submit($form, &$form_state) {
   
   // Check whether the {mastercal_calendar} table is empty. If empty, set 
   // mastercal_auth to FALSE.
-  if (!_mastercal_records_exist()) {
+  if (!_mastercal_load()) {
     variable_set('mastercal_auth', FALSE);
   }
 }
