@@ -121,7 +121,7 @@ function mastercal_admin_form_validate($form, &$form_state) {
  */
 function mastercal_add_form($form, &$form_state) {
   // Get a list of all calendars available.
-  $calendars = _mastercal_get_cals(variable_get('mastercal_default_parameter'));
+  $calendars = _mastercal_get_cals();
   
   $form['cid'] = array(
     '#type' => 'select',
@@ -157,7 +157,7 @@ function mastercal_add_form_validate($form, &$form_state) {
  */
 function mastercal_add_form_submit($form, &$form_state) {
   // Return the same calendar from the MC API as an array.
-  $calendar = _mastercal_get_cal($cid = $form_state['values']['cid']);
+  $calendar = _mastercal_get_cal($form_state['values']['cid']);
   
   // Save the calendar in the database.
   _mastercal_save($calendar['Name'], $form_state['values']['cid'], NULL, NULL, NULL, NULL);
@@ -265,7 +265,16 @@ function mastercal_edit_form($form, &$form_state, $cid) {
  * @param $form_state
  */
 function mastercal_edit_form_validate($form, &$form_state) {
+  // Grab the cid.
+  $cid = $form_state['values']['cid'];
   
+  // Assign the result to a variable.
+  $result = _mastercal_get_events($cid);
+  
+  // If the result contains 'Login Failed' - the credentials did not work.
+  if ($cid) {
+    
+  }
 }
 
 /**
