@@ -120,7 +120,7 @@ function mastercal_cron() {
     $result = _mastercal_get_events($calendar->cid);
       
     // Load the response as XML.
-    $xml = simplexml_load_string(utf8_encode($result->GetEventsResult));
+    $xml = simplexml_load_string($result->GetEventsResult);
     
     // Parse the XML response from the web service using SimpleXML.
     foreach ($xml->children() as $child) {
@@ -172,11 +172,6 @@ function mastercal_cron() {
         $node->type = 'node_mastercal_event';
         $node->language = LANGUAGE_NONE;
         node_object_prepare($node);
-        $node->title = _mastercal_replace_symbols($event['Title']);
-        
-        // Set the eventID and detailsID.
-        $node->field_event_cid['und'][0]['value'] = $cid;
-        $node->field_event_did['und'][0]['value'] = $did;
         
         // Sets publisher to first user.
         $node->uid = 1;
@@ -194,8 +189,15 @@ function mastercal_cron() {
         $nodes['updated'] += 1;
       }
       
+      // Set the eventID and detailsID.
+      $node->field_event_cid['und'][0]['value'] = $cid;
+      $node->field_event_did['und'][0]['value'] = $did;
+      
+      // Set the node title.
+      $node->title = _mastercal_format($event['Title']);
+      
       // Prepare the body field.
-      $node->body['und'][0]['value'] = _mastercal_replace_symbols($event['Description']);
+      $node->body['und'][0]['value'] = _mastercal_format($event['Description']);
       $node->body['und'][0]['format'] = 'filtered_html';
       
       // @TODO: What does this do?
