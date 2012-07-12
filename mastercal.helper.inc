@@ -24,7 +24,8 @@ function _mastercal_end_date($start_date, $time_range) {
 }
 
 /**
- * Helper function to collapse dates.
+ * Helper function to collapse dates. Changes the EventDate to an array of
+ * multiple values. 
  *
  * @param array $events
  */
