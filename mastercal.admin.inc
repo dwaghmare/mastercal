@@ -147,7 +147,7 @@ function mastercal_add_form($form, &$form_state) {
  */
 function mastercal_add_form_validate($form, &$form_state) {
   // Check to prevent a duplicate.
-  if (_mastercal_calendar_exists($form_state['values']['cid'])) {
+  if (_mastercal_load($form_state['values']['cid'])) {
     form_set_error('new', t('The calendar %name already exists. Choose another.', array('%name' => $form_state['values']['cid'])));
   }
 }

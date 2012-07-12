@@ -146,17 +146,6 @@ function _mastercal_create_term($event_type) {
 }
 
 /**
- * Helper function to check if a calendar already exists in {mastercal_calendar}.
- *
- * @return boolean
- *   TRUE if calendar exists.
- *   FALSE if calendar does not exist.
- */
-function _mastercal_calendar_exists($cid) {
-  return (bool) db_query_range('SELECT 1 FROM {mastercal_calendar} WHERE cid = :cid', 0, 1, array(':cid' => $cid))->fetchField();
-}
-
-/**
  * Helper function to check if {mastercal_calendar} is empty.
  *
  * @return boolean
@@ -180,7 +169,7 @@ function _mastercal_records_exist() {
  */
 function _mastercal_save($calendar_name, $cid, $username, $password, $start_date, $time_range) {
   // Check to see if the calendar is in the database.
-  if (_mastercal_calendar_exists($cid)) {
+  if (_mastercal_load($cid)) {
     // Update the fields for the existing calendar.
     $return = db_update('mastercal_calendar')
       ->fields(array(
