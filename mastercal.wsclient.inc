@@ -42,11 +42,21 @@ function mastercal_default_wsclient_service() {
  * 
  * @param array $param
  */
-function _mastercal_get_cals($param) {
+function _mastercal_get_cals() {
+  // Construct the API parameter for GetCalendars.
+  $param = array(
+    'userName' => variable_get('mastercal_default_username'),
+    'password' => variable_get('mastercal_default_password'),
+  );
+  
+  // Load the web service.
   $service = wsclient_service_load('calendar');
+  
+  // Get the result and load it via simplexml.
   $result = $service->GetCalendars($param);
   $respxml = simplexml_load_string($result->GetCalendarsResult);
 
+  // Create the calendar array and return it.
   $calendars = array();
   foreach ($respxml->children() as $cal) {
     $calendars[(string)$cal->CalendarID] = (string)$cal->Name;
