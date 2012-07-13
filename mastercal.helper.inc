@@ -241,13 +241,16 @@ function _mastercal_delete($cid) {
  */
 function _mastercal_format($unformatted_string) {
   // Create array of characters to be replaced.
-  $targets = array("\n");
+  $targets = array('“', '”', "‘", "’", '-', '—', '...');
   
   // Create array of replacments. Must be in order.
-  $replacements = array(" ");
+  $replacements = array('&#8220;', '&#8221;', '&#8216;', '&#8217;', '&#8211;', '&#8212;', '&#x2026;');
   
   // Replace the symbols and create a new string.
-  $formatted_string = str_replace($targets, $replacements, $unformatted_string);
+  $replaced_string = str_replace($targets, $replacements, $unformatted_string); 
+ 
+  // UTF8 encode the replaced string.
+  $formatted_string = utf8_encode($replaced_string);
   
   // Return the formatted string.
   return $formatted_string;
