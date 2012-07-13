@@ -265,16 +265,7 @@ function mastercal_edit_form($form, &$form_state, $cid) {
  * @param $form_state
  */
 function mastercal_edit_form_validate($form, &$form_state) {
-  // Grab the cid.
-  $cid = $form_state['values']['cid'];
-  
-  // Assign the result to a variable.
-  $result = _mastercal_get_events($cid);
-  
-  // If the result contains 'Login Failed' - the credentials did not work.
-  if ($cid) {
-    
-  }
+ // @TODO: Implment validation.
 }
 
 /**
