@@ -161,7 +161,7 @@ function mastercal_cron() {
       $query = new EntityFieldQuery;
       $result = $query
       ->entityCondition('entity_type', 'node')
-      ->propertyCondition('type', 'node_mastercal_event')
+      ->propertyCondition('type', 'mastercal_event')
       ->fieldCondition('field_event_cid', 'value', $cid, '=')
       ->execute();
       
@@ -169,7 +169,7 @@ function mastercal_cron() {
       if (empty($result)) {
         // Prepare the node object.
         $node = new stdClass();
-        $node->type = 'node_mastercal_event';
+        $node->type = 'mastercal_event';
         $node->language = LANGUAGE_NONE;
         node_object_prepare($node);
         
