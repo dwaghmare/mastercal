@@ -244,10 +244,10 @@ function _mastercal_format($unformatted_string) {
   $targets = array("\n");
   
   // Create array of replacments. Must be in order.
-  $replacments = array("<br>");
+  $replacements = array(" ");
   
   // Replace the symbols and create a new string.
-  $formatted_string = str_replace($targets, $replacments, $unformatted_string);
+  $formatted_string = str_replace($targets, $replacements, $unformatted_string);
   
   // Return the formatted string.
   return $formatted_string;
