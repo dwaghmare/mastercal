@@ -63,7 +63,6 @@ function mastercal_schema() {
         'length' => 2,
         'default' => '0',
         'description' => 'Boolean on whether the calendar is configured correctly or not.',
-        
       ),
     ),
     'primary key' => array('cid'),
