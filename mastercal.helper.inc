@@ -14,7 +14,7 @@
  */
 function _mastercal_end_date($start_date, $time_range) {
   // Add however many months to the start date.
-  $start_date_plus_range = strtotime('+' . $time_range .' month', $start_date);
+  $start_date_plus_range = strtotime('+' . $time_range . ' month', $start_date);
   
   // Convert the new date to the correct format.
   $end_date = date('Y-m-d', $start_date_plus_range);

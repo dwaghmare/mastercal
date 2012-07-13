@@ -101,7 +101,7 @@ function mastercal_admin_form_validate($form, &$form_state) {
   }
   // If the 'Delete' submit button is clicked, redirect to the delete
   // confirmation page with the table select value passed as an argument.
-  else if ($form_state['clicked_button']['#value'] == $form_state['values']['delete']) {
+  elseif ($form_state['clicked_button']['#value'] == $form_state['values']['delete']) {
     $form_state['redirect'] = 'admin/config/uiowa/mastercal/' . $form_state['values']['table'] . '/delete';
   }
 }
