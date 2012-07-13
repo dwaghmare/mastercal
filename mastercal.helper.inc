@@ -5,7 +5,7 @@
  */
 
 /**
- * Helper function to return an end date given a start date and a time_range.
+ * Helper function to return an end date given a start date and a time range.
  * Format is YYYY-MM-DD
  * 
  * @param date $start_date
@@ -157,7 +157,7 @@ function _mastercal_create_term($event_type) {
  * @param $start_date
  * @param $time_range
  */
-function _mastercal_save($calendar_name, $cid, $username, $password, $start_date, $time_range) {
+function _mastercal_save($calendar_name, $cid, $username, $password, $start_date, $time_range, $configured) {
   // Check to see if the calendar is in the database.
   if (_mastercal_load($cid)) {
     // Update the fields for the existing calendar.
@@ -169,6 +169,7 @@ function _mastercal_save($calendar_name, $cid, $username, $password, $start_date
         'password' => $password,
         'start_date' => strtotime($start_date),
         'time_range' => $time_range,
+        'configured' => $configured
       ))
       ->condition('cid', $cid, '=')
     ->execute();
@@ -183,7 +184,7 @@ function _mastercal_save($calendar_name, $cid, $username, $password, $start_date
         'cid' => (int)$cid,
         'start_date' => REQUEST_TIME,
       ))
-      ->useDefaults(array('username', 'password', 'time_range'))
+      ->useDefaults(array('username', 'password', 'time_range', 'configured'))
     ->execute();
     
     return $return;
