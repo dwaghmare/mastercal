@@ -234,7 +234,7 @@ function _mastercal_delete($cid) {
  * Helper function to format a string by replacing certain symbols.
  * 
  * @TODO: Look into encodings. The returned strings from the MC API are 
- * looking funkny after running utf8_encode. Removed for now.
+ * looking funky after running utf8_encode. Removed for now.
  * 
  * @param $string
  */
