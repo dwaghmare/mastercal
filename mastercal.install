@@ -53,9 +53,17 @@ function mastercal_schema() {
       'time_range' => array(
         'type' => 'int',
         'not null' => TRUE,
-        'length' => 11,
+        'length' => 255,
         'default' => '1',
         'description' => 'The number of months into the future events should be imported.',
+      ),
+      'configured' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'length' => 2,
+        'default' => '0',
+        'description' => 'Boolean on whether the calendar is configured correctly or not.',
+        
       ),
     ),
     'primary key' => array('cid'),
