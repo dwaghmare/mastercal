@@ -150,7 +150,7 @@ function mastercal_add_form($form, &$form_state) {
 function mastercal_add_form_validate($form, &$form_state) {
   // Check to prevent a duplicate.
   if (_mastercal_load($form_state['values']['cid'])) {
-    form_set_error('new', t('The calendar %name already exists. Choose another.', array('%name' => $form_state['values']['cid'])));
+    form_set_error('cid', t('The calendar %name already exists. Choose another.', array('%name' => $form_state['values']['cid'])));
   }
 }
 
@@ -162,7 +162,7 @@ function mastercal_add_form_submit($form, &$form_state) {
   $calendar = _mastercal_get_cal($form_state['values']['cid']);
   
   // Save the calendar in the database.
-  _mastercal_save($calendar['Name'], $form_state['values']['cid'], NULL, NULL, NULL, NULL);
+  _mastercal_save($calendar['Name'], $form_state['values']['cid'], NULL, NULL, NULL, NULL, NULL);
   
   // Set a confirmation message.
   drupal_set_message(t('The calendar %calendar has been created. You can edit it from this page.', array('%calendar' => $calendar['Name'])));
@@ -207,6 +207,12 @@ function mastercal_edit_form($form, &$form_state, $cid) {
   $form['cid'] = array(
     '#type' => 'value',
     '#value' => $cid,
+  );
+  
+  // Store the configured value. Assumes a calendar has not been configured.
+  $form['configured'] = array(
+    '#type' => 'value',
+    '#value' => 0,
   );
   
   // API username
@@ -267,7 +273,52 @@ function mastercal_edit_form($form, &$form_state, $cid) {
  * @param $form_state
  */
 function mastercal_edit_form_validate($form, &$form_state) {
- // @TODO: Implment validation.
+  // Get the cid for this calendar.
+  $cid = $form_state['values']['cid'];
+  
+  // Check if the calendar is configured correctly.
+  if ($form_state['values']['configured'] == '0') {
+    // Attempt to connect to the API.
+    // This has to be done without the helper function because the calendar
+    // may not exist in the database.
+    
+    // Create the end date.
+    $end_date = _mastercal_end_date(strtotime($form_state['values']['start_date']), $form_state['values']['time_range']);
+    
+    // Construct the calendar list in the format required by the API.
+    $calendar_list = array();
+    $calendar_list['int'][] = $cid;
+    
+    // Construct the API paramter as an array for the GetEvents call.
+    $param = array(
+      'userName' => $form_state['values']['username'],
+      'password' => $form_state['values']['password'],
+      'startDate' => date('Y-m-d', strtotime($form_state['values']['start_date'])),
+      'endDate' => $end_date,
+      'eventName' => '',
+      'location' => '',
+      'calendars' => $calendar_list,
+      'eventTypes' => NULL,
+      'udqAnswer' => NULL,
+    );
+    
+    // Load the WSClient calendar service.
+    $service = wsclient_service_load('calendar');
+    
+    // Get the result.
+    $result = $service->GetEvents($param);
+    
+    // If the result contains a login error, return a form error.
+    // @TODO: There is probably a better way to check for this.
+    if (strpos($result->GetEventsResult, 'Login Failed.')) {
+      form_set_error('username', 'Cannot connect with the given username and password. Please check your spelling or contact the UIowa Master Calendar team.'); 
+    }
+    else {
+      // The credentials worked. Set the configured value to 1 (true).
+      $form_state['values']['configured'] = 1;
+    }
+  }
+ 
 }
 
 /**
@@ -283,6 +334,7 @@ function mastercal_edit_form_submit($form, &$form_state) {
   $password = $form_state['values']['password'];
   $start_date = $form_state['values']['start_date'];
   $time_range = $form_state['values']['time_range'];
+  $configured = $form_state['values']['configured'];
   
   // Load the calendar from the database as an object.
   $calendar = _mastercal_load($cid);
@@ -294,7 +346,7 @@ function mastercal_edit_form_submit($form, &$form_state) {
   }
   
   // Save the calendar.
-  _mastercal_save($calendar->name, $cid, $username, $password, $start_date, $time_range);
+  _mastercal_save($calendar->name, $cid, $username, $password, $start_date, $time_range, $configured);
   
   // Set a confirmation message.
   drupal_set_message(t('The %calendar_name calendar has been saved.', array('%calendar_name' => $calendar->name)));
