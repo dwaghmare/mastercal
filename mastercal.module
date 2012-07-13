@@ -194,7 +194,7 @@ function mastercal_cron() {
       $node->field_event_did['und'][0]['value'] = $did;
       
       // Set the node title.
-      $node->title = _mastercal_format($event['Title']);
+      $node->title = $event['Title'];
       
       // Prepare the body field.
       $node->body['und'][0]['value'] = _mastercal_format($event['Description']);
