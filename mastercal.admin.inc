@@ -37,7 +37,7 @@ function mastercal_admin_form($form, &$form_state) {
     'password' => t('API Password'),
     'start_date' => t('Start Date'),
     'time_range' => t('Range'),
-    'configured' => t('Configured'),
+    'connected' => t('Connected'),
   );
   
   // Get any calendars that have been added already.
@@ -54,7 +54,7 @@ function mastercal_admin_form($form, &$form_state) {
       'password' => (!empty($calendar->password)) ? t('************') : '',
       'start_date' => format_date($calendar->start_date, $type='custom', $format='F d, Y'),
       'time_range' => $calendar->time_range . ' month(s)',
-      'configured' => ($calendar->configured == '1') ? 'Yes' : 'No',
+      'connected' => ($calendar->connected == '1') ? 'Yes' : 'No',
     );
   }
   
@@ -209,8 +209,8 @@ function mastercal_edit_form($form, &$form_state, $cid) {
     '#value' => $cid,
   );
   
-  // Store the configured value. Assumes a calendar has not been configured.
-  $form['configured'] = array(
+  // Store the connected value. Assumes a calendar has not been connected.
+  $form['connected'] = array(
     '#type' => 'value',
     '#value' => 0,
   );
@@ -276,8 +276,8 @@ function mastercal_edit_form_validate($form, &$form_state) {
   // Get the cid for this calendar.
   $cid = $form_state['values']['cid'];
   
-  // Check if the calendar is configured correctly.
-  if ($form_state['values']['configured'] == '0') {
+  // Check if the calendar is connected correctly.
+  if ($form_state['values']['connected'] == '0') {
     // Attempt to connect to the API.
     // This has to be done without the helper function because the calendar
     // may not exist in the database.
@@ -314,8 +314,8 @@ function mastercal_edit_form_validate($form, &$form_state) {
       form_set_error('username', 'Cannot connect with the given username and password. Please check your spelling or contact the UIowa Master Calendar team.'); 
     }
     else {
-      // The credentials worked. Set the configured value to 1 (true).
-      $form_state['values']['configured'] = 1;
+      // The credentials worked. Set the connected value to 1 (true).
+      $form_state['values']['connected'] = 1;
     }
   }
  
@@ -334,7 +334,7 @@ function mastercal_edit_form_submit($form, &$form_state) {
   $password = $form_state['values']['password'];
   $start_date = $form_state['values']['start_date'];
   $time_range = $form_state['values']['time_range'];
-  $configured = $form_state['values']['configured'];
+  $connected = $form_state['values']['connected'];
   
   // Load the calendar from the database as an object.
   $calendar = _mastercal_load($cid);
@@ -346,7 +346,7 @@ function mastercal_edit_form_submit($form, &$form_state) {
   }
   
   // Save the calendar.
-  _mastercal_save($calendar->name, $cid, $username, $password, $start_date, $time_range, $configured);
+  _mastercal_save($calendar->name, $cid, $username, $password, $start_date, $time_range, $connected);
   
   // Set a confirmation message.
   drupal_set_message(t('The %calendar_name calendar has been saved.', array('%calendar_name' => $calendar->name)));

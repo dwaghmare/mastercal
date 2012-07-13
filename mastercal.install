@@ -57,12 +57,12 @@ function mastercal_schema() {
         'default' => '1',
         'description' => 'The number of months into the future events should be imported.',
       ),
-      'configured' => array(
+      'connected' => array(
         'type' => 'int',
         'not null' => TRUE,
         'length' => 2,
         'default' => '0',
-        'description' => 'Boolean on whether the calendar is configured correctly or not.',
+        'description' => 'Integer representing a boolean on whether the calendar can connect to the API or not.',
       ),
     ),
     'primary key' => array('cid'),
