@@ -215,7 +215,7 @@ function mastercal_edit_form($form, &$form_state, $cid) {
     '#value' => 0,
   );
   
-  // API username
+  // API username.
   $form['username'] = array(
     '#type' => 'textfield',
     '#title' => t('API Username'),
@@ -223,13 +223,13 @@ function mastercal_edit_form($form, &$form_state, $cid) {
     '#required' => TRUE,
   );
   
-  // API password
+  // API password.
   $form['password'] = array(
     '#type' => 'password_confirm',
     '#title' => t('API Password'),
   );
   
-  // Start date
+  // Start date.
   $form['start_date'] = array(
     '#type' => 'textfield',
     '#title' => t('Start date'),
@@ -239,7 +239,7 @@ function mastercal_edit_form($form, &$form_state, $cid) {
     '#default_value' => format_date($calendar->start_date, $type='custom', $format='m/d/Y'),
   );
   
-  // Time range
+  // Time range.
   $form['time_range'] = array(
     '#type' => 'select',
     '#title' => t('Range'),
@@ -256,7 +256,7 @@ function mastercal_edit_form($form, &$form_state, $cid) {
     '#default_value' => $calendar->time_range,
   );
   
-  // Submit button
+  // Submit button.
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Submit'),
@@ -273,52 +273,61 @@ function mastercal_edit_form($form, &$form_state, $cid) {
  * @param $form_state
  */
 function mastercal_edit_form_validate($form, &$form_state) {
-  // Get the cid for this calendar.
+  // Assign the form elements to variables.
   $cid = $form_state['values']['cid'];
+  $username = $form_state['values']['username'];
+  $password = $form_state['values']['password'];
+  $start_date = date('Y-m-d', strtotime($form_state['values']['start_date']));
+  $time_range = $form_state['values']['time_range'];
+  $connected = $form_state['values']['connected'];
   
-  // Check if the calendar is connected correctly.
-  if ($form_state['values']['connected'] == '0') {
-    // Attempt to connect to the API.
-    // This has to be done without the helper function because the calendar
-    // may not exist in the database.
-    
-    // Create the end date.
-    $end_date = _mastercal_end_date(strtotime($form_state['values']['start_date']), $form_state['values']['time_range']);
-    
-    // Construct the calendar list in the format required by the API.
-    $calendar_list = array();
-    $calendar_list['int'][] = $cid;
-    
-    // Construct the API paramter as an array for the GetEvents call.
-    $param = array(
-      'userName' => $form_state['values']['username'],
-      'password' => $form_state['values']['password'],
-      'startDate' => date('Y-m-d', strtotime($form_state['values']['start_date'])),
-      'endDate' => $end_date,
-      'eventName' => '',
-      'location' => '',
-      'calendars' => $calendar_list,
-      'eventTypes' => NULL,
-      'udqAnswer' => NULL,
-    );
-    
-    // Load the WSClient calendar service.
-    $service = wsclient_service_load('calendar');
-    
-    // Get the result.
-    $result = $service->GetEvents($param);
-    
-    // If the result contains a login error, return a form error.
-    // @TODO: There is probably a better way to check for this.
-    if (strpos($result->GetEventsResult, 'Login Failed.')) {
-      form_set_error('username', 'Cannot connect with the given username and password. Please check your spelling or contact the UIowa Master Calendar team.'); 
-    }
-    else {
-      // The credentials worked. Set the connected value to 1 (true).
-      $form_state['values']['connected'] = 1;
-    }
+  // Load the calendar from the database as an object.
+  $calendar = _mastercal_load($cid);
+  
+  // If the API password has not been changed, load the password from the 
+  // database.
+  if (empty($password)) {
+    $password = $calendar->password;
   }
- 
+  
+  // Attempt to connect to the API.
+  // This has to be done without the helper function to test the new values.
+    
+  // Create the end date.
+  $end_date = _mastercal_end_date(strtotime($start_date), $time_range);
+    
+  // Construct the calendar list in the format required by the API.
+  $calendar_list = array();
+  $calendar_list['int'][] = $cid;
+    
+  // Construct the API paramter as an array for the GetEvents call.
+  $param = array(
+    'userName' => $username,
+    'password' => $password,
+    'startDate' => $start_date,
+    'endDate' => $end_date,
+    'eventName' => '',
+    'location' => '',
+    'calendars' => $calendar_list,
+    'eventTypes' => NULL,
+    'udqAnswer' => NULL,
+  );
+    
+  // Load the WSClient calendar service.
+  $service = wsclient_service_load('calendar');
+    
+  // Get the result.
+  $result = $service->GetEvents($param);
+    
+  // If the result contains a login error, return a form error.
+  // @TODO: There is probably a better way to check for this.
+  if (strpos($result->GetEventsResult, 'Login Failed.')) {
+    form_set_error('username', 'Cannot connect with the given username and password. Please check your spelling or contact the UIowa Master Calendar team.'); 
+  }
+  else {
+    // The credentials worked. Set the connected value to 1 (true).
+    $form_state['values']['connected'] = 1;
+  }
 }
 
 /**
