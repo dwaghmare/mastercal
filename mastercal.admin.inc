@@ -37,6 +37,7 @@ function mastercal_admin_form($form, &$form_state) {
     'password' => t('API Password'),
     'start_date' => t('Start Date'),
     'time_range' => t('Range'),
+    'configured' => t('Configured'),
   );
   
   // Get any calendars that have been added already.
@@ -53,6 +54,7 @@ function mastercal_admin_form($form, &$form_state) {
       'password' => (!empty($calendar->password)) ? t('************') : '',
       'start_date' => format_date($calendar->start_date, $type='custom', $format='F d, Y'),
       'time_range' => $calendar->time_range . ' month(s)',
+      'configured' => ($calendar->configured == '1') ? 'Yes' : 'No',
     );
   }
   
