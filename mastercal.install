@@ -667,6 +667,8 @@ function mastercal_uninstall() {
   // Delete persistent variables.
   variable_del('comment_mastercal_event');
   variable_del('node_submitted_mastercal_event');
+  variable_del('mastercal_default_username');
+  variable_del('mastercal_default_password');
   
   // Gather all the content that might have been created while this
   // module was enabled. Simple selects still use db_query().
