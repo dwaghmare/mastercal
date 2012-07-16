@@ -251,7 +251,7 @@ function _mastercal_format($unformatted_string) {
   
   // Replace the symbols and create a new string.
   $replaced_string = str_replace($targets, $replacements, $stripped_string); 
- 
+
   // UTF8 encode the replaced string.
   $formatted_string = utf8_encode($replaced_string);
   
