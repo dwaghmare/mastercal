@@ -240,6 +240,9 @@ function _mastercal_delete($cid) {
  * @param $string
  */
 function _mastercal_format($unformatted_string) {
+  // Strip the inline styles from the html elements.
+  $stripped_string = preg_replace("/<([a-z][a-z0-9]*)[^>]*?(\/?)>/i",'<$1$2>', $unformatted_string);
+  
   // Create array of characters to be replaced.
   $targets = array("\n", '“', '”', "‘", "’", '-', '—', '…');
   
@@ -247,7 +250,7 @@ function _mastercal_format($unformatted_string) {
   $replacements = array(' ', '&#8220;', '&#8221;', '&#8216;', '&#8217;', '&#8211;', '&#8212;', '&#x2026;');
   
   // Replace the symbols and create a new string.
-  $replaced_string = str_replace($targets, $replacements, $unformatted_string); 
+  $replaced_string = str_replace($targets, $replacements, $stripped_string); 
  
   // UTF8 encode the replaced string.
   $formatted_string = utf8_encode($replaced_string);
