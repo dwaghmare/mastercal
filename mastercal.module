@@ -116,8 +116,11 @@ function mastercal_cron() {
     
   // For each calendar in the database, run get_events.
   foreach ($calendars as $calendar) {
+    // Assign the cid to a variable.
+    $cid = $calendar->cid;
+    
     // Get the result from the MC API.
-    $result = _mastercal_get_events($calendar->cid);
+    $result = _mastercal_get_events($cid);
       
     // Load the response as XML.
     $xml = simplexml_load_string($result->GetEventsResult);
@@ -145,7 +148,7 @@ function mastercal_cron() {
     // Iterate over each event.
     foreach ($events as $id => $event) {
       // Assign XML fields to variables if not empty, otherwise NULL.
-      $cid = $id;
+      $eid = $id;
       $did = $event['EventDetailID'];
       $contact_name = $event['ContactName'];
       $contact_email = $event['ContactEmail'];
@@ -162,7 +165,7 @@ function mastercal_cron() {
       $result = $query
       ->entityCondition('entity_type', 'node')
       ->propertyCondition('type', 'mastercal_event')
-      ->fieldCondition('field_event_cid', 'value', $cid, '=')
+      ->fieldCondition('field_event_cid', 'value', $eid, '=')
       ->execute();
       
       // If not, create and prepare a new node.
@@ -190,7 +193,7 @@ function mastercal_cron() {
       }
       
       // Set the eventID and detailsID.
-      $node->field_event_cid['und'][0]['value'] = $cid;
+      $node->field_event_cid['und'][0]['value'] = $eid;
       $node->field_event_did['und'][0]['value'] = $did;
       
       // Set the node title.
@@ -202,7 +205,7 @@ function mastercal_cron() {
       
       // @TODO: What does this do?
       $param['eventDetailId'] = $did;
-      $event_data = _mastercal_get_event($param);
+      $event_data = _mastercal_get_event($cid, $did);
       
       // If the event has an image, decode it, save it to the public file
       // system and assign it to the corresponding node.
