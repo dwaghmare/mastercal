@@ -135,10 +135,11 @@ function _mastercal_get_events($cid) {
  * Returns array of specified event.
  * 
  * $param $cid
- * $param $eid
- * 
+ *   calendar id
+ * $param $did
+ *   event detail id
  */
-function _mastercal_get_event($cid, $eid) {
+function _mastercal_get_event($cid, $did) {
   // Load the calendar as an object.
   $calendar = _mastercal_load($cid);
   
@@ -146,7 +147,7 @@ function _mastercal_get_event($cid, $eid) {
   $param = array(
     'userName' => $calendar->username,
     'password' => $calendar->password,
-    'eventDetailId' => $eid,
+    'eventDetailId' => $did,
   );
   
   // Load the WSClient calendar service.
@@ -155,8 +156,27 @@ function _mastercal_get_event($cid, $eid) {
   // Get the result.
   $result = $service->GetEvent($param);
 
-  // Return the result.
-  return $result;
+  $xml = simplexml_load_string(utf8_encode($result->GetEventResult));
+
+  $calenss = array();
+  $count = 0;
+  foreach ($xml->children() as $child) {
+    $cals = array();
+    foreach ($child->children() as $subchild) {
+      $cals[$subchild->getName()] = (string) $subchild;
+    }
+    $calens[] = $cals;
+    $count .= 1;
+  }
+  
+  if (isset($calens)) {
+    $calendars = $calens;
+  }
+  else {
+    $calendars = NULL;
+  }
+
+  return $calendars;
 }
 
 /**
