@@ -134,33 +134,29 @@ function _mastercal_get_events($cid) {
 /**
  * Returns array of specified event.
  * 
- * @param unknown_type $param
+ * $param $cid
+ * $param $eid
+ * 
  */
-function _mastercal_get_event($param) {
+function _mastercal_get_event($cid, $eid) {
+  // Load the calendar as an object.
+  $calendar = _mastercal_load($cid);
+  
+  // Construct the API paramter as an array for the GetEvent call.
+  $param = array(
+    'userName' => $calendar->username,
+    'password' => $calendar->password,
+    'eventDetailId' => $eid,
+  );
+  
+  // Load the WSClient calendar service.
   $service = wsclient_service_load('calendar');
+  
+  // Get the result.
   $result = $service->GetEvent($param);
 
-  $xml = simplexml_load_string(utf8_encode($result->GetEventResult));
-
-  $calenss = array();
-  $count = 0;
-  foreach ($xml->children() as $child) {
-    $cals = array();
-    foreach ($child->children() as $subchild) {
-      $cals[$subchild->getName()] = (string) $subchild;
-    }
-    $calens[] = $cals;
-    $count .= 1;
-  }
-  
-  if (isset($calens)) {
-    $calendars = $calens;
-  }
-  else {
-    $calendars = NULL;
-  }
-
-  return $calendars;
+  // Return the result.
+  return $result;
 }
 
 /**
