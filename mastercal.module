@@ -209,11 +209,11 @@ function mastercal_cron() {
       
       // If the event has an image, decode it, save it to the public file
       // system and assign it to the corresponding node.
-      // NOTE : This uses the 'Add an image' link under the body field of the
+      // NOTE : This uses the 'Add Image' link under the body field of the
       // Master Calendar submit form.
-      if (isset($event_data[0]['Image'])) {
-        $image = base64_decode($event_data[0]['Image']);
-        $file = file_save_data($image, 'public://' . $event_data[0]['ImageName'], FILE_EXISTS_REPLACE);
+      if (isset($event_data->GetEventsResult['Image'])) {
+        $image = base64_decode($event_data->GetEventsResult['Image']);
+        $file = file_save_data($image, 'public://' . $event_data->GetEventsResult['ImageName'], FILE_EXISTS_REPLACE);
         $node->field_event_image['und']['0']['fid'] = $file->fid;
       }
       

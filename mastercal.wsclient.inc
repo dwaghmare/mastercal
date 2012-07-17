@@ -155,28 +155,9 @@ function _mastercal_get_event($cid, $did) {
   
   // Get the result.
   $result = $service->GetEvent($param);
-
-  $xml = simplexml_load_string(utf8_encode($result->GetEventResult));
-
-  $calenss = array();
-  $count = 0;
-  foreach ($xml->children() as $child) {
-    $cals = array();
-    foreach ($child->children() as $subchild) {
-      $cals[$subchild->getName()] = (string) $subchild;
-    }
-    $calens[] = $cals;
-    $count .= 1;
-  }
   
-  if (isset($calens)) {
-    $calendars = $calens;
-  }
-  else {
-    $calendars = NULL;
-  }
-
-  return $calendars;
+  // Return it as an object.
+  return $result;
 }
 
 /**
