@@ -185,15 +185,17 @@ function _mastercal_get_event($cid, $did) {
   // Initialize a count.
   $count = 0;
   
-  // Iterate over each XML element in the XML.
+  // Iterate over each element in the XML.
   foreach ($xml->children() as $child) {
     // Initialize a temporary array.
     $temp = array();
     
+    // Assign proper key => value pairs based on the XML element name.
     foreach ($child->children() as $subchild) {
       $temp[$subchild->getName()] = (string) $subchild;
     }
     
+    // Assign the $temp array to $data.
     $data[] = $temp;
     
     // Increment the count.
