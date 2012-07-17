@@ -244,10 +244,10 @@ function _mastercal_format($unformatted_string) {
   $stripped_string = preg_replace("/<([a-z][a-z0-9]*)[^>]*?(\/?)>/i",'<$1$2>', $unformatted_string);
   
   // Create array of characters to be replaced.
-  $targets = array("\n", '“', '”', "‘", "’", '-', '—', '…');
+  $targets = array("\n", '“', '”', "‘", "’", '-', '—', '…', '<?xml:namespace prefix = o ns = "urn:schemas–microsoft–com:office:office" />');
   
   // Create array of replacments. Must be in order.
-  $replacements = array(' ', '&#8220;', '&#8221;', '&#8216;', '&#8217;', '&#8211;', '&#8212;', '&#x2026;');
+  $replacements = array(' ', '&#8220;', '&#8221;', '&#8216;', '&#8217;', '&#8211;', '&#8212;', '&#x2026;', ' ');
   
   // Replace the symbols and create a new string.
   $replaced_string = str_replace($targets, $replacements, $stripped_string); 
