@@ -181,32 +181,32 @@ function _mastercal_get_event($cid, $did) {
   
   // Load it into XML.
   $xml = simplexml_load_string(utf8_encode($result->GetEventResult));
-
+  
   // Initialize a count.
   $count = 0;
-  	
+  
   // Iterate over each XML element in the XML.
-  foreach ($xml->children() as $child) {	
+  foreach ($xml->children() as $child) {
     // Initialize a temporary array.
     $temp = array();
-	  	
+    
     foreach ($child->children() as $subchild) {
-	    $temp[$subchild->getName()] = (string) $subchild;
+      $temp[$subchild->getName()] = (string) $subchild;
     }
-  	
+    
     $data[] = $temp;
-
+    
     // Increment the count.
     $count .= 1;
   }
-
+  
   // If there is event data.
-  if (isset($data)) {  	
+  if (isset($data)) {
     $event = $data;
   }
   else {
     $event = NULL;
-  }	
+  }
   
   // Return the event.
   return $event;
