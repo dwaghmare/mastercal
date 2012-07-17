@@ -120,30 +120,7 @@ function mastercal_cron() {
     $cid = $calendar->cid;
     
     // Get the result from the MC API.
-    $result = _mastercal_get_events($cid);
-      
-    // Load the response as XML.
-    $xml = simplexml_load_string($result->GetEventsResult);
-    
-    // Parse the XML response from the web service using SimpleXML.
-    foreach ($xml->children() as $child) {
-      // Create an array to store the data.
-      $temp = array();
-      foreach ($child->children() as $subchild) {
-        // Associate array var['Name of field'] = 'value of field'.
-        $temp[$subchild->getName()] = (string) $subchild;
-      }
-      // Assign the $temp fields to the $cals array.
-      $cals[] = $temp;
-    }
-    
-    // Collapse the dates if $cals is set.
-    if (isset($cals)) {
-      $events = _mastercal_collapse_dates($cals);
-    }
-    else {
-      $events = NULL;
-    }
+    $events = _mastercal_get_events($cid);
     
     // Iterate over each event.
     foreach ($events as $id => $event) {
