@@ -182,18 +182,26 @@ function _mastercal_get_event($cid, $did) {
 /**
  * Returns array of user-defined questions (UDQ) for calendar.
  * 
- * @param int $event_id
+ * @param $cid
+ * @param $eid 
  */
-function _mastercal_get_udqs($event_id) {
-  // Construct the API parameter.
+function _mastercal_get_udqs($cid, $eid) {
+  // Load the calendar as an object.
+  $calendar = _mastercal_load($cid);
+  
+  // Construct the API paramter as an array for the GetEvent call.
   $param = array(
-    'userName' => variable_get('mastercal_default_username'),
-    'password' => variable_get('mastercal_default_password'),
-    'eventId' => $event_id,
+    'userName' => $calendar->username,
+    'password' => $calendar->password,
+    'eventDetailId' => $eid,
   );
   
+  // Load the WSClient service.
   $service = wsclient_service_load('calendar');
-  $result = $service->GetUdqs($param);
   
+  // Call the GetUdqs function.
+  $result = $service->GetUdqs($param);
+
+  // Return the result.
   return $result;
 }
