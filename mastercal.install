@@ -144,190 +144,205 @@ function mastercal_install() {
  * hook_install() and hook_uninstall().
  */
 function _mastercal_installed_fields() {
+  // Get the current translation.
   $t = get_t();
+  
+  // Create the fields array and assign field definitions.
   $fields = array();
   
-  $fields['field_event_image'] = array(
-      'field_name' => 'field_event_image',
-      'type'       => 'image',
-      'cardinality' => 1,
-    );
-  
-  // Exported field: 'node-event-field_event_cid'
+  // Calendar ID
+  // field_event_cid
   $fields['field_event_cid'] = array(  
-      'active' => '1',
-      'cardinality' => '1',
-      'deleted' => '0',
-      'entity_types' => array(),
-      'field_name' => 'field_event_cid',
-      'foreign keys' => array(),
-      'indexes' => array(),
-      'module' => 'number',
-      'settings' => array(),
-      'type' => 'number_integer',
+    'field_name' => 'field_event_cid',
+    'type' => 'number_integer',
+    'active' => '1',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'entity_types' => array(),
+    'foreign keys' => array(),
+    'indexes' => array(),
+    'module' => 'number',
+    'settings' => array(),
   );
   
+  // Event Details ID
+  // field_event_did
   $fields['field_event_did'] = array(
-      'active' => '1',
-      'cardinality' => '1',
-      'deleted' => '0',
-      'entity_types' => array(),
-      'field_name' => 'field_event_did',
-      'foreign keys' => array(),
-      'indexes' => array(),
-      'module' => 'number',
-      'settings' => array(),
-      'type' => 'number_integer',
+    'field_name' => 'field_event_did',
+    'type' => 'number_integer',
+    'active' => '1',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'entity_types' => array(),
+    'foreign keys' => array(),
+    'indexes' => array(),
+    'module' => 'number',
+    'settings' => array(),
   );
   
-  // Exported field: 'node-event-field_event_contact'
-  $fields['field_event_contact'] = array(
-      'active' => '1',
-      'cardinality' => '1',
-      'deleted' => '0',
-      'entity_types' => array(),
-      'field_name' => 'field_event_contact',
-      'foreign keys' => array(
-        'format' => array(
-          'columns' => array(
-            'format' => 'format',
-          ),
-          'table' => 'filter_format',
-        ),
-      ),
-      'indexes' => array(
-        'format' => array(
-          0 => 'format',
-        ),
-      ),
-      'module' => 'text',
-      'settings' => array(
-        'max_length' => '255',
-      ),
-      'type' => 'text',
-  );
-
-  // Exported field: 'node-event-field_event_date'
+  // Event Date
+  // field_event_date
   $fields['field_event_date'] = array(
-      'active' => '1',
-      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
-      'deleted' => '0',
-      'entity_types' => array(),
-      'field_name' => 'field_event_date',
-      'foreign keys' => array(),
-      'indexes' => array(),
-      'module' => 'date',
-      'settings' => array(
-        'granularity' => array(
-          'day' => 'day',
-          'hour' => 'hour',
-          'minute' => 'minute',
-          'month' => 'month',
-          'second' => 0,
-          'year' => 'year',
-        ),
-        'repeat' => 0,
-        'timezone_db' => 'UTC',
-        'todate' => 'optional',
-        'tz_handling' => 'site',
+    'field_name' => 'field_event_date',
+    'type' => 'datetime',
+    'active' => '1',
+    'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+    'deleted' => '0',
+    'entity_types' => array(),
+    'foreign keys' => array(),
+    'indexes' => array(),
+    'module' => 'date',
+    'settings' => array(
+      'granularity' => array(
+        'day' => 'day',
+        'hour' => 'hour',
+        'minute' => 'minute',
+        'month' => 'month',
+        'second' => 0,
+        'year' => 'year',
       ),
-      'type' => 'datetime',
+      'repeat' => 0,
+      'timezone_db' => 'UTC',
+      'todate' => 'optional',
+      'tz_handling' => 'site',
+    ),
   );
-
-  // Exported field: 'node-event-field_event_email'
+  
+  // Contact Name
+  // field_event_contact
+  $fields['field_event_contact'] = array(
+    'field_name' => 'field_event_contact',
+    'type' => 'text',
+    'active' => '1',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'entity_types' => array(),
+    'foreign keys' => array(
+      'format' => array(
+        'columns' => array(
+          'format' => 'format',
+        ),
+        'table' => 'filter_format',
+      ),
+    ),
+    'indexes' => array(
+      'format' => array(
+        0 => 'format',
+      ),
+    ),
+    'module' => 'text',
+    'settings' => array(
+      'max_length' => '255',
+    ),
+  );
+  
+  // Contact Email
+  // field_event_email
   $fields['field_event_email'] = array(
-      'active' => '1',
-      'cardinality' => '1',
-      'deleted' => '0',
-      'entity_types' => array(),
-      'field_name' => 'field_event_email',
-      'foreign keys' => array(
-        'format' => array(
-          'columns' => array(
-            'format' => 'format',
-          ),
-          'table' => 'filter_format',
+    'field_name' => 'field_event_email',
+    'type' => 'text',
+    'active' => '1',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'entity_types' => array(),
+    'foreign keys' => array(
+      'format' => array(
+        'columns' => array(
+          'format' => 'format',
         ),
+        'table' => 'filter_format',
       ),
-      'indexes' => array(
-        'format' => array(
-          0 => 'format',
-        ),
+    ),
+    'indexes' => array(
+      'format' => array(
+        0 => 'format',
       ),
-      'module' => 'text',
-      'settings' => array(
-        'max_length' => '255',
-      ),
-      'type' => 'text',
+    ),
+    'module' => 'text',
+    'settings' => array(
+      'max_length' => '255',
+    ),
   );
 
-  // Exported field: 'node-event-field_event_location'
+  // Event Location
+  // field_event_location
   $fields['field_event_location'] = array(
-      'active' => '1',
-      'cardinality' => '1',
-      'deleted' => '0',
-      'entity_types' => array(),
-      'field_name' => 'field_event_location',
-      'foreign keys' => array(
-        'format' => array(
-          'columns' => array(
-            'format' => 'format',
-          ),
-          'table' => 'filter_format',
+    'field_name' => 'field_event_location',
+    'type' => 'text',
+    'active' => '1',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'entity_types' => array(),
+    'foreign keys' => array(
+      'format' => array(
+        'columns' => array(
+          'format' => 'format',
         ),
+        'table' => 'filter_format',
       ),
-      'indexes' => array(
-        'format' => array(
-          0 => 'format',
-        ),
+    ),
+    'indexes' => array(
+      'format' => array(
+        0 => 'format',
       ),
-      'module' => 'text',
-      'settings' => array(
-        'max_length' => '255',
-      ),
-      'type' => 'text',
+    ),
+    'module' => 'text',
+    'settings' => array(
+      'max_length' => '255',
+    ),
   );
 
-  // Exported field: 'node-event-field_event_url'
+  // Event URL
+  // field_event_url
   $fields['field_event_url'] = array(
-      'active' => '1',
-      'cardinality' => '1',
-      'deleted' => '0',
-      'entity_types' => array(),
-      'field_name' => 'field_event_url',
-      'foreign keys' => array(
-        'format' => array(
-          'columns' => array(
-            'format' => 'format',
-          ),
-          'table' => 'filter_format',
+    'field_name' => 'field_event_url',
+    'type' => 'text',
+    'active' => '1',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'entity_types' => array(),
+    'foreign keys' => array(
+      'format' => array(
+        'columns' => array(
+          'format' => 'format',
         ),
+        'table' => 'filter_format',
       ),
-      'indexes' => array(
-        'format' => array(
-          0 => 'format',
-        ),
+    ),
+    'indexes' => array(
+      'format' => array(
+        0 => 'format',
       ),
-      'module' => 'text',
-      'settings' => array(
-        'max_length' => '255',
-      ),      
-      'type' => 'text',
+    ),
+    'module' => 'text',
+    'settings' => array(
+      'max_length' => '255',
+    ),
   );
-
+  
+  // Event Type
+  // field_event_type
   $fields['field_event_type'] = array(
-      'field_name' => 'field_event_type',
-      'type' => 'taxonomy_term_reference',
-      'cardinality' => 1,
-      'settings' => array(
-        'allowed_values' => array(
-          array(
-            'vocabulary' => 'event_types',
-            'parent' => 0,
-          ),
+    'field_name' => 'field_event_type',
+    'type' => 'taxonomy_term_reference',
+    'cardinality' => 1,
+    'settings' => array(
+      'allowed_values' => array(
+        array(
+          'vocabulary' => 'event_types',
+          'parent' => 0,
         ),
       ),
-    );
+    ),
+  );
+  
+  // Image
+  // field_event_image
+  $fields['field_event_image'] = array(
+    'field_name' => 'field_event_image',
+    'type'       => 'image',
+    'cardinality' => 1,
+  );
   
   return $fields;
 }
@@ -342,17 +357,13 @@ function _mastercal_installed_fields() {
  * and hook_uninstall().
  */
 function _mastercal_installed_instances() {
+  // Get the current translation.
   $t = get_t();
+  
+  // Return the instances of the fields defined in _mastercal_installed_fields.
   return array(
-    'field_event_image' => array(
-      'field_name'  => 'field_event_image',
-      'label'       => $t('Upload an image:'),
-      'required'    => FALSE,
-      'widget' => array(
-        'type'    => 'image_image',
-        'weight'  => 2.10,
-      ),
-    ),
+    // Event Calendar ID
+    // field_event_cid
     'field_event_cid' => array(
       'bundle' => 'mastercal_event',
       'default_value' => NULL,
@@ -403,6 +414,8 @@ function _mastercal_installed_instances() {
         'weight' => '2',
       ),
     ),
+    // Event Details ID
+    // field_event_did
     'field_event_did' => array(
       'bundle' => 'mastercal_event',
       'default_value' => NULL,
@@ -413,50 +426,8 @@ function _mastercal_installed_instances() {
       'label' => 'DetailID',
       'required' => 1,
     ),  
-    'field_event_contact' => array(
-      'bundle' => 'mastercal_event',
-      'default_value' => NULL,
-      'deleted' => '0',
-      'description' => '',
-      'display' => array(
-        'default' => array(
-          'label' => 'above',
-          'module' => 'text',
-          'settings' => array(),
-          'type' => 'text_default',
-          'weight' => 4,
-        ),
-        'example_node_list' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => 0,
-        ),
-        'teaser' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => 0,
-        ),
-      ),
-      'entity_type' => 'node',
-      'field_name' => 'field_event_contact',
-      'label' => 'ContactName',
-      'required' => 0,
-      'settings' => array(
-        'text_processing' => '0',
-        'user_register_form' => FALSE,
-      ),
-      'widget' => array(
-        'active' => 1,
-        'module' => 'text',
-        'settings' => array(
-          'size' => '60',
-        ),
-        'type' => 'text_textfield',
-        'weight' => '0',
-      ),
-    ),
+    // Event Date
+    // field_event_date
     'field_event_date' => array(
       'bundle' => 'mastercal_event',
       'deleted' => '0',
@@ -515,7 +486,55 @@ function _mastercal_installed_instances() {
         'type' => 'date_popup',
         'weight' => '-3',
       ),
-    ), 
+    ),
+    // Event Contact Name
+    // field_event_contact
+    'field_event_contact' => array(
+      'bundle' => 'mastercal_event',
+      'default_value' => NULL,
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 4,
+      ),
+      'example_node_list' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_event_contact',
+    'label' => 'ContactName',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => '0',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => '60',
+      ),
+      'type' => 'text_textfield',
+      'weight' => '0',
+      ),
+    ),
+    // Event Contact Email
+    // field_event_email
     'field_event_email' => array(
       'bundle' => 'mastercal_event',
       'default_value' => NULL,
@@ -560,6 +579,8 @@ function _mastercal_installed_instances() {
         'weight' => '1',
       ),
     ), 
+    // Event Location
+    // field_event_location
     'field_event_location' => array(
       'bundle' => 'mastercal_event',
       'default_value' => NULL,
@@ -604,6 +625,8 @@ function _mastercal_installed_instances() {
         'weight' => '-2',
       ),
     ), 
+    // Event URL
+    // field_event_url
     'field_event_url' => array(
       'bundle' => 'mastercal_event',
       'default_value' => NULL,
@@ -648,6 +671,8 @@ function _mastercal_installed_instances() {
         'weight' => '-1',
       ),
     ),
+    // Event Type
+    // field_event_type
     'field_event_type' => array(
       'field_name' => 'field_event_type',
       'label' => $t('Event Type'),
@@ -656,7 +681,18 @@ function _mastercal_installed_instances() {
       'widget' => array(
         'type' => 'options_select',
       ),
-    ),  
+    ),
+    // Event Image
+    // field_event_image
+    'field_event_image' => array(
+      'field_name'  => 'field_event_image',
+      'label'       => $t('Upload an image:'),
+      'required'    => FALSE,
+      'widget' => array(
+        'type'    => 'image_image',
+        'weight'  => 2.10,
+      ),
+    ),
   );
 }
 
