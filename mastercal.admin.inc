@@ -256,6 +256,41 @@ function mastercal_edit_form($form, &$form_state, $cid) {
     '#default_value' => $calendar->time_range,
   );
   
+  // Create the UDQ table header.
+  // @TODO: Sort this by calendar name.
+  $header = array(
+    'name' => t('UDQ Name'),
+    'answer' => t('Sample Answer'),
+    'data_type' => t('Data Type'),
+  );
+  
+  // Get the UDQs for the calendar.
+  $udqs = _mastercal_get_udqs($cid);
+  
+  // Initialize an empty array.
+  $options = array();
+  
+  // Loop through the individual calendars.
+  foreach ($calendars as $calendar) {
+    $options[$calendar->cid] = array(
+    'name' => $calendar->name,
+    'username' => $calendar->username,
+    'password' => (!empty($calendar->password)) ? t('************') : '',
+    'start_date' => format_date($calendar->start_date, $type='custom', $format='F d, Y'),
+    'time_range' => $calendar->time_range . ' month(s)',
+    'connected' => ($calendar->connected == '1') ? 'Yes' : 'No',
+    );
+  }
+  
+  // Construct the table select which stores the cid in the selected value.
+  $form['table'] = array(
+  '#type' => 'tableselect',
+  '#header' => $header,
+  '#options' => $options,
+  '#multiple' => FALSE,
+  '#empty' => t('No calendars found.'),
+  );
+  
   // Submit button.
   $form['submit'] = array(
     '#type' => 'submit',

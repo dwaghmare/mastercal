@@ -127,8 +127,31 @@ function _mastercal_get_events($cid) {
   // Get the result.
   $result = $service->GetEvents($param);
   
-  // Return the result.
-  return $result;
+  // Load the response as XML.
+  $xml = simplexml_load_string($result->GetEventsResult);
+  
+  // Parse the XML response from the web service using SimpleXML.
+  foreach ($xml->children() as $child) {
+    // Create an array to store the data.
+    $temp = array();
+    foreach ($child->children() as $subchild) {
+      // Associate array var['Name of field'] = 'value of field'.
+      $temp[$subchild->getName()] = (string) $subchild;
+    }
+    // Assign the $temp fields to the $cals array.
+    $cals[] = $temp;
+  }
+  
+  // Collapse the dates if $cals is set.
+  if (isset($cals)) {
+    $events = _mastercal_collapse_dates($cals);
+  }
+  else {
+    $events = NULL;
+  }
+ 
+  // Return the events.
+  return $events;
 }
 
 /**
@@ -156,33 +179,82 @@ function _mastercal_get_event($cid, $did) {
   // Get the result.
   $result = $service->GetEvent($param);
   
-  // Return it as an object.
-  return $result;
+  // Load it into XML.
+  $xml = simplexml_load_string(utf8_encode($result->GetEventResult));
+
+  // Initialize a count.
+  $count = 0;
+  	
+  // Iterate over each XML element in the XML.
+  foreach ($xml->children() as $child) {	
+    // Initialize a temporary array.
+    $temp = array();
+	  	
+    foreach ($child->children() as $subchild) {
+	    $temp[$subchild->getName()] = (string) $subchild;
+    }
+  	
+    $data[] = $temp;
+
+    // Increment the count.
+    $count .= 1;
+  }
+
+  // If there is event data.
+  if (isset($data)) {  	
+    $event = $data;
+  }
+  else {
+    $event = NULL;
+  }	
+  
+  // Return the event.
+  return $event;
 }
 
 /**
- * Returns array of user-defined questions (UDQ) for calendar.
+ * Returns array of user-defined questions (UDQ) for a given calendar. 
+ * Gets the first event for the calendar and uses that event as the $eid
+ * argument for the GetUdqs API call. If no events exist, returns NULL.
  * 
  * @param $cid
- * @param $eid 
  */
-function _mastercal_get_udqs($cid, $eid) {
+function _mastercal_get_udqs($cid) {
   // Load the calendar as an object.
   $calendar = _mastercal_load($cid);
   
-  // Construct the API paramter as an array for the GetEvent call.
-  $param = array(
+  // Get events for the current calendar.
+  $events = _mastercal_get_events($cid);
+  
+  return $events;
+  
+  // Get the eid of the first event. 
+  /*
+  foreach ($events['GetEventsResult'] as $event) {
+    $eid = $event['EventID'];
+    break;
+  }
+  
+  // If no events exist, return NULL.
+  if (empty($eid)) {
+    return NULL;
+  }
+  else {
+    // Construct the API paramter as an array for the GetUdqs call.
+    $param = array(
     'userName' => $calendar->username,
     'password' => $calendar->password,
-    'eventDetailId' => $eid,
-  );
-  
-  // Load the WSClient service.
-  $service = wsclient_service_load('calendar');
-  
-  // Call the GetUdqs function.
-  $result = $service->GetUdqs($param);
-
-  // Return the result.
-  return $result;
+    'eventId' => $eid,
+    );
+    
+    // Load the WSClient service.
+    $service = wsclient_service_load('calendar');
+    
+    // Call the GetUdqs function.
+    $result = $service->GetUdqs($param);
+    
+    // Return the result.
+    return $result;
+  }
+*/
 }
