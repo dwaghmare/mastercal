@@ -382,22 +382,10 @@ function _mastercal_installed_instances() {
           'type' => 'number_integer',
           'weight' => 6,
         ),
-        'example_node_list' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => 0,
-        ),
-        'teaser' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => 0,
-        ),
       ),
       'entity_type' => 'node',
       'field_name' => 'field_event_cid',
-      'label' => 'CID',
+      'label' => 'Calendar ID',
       'required' => 1,
       'settings' => array(
         'max' => '',
@@ -411,7 +399,7 @@ function _mastercal_installed_instances() {
         'module' => 'number',
         'settings' => array(),
         'type' => 'number',
-        'weight' => '2',
+        'weight' => '-4',
       ),
     ),
     // Event Details ID
@@ -423,8 +411,11 @@ function _mastercal_installed_instances() {
       'description' => '',
       'entity_type' => 'node',
       'field_name' => 'field_event_did',
-      'label' => 'DetailID',
+      'label' => 'Event Details ID',
       'required' => 1,
+      'widget' => array(
+        'weight' => '-3',
+      ),
     ),  
     // Event Date
     // field_event_date
@@ -446,18 +437,6 @@ function _mastercal_installed_instances() {
           ),
           'type' => 'date_default',
           'weight' => 1,
-        ),
-        'example_node_list' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => 0,
-        ),
-        'teaser' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => 0,
         ),
       ),
       'entity_type' => 'node',
@@ -484,7 +463,7 @@ function _mastercal_installed_instances() {
           'year_range' => '-3:+3',
         ),
         'type' => 'date_popup',
-        'weight' => '-3',
+        'weight' => '-2',
       ),
     ),
     // Event Contact Name
@@ -502,22 +481,10 @@ function _mastercal_installed_instances() {
         'type' => 'text_default',
         'weight' => 4,
       ),
-      'example_node_list' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
     ),
     'entity_type' => 'node',
     'field_name' => 'field_event_contact',
-    'label' => 'ContactName',
+    'label' => 'Contact Name',
     'required' => 0,
     'settings' => array(
       'text_processing' => '0',
@@ -530,7 +497,7 @@ function _mastercal_installed_instances() {
         'size' => '60',
       ),
       'type' => 'text_textfield',
-      'weight' => '0',
+      'weight' => '-1',
       ),
     ),
     // Event Contact Email
@@ -548,22 +515,10 @@ function _mastercal_installed_instances() {
           'type' => 'text_default',
           'weight' => 5,
         ),
-        'example_node_list' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => 0,
-        ),
-        'teaser' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => 0,
-        ),
       ),
       'entity_type' => 'node',
       'field_name' => 'field_event_email',
-      'label' => 'ContactEmail',
+      'label' => 'Contact Email',
       'required' => 0,
       'settings' => array(
         'text_processing' => '0',
@@ -576,7 +531,7 @@ function _mastercal_installed_instances() {
           'size' => '60',
         ),
         'type' => 'text_textfield',
-        'weight' => '1',
+        'weight' => '0',
       ),
     ), 
     // Event Location
@@ -594,18 +549,6 @@ function _mastercal_installed_instances() {
           'type' => 'text_default',
           'weight' => 2,
         ),
-        'example_node_list' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => 0,
-        ),
-        'teaser' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => 0,
-        ),
       ),
       'entity_type' => 'node',
       'field_name' => 'field_event_location',
@@ -622,7 +565,7 @@ function _mastercal_installed_instances() {
           'size' => '60',
         ),
         'type' => 'text_textfield',
-        'weight' => '-2',
+        'weight' => '1',
       ),
     ), 
     // Event URL
@@ -640,22 +583,10 @@ function _mastercal_installed_instances() {
           'type' => 'text_default',
           'weight' => 3,
         ),
-        'example_node_list' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => 0,
-        ),
-        'teaser' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => 0,
-        ),
       ),
       'entity_type' => 'node',
       'field_name' => 'field_event_url',
-      'label' => 'LocationURL',
+      'label' => 'Location URL',
       'required' => 0,
       'settings' => array(
         'text_processing' => '0',
@@ -668,7 +599,7 @@ function _mastercal_installed_instances() {
           'size' => '60',
         ),
         'type' => 'text_textfield',
-        'weight' => '-1',
+        'weight' => '2',
       ),
     ),
     // Event Type
@@ -680,6 +611,7 @@ function _mastercal_installed_instances() {
       'required' => FALSE,
       'widget' => array(
         'type' => 'options_select',
+        'weight' => '3',
       ),
     ),
     // Event Image
@@ -690,7 +622,7 @@ function _mastercal_installed_instances() {
       'required'    => FALSE,
       'widget' => array(
         'type'    => 'image_image',
-        'weight'  => 2.10,
+        'weight'  => '4',
       ),
     ),
   );
