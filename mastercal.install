@@ -64,6 +64,12 @@ function mastercal_schema() {
         'default' => '0',
         'description' => 'Integer representing a boolean on whether the calendar can connect to the API or not.',
       ),
+      'terms' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'serialize' => TRUE,
+        'description' => 'A serialized array of UDQ IDs that represent approved taxonomy terms.',
+      ),
     ),
     'primary key' => array('cid'),
   );
