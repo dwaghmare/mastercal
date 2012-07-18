@@ -233,20 +233,31 @@ function mastercal_cron() {
       
       // Run taxonomy functionality.
       if (!empty($terms)) {
+        // An array of taxonomy terms.
+        $taxonomy = array();
+        
+        foreach ($terms as $key => $value) {
+          // Get the UDQID for each term selection.
+          if ($value != 0) {
+            foreach ($udqs as $udq) {
+              if ($udq['UDQID'] == $value) {
+                $taxonomy[$udq['UDQID']] = $udq['Answer'];                
+              }
+            }
+          }
+        }
+        
         // Count.
         $n = 0;
         
-        foreach ($terms as $term) {
-          // Get the value for each term selection.
-          
-          
+        foreach ($taxonomy as $key => $value) {
           // Create the taxonomy terms.
-          $tid = _mastercal_create_term($term);
-          
+          $tid = _mastercal_create_term($value);
+        
           // Assign the term to the event type field.
           if (!empty($tid)) {
             $node->field_event_tags['und'][$n]['tid'] = $tid;
-            
+        
             // Increment the count.
             $n++;
           }
