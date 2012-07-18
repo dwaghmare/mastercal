@@ -61,9 +61,9 @@ function _mastercal_create_term($term) {
   // Grabs the list of vocabularies.
   $vocabularies = taxonomy_get_vocabularies();
   
-  // Get the vid of the event_types vocabulary.
+  // Get the vid of the Master Calendar event tags vocabulary.
   foreach ($vocabularies as $voc) {
-    if ($voc->machine_name == 'event_types') {
+    if ($voc->machine_name == 'mastercal_event_tags') {
       $vid = $voc->vid;
     }
   }
