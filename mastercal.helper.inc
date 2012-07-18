@@ -52,81 +52,25 @@ function _mastercal_collapse_dates($events) {
 }
 
 /**
- * Helper function to create taxonomy list.
- *
- * @param array $list
- */
-function _mastercal_create_terms($list) {
-  $jobs = array();
-
-  // Grabs the list of vocabularies.
-  $vocabularies = taxonomy_get_vocabularies();
-  foreach ($vocabularies as $voc) {
-    if ($voc->machine_name == 'event_types') {
-      $vid = $voc->vid;
-    }
-  }
-  // Grabs the terms from the chosen vocabulary.
-  $existing = taxonomy_get_tree($vid);
-
-  $loaded_terms = array();
-  foreach ($existing as $job_rank) {
-    $loaded_terms[] = $job_rank->name;
-  }
-  foreach ($list as $entry) {
-    if (is_array($entry)) {
-      if (!isset($jobs[$entry['title']])) {
-        $jobs[$entry['title']] = False;
-      }
-    }
-    else {
-      if (!isset($jobs[$entry])) {
-        $jobs[$entry] = False;
-      }
-
-    }
-  }
-
-  if (!empty($loaded_terms)) {
-    foreach ($jobs as $new_term => $val) {
-
-      if (!in_array($new_term, $loaded_terms)) {
-        taxonomy_term_save((object) array(
-          'name' => t($new_term),
-          'vid' => $vid,
-        ));
-      }
-    }
-  }
-  else {
-    foreach ($jobs as $new_term => $val) {
-      taxonomy_term_save((object) array(
-        'name' => t($new_term),
-        'vid' => $vid,
-      ));
-    }
-  }
-
-
-}
-
-/**
  * Helper function to create taxonomy term.
  *
- * @param string $event_type
+ * @param $term
  */
-function _mastercal_create_term($event_type) {
+function _mastercal_create_term($term) {
 
   // Grabs the list of vocabularies.
   $vocabularies = taxonomy_get_vocabularies();
+  
+  // Get the vid of the event_types vocabulary.
   foreach ($vocabularies as $voc) {
     if ($voc->machine_name == 'event_types') {
       $vid = $voc->vid;
     }
   }
+  
   // Grabs the terms from the chosen vocabulary.
   if (!empty($vid)) {
-    $new = array('vid' => $vid, 'name' => $event_type);
+    $new = array('vid' => $vid, 'name' => $term);
     $terms = taxonomy_get_term_by_name($new['name']);
     if (!empty($terms)) {
       if (count($terms) == 1) {
