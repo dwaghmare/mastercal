@@ -169,49 +169,18 @@ function mastercal_cron() {
         $nodes['updated'] += 1;
       }
       
-      // Set the eventID and detailsID.
-      $node->field_event_cid['und'][0]['value'] = $eid;
-      $node->field_event_did['und'][0]['value'] = $did;
-      
-      // Set the node title.
+      // Assign variables to node object fields.
       $node->title = $event['Title'];
+      $node->field_event_eid['und'][0]['value'] = $eid;
+      $node->field_event_did['und'][0]['value'] = $did;
+      $node->field_event_contact['und'][0]['value'] = $contact_name;
+      $node->field_event_email['und'][0]['value'] = $contact_email;
+      $node->field_event_location['und'][0]['value'] = $event_loc;
+      $node->field_event_url['und'][0]['value'] = $event_loc_url;
       
       // Prepare the body field.
       $node->body['und'][0]['value'] = _mastercal_format($event['Description']);
       $node->body['und'][0]['format'] = 'filtered_html';
-      
-      // @TODO: What does this do?
-      $param['eventDetailId'] = $did;
-      $event_data = _mastercal_get_event($cid, $did);
-      
-      // If the event has an image, decode it, save it to the public file
-      // system and assign it to the corresponding node.
-      // NOTE : This uses the 'Add Image' link under the body field of the
-      // Master Calendar submit form.
-      if (isset($event_data[0]['Image'])) {
-        $image = base64_decode($event_data[0]['Image']);
-        $file = file_save_data($image, 'public://' . $event_data[0]['ImageName'], FILE_EXISTS_REPLACE);
-        $node->field_event_image['und']['0']['fid'] = $file->fid;
-      }
-      
-      // Assign variables to node fields.
-      $node->field_event_contact['und'][0]['value'] = $contact_name;
-      $node->field_event_location['und'][0]['value'] = $event_loc;
-      if (!empty($event_loc_url)) {
-        $node->field_event_url['und'][0]['value'] = $event_loc_url;
-      }
-      
-      // Create the taxonomy term for this event based on event type.
-      if (!empty($event_tag)) {
-        $type_name = $event_tag;
-        _mastercal_create_terms(array($type_name));
-        $tid = db_query_range('SELECT tid FROM {taxonomy_term_data} WHERE name = :name ORDER BY tid DESC', 0,
-        1, array(':name' => $type_name))->fetchField();
-      
-        if (!empty($tid)) {
-          $node->field_event_type['und'][0]['tid'] = $tid;
-        }
-      }
       
       // Count the number of dates.
       $n_dates = count($event['EventDate']);
@@ -224,7 +193,7 @@ function mastercal_cron() {
           $time = explode('-', $date[1]);
           $datetime = $date[0] . ' ' . $time[0];
           $the_date = gmdate('Y-m-d H:i:s', strtotime($datetime));
-    
+      
           $node->field_event_date['und'][$count]['value'] = $the_date;
           $node->field_event_date['und'][$count]['value2'] = $the_date;
            
@@ -236,10 +205,39 @@ function mastercal_cron() {
         $time = explode('-', $date[1]);
         $datetime = $date[0] . ' ' . $time[0];
         $the_date = gmdate('Y-m-d H:i:s', strtotime($datetime));
-    
+      
         $node->field_event_date['und'][0]['value'] = $the_date;
         $node->field_event_date['und'][0]['value2'] = $the_date;
         $node->field_event_date['und'][0]['date_type'] = 'datetime';
+      }
+      
+      // Grab the event data for this event using GetEvent. The 'Image' field
+      // is not returned in GetEvents.
+      $event_data = _mastercal_get_event($cid, $did);
+      
+      // If the event has an image, decode it, save it to the public file
+      // system and assign it to the corresponding node.
+      // NOTE : This uses the 'Add Image' link under the body field of the
+      // Master Calendar submit form.
+      if (isset($event_data[0]['Image'])) {
+        $image = base64_decode($event_data[0]['Image']);
+        $file = file_save_data($image, 'public://' . $event_data[0]['ImageName'], FILE_EXISTS_REPLACE);
+        $node->field_event_image['und']['0']['fid'] = $file->fid;
+      }
+      
+      // Get the UDQ's for this calendar, if any.
+      $udqs = _mastercal_get_udqs($cid);
+      
+      // Create the taxonomy term for this event based on event type.
+      if (!empty($event_tag)) {
+        $type_name = $event_tag;
+        _mastercal_create_terms(array($type_name));
+        $tid = db_query_range('SELECT tid FROM {taxonomy_term_data} WHERE name = :name ORDER BY tid DESC', 0,
+        1, array(':name' => $type_name))->fetchField();
+      
+        if (!empty($tid)) {
+          $node->field_event_type['und'][0]['tid'] = $tid;
+        }
       }
     
       // Save the node.
