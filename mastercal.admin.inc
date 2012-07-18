@@ -259,7 +259,7 @@ function mastercal_edit_form($form, &$form_state, $cid) {
   // If the calendar is connected.
   if ($calendar->connected == 1) {
     // Get the UDQs for the calendar.
-    $udqs = _mastercal_get_udqs($cid);
+    $udqs = _mastercal_get_udqs($cid, NULL);
     
     // Create another array for the taxonomy terms.
     $terms = array();
@@ -267,7 +267,7 @@ function mastercal_edit_form($form, &$form_state, $cid) {
     
     // Assign each udq as key => value pair.
     foreach ($udqs as $udq) {
-      $terms['term_' . $udq['UDQID']] = t($udq['PromptText']);
+      $terms[$udq['UDQID']] = t($udq['PromptText']);
     }
     
     // Taxonomy fieldset.

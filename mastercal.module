@@ -225,18 +225,21 @@ function mastercal_cron() {
         $node->field_event_image['und']['0']['fid'] = $file->fid;
       }
       
-      // Get the UDQ's for this calendar, if any.
-      $udqs = _mastercal_get_udqs($cid);
+      // Get the UDQ's for this event.
+      $udqs = _mastercal_get_udqs($cid, $eid);
       
-      // Create the terms array.
+      // Get the term selections for the calendar.
       $terms = unserialize($calendar->terms);
       
-      // Create the taxonomy term for this event based on the calendar terms.
+      // Run taxonomy functionality.
       if (!empty($terms)) {
         // Count.
         $n = 0;
         
         foreach ($terms as $term) {
+          // Get the value for each term selection.
+          
+          
           // Create the taxonomy terms.
           $tid = _mastercal_create_term($term);
           

@@ -215,23 +215,30 @@ function _mastercal_get_event($cid, $did) {
 }
 
 /**
- * Returns array of user-defined questions (UDQ) for a given calendar. 
- * Gets the first event for the calendar and uses that event as the $eid
- * argument for the GetUdqs API call. If no events exist, returns NULL.
+ * Returns array of user-defined questions (UDQ) for a given event.
+ *  
+ * If no event ID is passed as an argument, this function gets the first event
+ * for the calendar and uses that event as the $eid argument for the GetUdqs 
+ * API call. 
+ * 
+ * If no events exist, returns NULL.
  * 
  * @param $cid
  */
-function _mastercal_get_udqs($cid) {
+function _mastercal_get_udqs($cid, $eid = NULL) {
   // Load the calendar as an object.
   $calendar = _mastercal_load($cid);
   
-  // Get events for the current calendar.
-  $events = _mastercal_get_events($cid);
-  
-  // Get the eid of the first event. 
-  foreach ($events as $id => $event) {
-    $eid = $event['EventID'];
-    break;
+  // If no event ID is passed, grab the first one from the calendar.
+  if ($eid == NULL) {
+    // Get events for the current calendar.
+    $events = _mastercal_get_events($cid);
+    
+    // Get the eid of the first event.
+    foreach ($events as $id => $event) {
+      $eid = $event['EventID'];
+      break;
+    }
   }
   
   // If no events exist, return NULL.
