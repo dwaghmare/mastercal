@@ -263,7 +263,6 @@ function mastercal_edit_form($form, &$form_state, $cid) {
     
     // Create another array for the taxonomy terms.
     $terms = array();
-    $terms['event_type'] = t('Event Type');
     
     // Assign each udq as key => value pair.
     foreach ($udqs as $udq) {
