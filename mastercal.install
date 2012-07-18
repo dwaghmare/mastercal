@@ -158,10 +158,10 @@ function _mastercal_installed_fields() {
   // Create the fields array and assign field definitions.
   $fields = array();
   
-  // Calendar ID
-  // field_event_cid
-  $fields['field_event_cid'] = array(  
-    'field_name' => 'field_event_cid',
+  // Event ID
+  // field_event_eid
+  $fields['field_event_eid'] = array(  
+    'field_name' => 'field_event_eid',
     'type' => 'number_integer',
     'active' => '1',
     'cardinality' => '1',
@@ -370,9 +370,9 @@ function _mastercal_installed_instances() {
   
   // Return the instances of the fields defined in _mastercal_installed_fields.
   return array(
-    // Event Calendar ID
-    // field_event_cid
-    'field_event_cid' => array(
+    // Event ID
+    // field_event_eid
+    'field_event_eid' => array(
       'bundle' => 'mastercal_event',
       'default_value' => NULL,
       'deleted' => '0',
@@ -392,8 +392,8 @@ function _mastercal_installed_instances() {
         ),
       ),
       'entity_type' => 'node',
-      'field_name' => 'field_event_cid',
-      'label' => 'Calendar ID',
+      'field_name' => 'field_event_eid',
+      'label' => 'Event ID',
       'required' => 1,
       'settings' => array(
         'max' => '',
