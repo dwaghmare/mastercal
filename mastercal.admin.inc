@@ -162,7 +162,7 @@ function mastercal_add_form_submit($form, &$form_state) {
   $calendar = _mastercal_get_cal($form_state['values']['cid']);
   
   // Save the calendar in the database.
-  _mastercal_save($calendar['Name'], $form_state['values']['cid'], NULL, NULL, NULL, NULL, NULL);
+  _mastercal_save($calendar['Name'], $form_state['values']['cid'], NULL, NULL, NULL, NULL, NULL, NULL);
   
   // Set a confirmation message.
   drupal_set_message(t('The calendar %calendar has been created. You can edit it from this page.', array('%calendar' => $calendar['Name'])));
@@ -276,13 +276,24 @@ function mastercal_edit_form($form, &$form_state, $cid) {
       '#title' => t('Taxonomy'),
     );
     
-    // Create the taxonomy term checkboxes.
-    $form['taxonomy']['terms'] = array(
+    // If no terms have been set, the default value will not work.
+    if ($calendar->terms != NULL) {
+      // Create the taxonomy term checkboxes.
+      $form['taxonomy']['terms'] = array(
       '#type' => 'checkboxes',
       '#options' => $terms,
       '#description' => t('Select the fields that should be used as taxonomy terms.'),
       '#default_value' => unserialize($calendar->terms),
-    );
+      );
+    }
+    else {
+      // Create the taxonomy term checkboxes.
+      $form['taxonomy']['terms'] = array(
+      '#type' => 'checkboxes',
+      '#options' => $terms,
+      '#description' => t('Select the fields that should be used as taxonomy terms.'),
+      );
+    }
     
     // Markup.
     $form['udq_markup'] = array(
@@ -419,7 +430,7 @@ function mastercal_edit_form_submit($form, &$form_state) {
   $start_date = $form_state['values']['start_date'];
   $time_range = $form_state['values']['time_range'];
   $connected = $form_state['values']['connected'];
-  $terms = serialize($form_state['values']['terms']);
+  $terms = (!empty($form_state['values']['terms'])) ? serialize($form_state['values']['terms']) :  NULL;
   
   // Load the calendar from the database as an object.
   $calendar = _mastercal_load($cid);
