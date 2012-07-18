@@ -228,15 +228,25 @@ function mastercal_cron() {
       // Get the UDQ's for this calendar, if any.
       $udqs = _mastercal_get_udqs($cid);
       
-      // Create the taxonomy term for this event based on event type.
-      if (!empty($event_tag)) {
-        $type_name = $event_tag;
-        _mastercal_create_terms(array($type_name));
-        $tid = db_query_range('SELECT tid FROM {taxonomy_term_data} WHERE name = :name ORDER BY tid DESC', 0,
-        1, array(':name' => $type_name))->fetchField();
+      // Create the terms array.
+      $terms = unserialize($calendar->terms);
       
-        if (!empty($tid)) {
-          $node->field_event_type['und'][0]['tid'] = $tid;
+      // Create the taxonomy term for this event based on the calendar terms.
+      if (!empty($terms)) {
+        // Count.
+        $n = 0;
+        
+        foreach ($terms as $term) {
+          // Create the taxonomy terms.
+          $tid = _mastercal_create_term($term);
+          
+          // Assign the term to the event type field.
+          if (!empty($tid)) {
+            $node->field_event_type['und'][$n]['tid'] = $tid;
+            
+            // Increment the count.
+            $n++;
+          }
         }
       }
     
