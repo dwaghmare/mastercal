@@ -256,40 +256,76 @@ function mastercal_edit_form($form, &$form_state, $cid) {
     '#default_value' => $calendar->time_range,
   );
   
-  // Create the UDQ table header.
-  // @TODO: Sort this by calendar name.
-  $header = array(
-    'name' => t('UDQ Name'),
-    'answer' => t('Sample Answer'),
-    'data_type' => t('Data Type'),
-  );
-  
   // Get the UDQs for the calendar.
   $udqs = _mastercal_get_udqs($cid);
   
-  // Initialize an empty array.
-  $options = array();
+  // Create another array for the taxonomy terms.
+  $terms = array();
   
-  // Loop through the individual calendars.
-  foreach ($calendars as $calendar) {
-    $options[$calendar->cid] = array(
-    'name' => $calendar->name,
-    'username' => $calendar->username,
-    'password' => (!empty($calendar->password)) ? t('************') : '',
-    'start_date' => format_date($calendar->start_date, $type='custom', $format='F d, Y'),
-    'time_range' => $calendar->time_range . ' month(s)',
-    'connected' => ($calendar->connected == '1') ? 'Yes' : 'No',
-    );
+  $terms['event_type'] = t('Event Type');
+  
+  // Assign each udq as key => value pair.
+  foreach ($udqs as $udq) {
+    $terms['term_' . $udq['UDQID']] = t($udq['PromptText']);
   }
   
-  // Construct the table select which stores the cid in the selected value.
-  $form['table'] = array(
-  '#type' => 'tableselect',
-  '#header' => $header,
-  '#options' => $options,
-  '#multiple' => FALSE,
-  '#empty' => t('No calendars found.'),
+  // Taxonomy fieldset.
+  $form['taxonomy'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Taxonomy'),
   );
+  
+  // Create the taxonomy term checkboxes.
+  $form['taxonomy']['terms'] = array(
+    '#type' => 'checkboxes',
+    '#options' => $terms,
+    '#description' => t('Select the fields that should be used as taxonomy terms.'),
+  );
+  
+  // Markup.
+  $form['udq_markup'] = array(
+  '#markup' => t('<h3>UDQs</h3><p>For each UDQ below, select the data type that Drupal should use for the corresponding field. Incorrect data types will be truncated.</p>'),
+  );
+  
+  // Iterate over each UDQ.
+  foreach ($udqs as $udq) {
+    // Create a concatenated string for this fieldset.
+    $udq_fieldset = 'udq_' . $udq['UDQID'] . '_fieldset';
+    
+    // Create the fieldset.
+    $form[$udq_fieldset] = array(
+      '#type' => 'fieldset',
+      '#title' => t('UDQ %udq Settings', array('%udq' => $udq['UDQID'])),
+    );
+    
+    // Create the prompt text field.
+    $form[$udq_fieldset]['prompt_text'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Prompt Text'),
+      '#default_value' => $udq['PromptText'],
+      '#disabled' => TRUE,
+    );
+    
+    $form[$udq_fieldset]['sample_answer'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Sample Answer'),
+      '#default_value' => (!empty($udq['Answer']) ? $udq['Answer'] : ''),
+      '#disabled' => TRUE,
+    );
+    
+    $form[$udq_fieldset]['data_type'] = array(
+      '#type' => 'select',
+      '#title' => t('Data Type'),
+      '#description' => t('The data type for the field, e.g. text -> string, number -> int, etc.'),
+      '#options' => array(
+        'string' => t('String'),
+        'int' => t('Integer'),
+        'date' => t('Date'),
+        'boolean' => t('Boolean'),
+      ),
+      //'#required' => TRUE,
+    );
+  }
   
   // Submit button.
   $form['submit'] = array(
@@ -297,6 +333,7 @@ function mastercal_edit_form($form, &$form_state, $cid) {
     '#value' => t('Submit'),
   );
   
+  // Return the form.
   return $form;
 }
 
