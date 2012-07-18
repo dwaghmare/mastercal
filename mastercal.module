@@ -242,7 +242,7 @@ function mastercal_cron() {
           
           // Assign the term to the event type field.
           if (!empty($tid)) {
-            $node->field_event_type['und'][$n]['tid'] = $tid;
+            $node->field_event_tags['und'][$n]['tid'] = $tid;
             
             // Increment the count.
             $n++;

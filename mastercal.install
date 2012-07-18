@@ -328,16 +328,16 @@ function _mastercal_installed_fields() {
     ),
   );
   
-  // Event Type
-  // field_event_type
-  $fields['field_event_type'] = array(
-    'field_name' => 'field_event_type',
+  // Event Tags
+  // field_event_tags
+  $fields['field_event_tags'] = array(
+    'field_name' => 'field_event_tags',
     'type' => 'taxonomy_term_reference',
     'cardinality' => 1,
     'settings' => array(
       'allowed_values' => array(
         array(
-          'vocabulary' => 'event_types',
+          'vocabulary' => 'mastercal_event_tags',
           'parent' => 0,
         ),
       ),
@@ -610,11 +610,11 @@ function _mastercal_installed_instances() {
         'weight' => '2',
       ),
     ),
-    // Event Type
-    // field_event_type
-    'field_event_type' => array(
-      'field_name' => 'field_event_type',
-      'label' => $t('Event Type'),
+    // Event Tags
+    // field_event_tags
+    'field_event_tags' => array(
+      'field_name' => 'field_event_tags',
+      'label' => $t('Event Tags'),
       'bundle' => 'mastercal_event',
       'required' => FALSE,
       'widget' => array(
@@ -679,7 +679,9 @@ function mastercal_uninstall() {
   // Delete the mastercal_event content type.
   // http://api.drupal.org/api/function/node_type_delete/7
   node_type_delete('mastercal_event');
-  $vid = db_query("SELECT vid FROM {taxonomy_vocabulary} WHERE machine_name = 'event_types'")->fetchField();
+  
+  // Delete the Master Calendar event tags taxonomy.
+  $vid = db_query("SELECT vid FROM {taxonomy_vocabulary} WHERE machine_name = 'mastercal_event_tags'")->fetchField();
   taxonomy_vocabulary_delete($vid);
   
   // Purge all field information.
