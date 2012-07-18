@@ -157,7 +157,7 @@ function _mastercal_create_term($event_type) {
  * @param $start_date
  * @param $time_range
  */
-function _mastercal_save($calendar_name, $cid, $username, $password, $start_date, $time_range, $connected) {
+function _mastercal_save($calendar_name, $cid, $username, $password, $start_date, $time_range, $connected, $terms) {
   // Check to see if the calendar is in the database.
   if (_mastercal_load($cid)) {
     // Update the fields for the existing calendar.
@@ -169,7 +169,8 @@ function _mastercal_save($calendar_name, $cid, $username, $password, $start_date
         'password' => $password,
         'start_date' => strtotime($start_date),
         'time_range' => $time_range,
-        'connected' => $connected
+        'connected' => $connected,
+        'terms' => $terms,
       ))
       ->condition('cid', $cid, '=')
     ->execute();
