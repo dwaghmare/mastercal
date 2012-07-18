@@ -136,9 +136,11 @@ function mastercal_install() {
     $instance['bundle'] = $mastercal_event['type'];
     field_create_instance($instance);
   }
+  
+  // Create the taxonomy vocabulary.
   taxonomy_vocabulary_save((object) array(
-    'name' => 'Event Type',
-    'machine_name' => 'event_types',
+    'name' => 'Master Calendar Event Tags',
+    'machine_name' => 'mastercal_event_tags',
   ));
   
 }
