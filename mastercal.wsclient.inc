@@ -228,11 +228,8 @@ function _mastercal_get_udqs($cid) {
   // Get events for the current calendar.
   $events = _mastercal_get_events($cid);
   
-  return $events;
-  
   // Get the eid of the first event. 
-  /*
-  foreach ($events['GetEventsResult'] as $event) {
+  foreach ($events as $id => $event) {
     $eid = $event['EventID'];
     break;
   }
@@ -255,8 +252,22 @@ function _mastercal_get_udqs($cid) {
     // Call the GetUdqs function.
     $result = $service->GetUdqs($param);
     
-    // Return the result.
-    return $result;
+    // Load the response as XML.
+    $xml = simplexml_load_string($result->GetUdqsResult);
+    
+    // Parse the XML response from the web service using SimpleXML.
+    foreach ($xml->children() as $child) {
+      // Create an array to store the data.
+      $temp = array();
+      foreach ($child->children() as $subchild) {
+        // Associate array var['Name of field'] = 'value of field'.
+        $temp[$subchild->getName()] = (string) $subchild;
+      }
+      // Assign the $temp fields to the $cals array.
+      $udqs[] = $temp;
+    }
+    
+    // Return the udqs.
+    return $udqs;
   }
-*/
 }
