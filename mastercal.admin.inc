@@ -307,13 +307,13 @@ function mastercal_edit_form($form, &$form_state, $cid) {
       // Assign the UDQID to a variable.
       $udqid = 'udq_' . $udq['UDQID'];
       
-      // Create the fieldset.
+      // UDQ fieldset.
       $form[$udq_fieldset] = array(
         '#type' => 'fieldset',
         '#title' => t('UDQ %udq Settings', array('%udq' => $udq['UDQID'])),
       );
     
-      // Create the prompt text field.
+      // UDQ prompt text field.
       $form[$udq_fieldset][$udqid . '_prompt_text'] = array(
         '#type' => 'textfield',
         '#title' => t('Prompt Text'),
@@ -321,6 +321,7 @@ function mastercal_edit_form($form, &$form_state, $cid) {
         '#disabled' => TRUE,
       );
     
+      // UDQ Sample Answer.
       $form[$udq_fieldset][$udqid . '_sample_answer'] = array(
         '#type' => 'textfield',
         '#title' => t('Sample Answer'),
@@ -328,6 +329,7 @@ function mastercal_edit_form($form, &$form_state, $cid) {
         '#disabled' => TRUE,
       );
     
+      // UDQ Data Type.
       $form[$udq_fieldset][$udqid . '_data_type'] = array(
         '#type' => 'select',
         '#title' => t('Data Type'),
