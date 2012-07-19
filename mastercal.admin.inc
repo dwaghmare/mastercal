@@ -303,7 +303,10 @@ function mastercal_edit_form($form, &$form_state, $cid) {
     foreach ($udqs as $udq) {
       // Create a concatenated string for this fieldset.
       $udq_fieldset = 'udq_' . $udq['UDQID'] . '_fieldset';
-    
+      
+      // Assign the UDQID to a variable.
+      $udqid = 'udq_' . $udq['UDQID'];
+      
       // Create the fieldset.
       $form[$udq_fieldset] = array(
         '#type' => 'fieldset',
@@ -311,21 +314,21 @@ function mastercal_edit_form($form, &$form_state, $cid) {
       );
     
       // Create the prompt text field.
-      $form[$udq_fieldset]['prompt_text'] = array(
+      $form[$udq_fieldset][$udqid . '_prompt_text'] = array(
         '#type' => 'textfield',
         '#title' => t('Prompt Text'),
         '#default_value' => $udq['PromptText'],
         '#disabled' => TRUE,
       );
     
-      $form[$udq_fieldset]['sample_answer'] = array(
+      $form[$udq_fieldset][$udqid . '_sample_answer'] = array(
         '#type' => 'textfield',
         '#title' => t('Sample Answer'),
         '#default_value' => (!empty($udq['Answer']) ? $udq['Answer'] : ''),
         '#disabled' => TRUE,
       );
     
-      $form[$udq_fieldset]['data_type'] = array(
+      $form[$udq_fieldset][$udqid . '_data_type'] = array(
         '#type' => 'select',
         '#title' => t('Data Type'),
         '#description' => t('The data type for the field, e.g. text -> string, number -> int, etc.'),

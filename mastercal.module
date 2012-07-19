@@ -267,7 +267,7 @@ function mastercal_cron() {
             }
           }
         }
-    
+        
         // Save the node.
         node_submit($node);
         node_save($node);
