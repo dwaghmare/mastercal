@@ -18,17 +18,17 @@ function mastercal_schema() {
   $schema['mastercal_calendar'] = array(
     'description' => 'Stores information about calendars.',
     'fields' => array(
+      'cid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'description' => 'The calendar ID number.',
+      ),
       'name' => array(
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
         'description' => 'Name of the calendar.',
-      ),
-        'cid' => array(
-        'description' => 'Calendar ID number.',
-        'type' => 'int',
-        'not null' => TRUE,
       ),
       'username' => array(
         'type' => 'varchar',
@@ -73,7 +73,41 @@ function mastercal_schema() {
     ),
     'primary key' => array('cid'),
   );
-    
+
+  $schema['mastercal_udq'] = array(
+    'description' => 'Stores information about User Defined Questions (UDQ) for each calendar.',
+    'fields' => array(
+      'udqid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'description' => 'The UDQ ID number.',
+      ),
+      'cid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'description' => 'The calendar ID number the UDQ relates to.',
+      ),
+      'prompt_text' => array(
+        'type' => 'varchar',
+        'not null' => TRUE,
+        'length' => 255,
+        'description' => 'The prompt text for the UDQ.',
+      ),
+      'sample_answer' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'description' => 'A sample answer for the UDQ.',
+      ),
+    ),
+    'primary key' => array('udqid'),
+    'foreign keys' => array(
+      'mastercal_calendar' => array(
+        'table' => 'mastercal_calendar',
+        'columns' => array('cid' => 'cid'),
+      ),
+    ),
+  );
+  
   return $schema;
 }
 
