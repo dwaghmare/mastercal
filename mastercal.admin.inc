@@ -296,7 +296,10 @@ function mastercal_edit_form($form, &$form_state, $cid) {
     
     // Markup.
     $form['udq_markup'] = array(
-      '#markup' => t('<h3>UDQs</h3><p>For each UDQ below, select the data type that Drupal should use for the corresponding field. Incorrect data types will be truncated.</p>'),
+      '#markup' => t('<h3>UDQs</h3><p>For each UDQ below, select the data type 
+      that Drupal should use for the corresponding field. Incorrect data types 
+      will be truncated. Leave the data type set to "None" if you do not
+      wish to create a field for a given UDQ.</p>'),
     );
     
     // Iterate over each UDQ.
