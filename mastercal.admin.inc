@@ -335,7 +335,7 @@ function mastercal_edit_form($form, &$form_state, $cid) {
           'date' => t('Date'),
           'boolean' => t('Boolean'),
         ),
-        //'#required' => TRUE,
+        '#empty_value' => t('-None-'),
       );
     }  
   }
