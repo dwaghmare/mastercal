@@ -215,7 +215,7 @@ function _mastercal_get_event($cid, $did) {
 }
 
 /**
- * Returns array of user-defined questions (UDQ) for a given event.
+ * Returns array of user-defined questions (UDQ) from the API for a given event.
  *  
  * If no event ID is passed as an argument, this function gets the first event
  * for the calendar and uses that event as the $eid argument for the GetUdqs 
