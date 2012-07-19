@@ -281,7 +281,7 @@ function mastercal_edit_form($form, &$form_state, $cid) {
       $form['taxonomy']['terms'] = array(
       '#type' => 'checkboxes',
       '#options' => $terms,
-      '#description' => t('Select the fields that should be used as taxonomy terms.'),
+      '#description' => t('Select the fields that should be used as taxonomy terms in field_event_tags.'),
       '#default_value' => unserialize($calendar->terms),
       );
     }
@@ -290,7 +290,7 @@ function mastercal_edit_form($form, &$form_state, $cid) {
       $form['taxonomy']['terms'] = array(
       '#type' => 'checkboxes',
       '#options' => $terms,
-      '#description' => t('Select the fields that should be used as taxonomy terms.'),
+      '#description' => t('Select the fields that should be used as taxonomy terms in field_event_tags.'),
       );
     }
     
