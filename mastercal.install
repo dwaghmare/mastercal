@@ -188,6 +188,34 @@ function _mastercal_installed_fields() {
     'settings' => array(),
   );
   
+  // Event Type
+  // field_event_type
+  $fields['field_event_type'] = array(
+    'field_name' => 'field_event_type',
+    'type' => 'text',
+    'active' => '1',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'entity_types' => array(),
+    'foreign keys' => array(
+      'format' => array(
+        'columns' => array(
+          'format' => 'format',
+        ),
+        'table' => 'filter_format',
+      ),
+    ),
+    'indexes' => array(
+      'format' => array(
+        0 => 'format',
+      ),
+    ),
+    'module' => 'text',
+    'settings' => array(
+      'max_length' => '255',
+    ),
+  );
+  
   // Event Date
   // field_event_date
   $fields['field_event_date'] = array(
@@ -424,7 +452,41 @@ function _mastercal_installed_instances() {
       'widget' => array(
         'weight' => '-3',
       ),
-    ),  
+    ),
+    // Event Type
+    // field_event_type
+    'field_event_type' => array(
+      'bundle' => 'mastercal_event',
+      'default_value' => NULL,
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'text',
+          'settings' => array(),
+          'type' => 'text_default',
+          'weight' => 4,
+        ),
+      ),
+      'entity_type' => 'node',
+      'field_name' => 'field_event_type',
+      'label' => 'Event Type',
+      'required' => 0,
+      'settings' => array(
+        'text_processing' => '0',
+        'user_register_form' => FALSE,
+      ),
+      'widget' => array(
+        'active' => 1,
+        'module' => 'text',
+        'settings' => array(
+          'size' => '60',
+        ),
+        'type' => 'text_textfield',
+        'weight' => '-2',
+      ),
+    ),
     // Event Date
     // field_event_date
     'field_event_date' => array(
@@ -471,7 +533,7 @@ function _mastercal_installed_instances() {
           'year_range' => '-3:+3',
         ),
         'type' => 'date_popup',
-        'weight' => '-2',
+        'weight' => '-1',
       ),
     ),
     // Event Contact Name
@@ -505,7 +567,7 @@ function _mastercal_installed_instances() {
         'size' => '60',
       ),
       'type' => 'text_textfield',
-      'weight' => '-1',
+      'weight' => '0',
       ),
     ),
     // Event Contact Email
@@ -539,7 +601,7 @@ function _mastercal_installed_instances() {
           'size' => '60',
         ),
         'type' => 'text_textfield',
-        'weight' => '0',
+        'weight' => '1',
       ),
     ), 
     // Event Location
@@ -573,7 +635,7 @@ function _mastercal_installed_instances() {
           'size' => '60',
         ),
         'type' => 'text_textfield',
-        'weight' => '1',
+        'weight' => '2',
       ),
     ), 
     // Event URL
@@ -607,7 +669,7 @@ function _mastercal_installed_instances() {
           'size' => '60',
         ),
         'type' => 'text_textfield',
-        'weight' => '2',
+        'weight' => '3',
       ),
     ),
     // Event Tags
