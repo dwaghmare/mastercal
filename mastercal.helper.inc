@@ -204,3 +204,50 @@ function _mastercal_format($unformatted_string) {
   return $formatted_string;
 }
 
+/**
+ * Helper function to create field and attach it to mastercal_event node.
+ * 
+ * @param $field_type
+ * @param $field_name
+ * @param $field_label
+ */
+function _mastercal_create_field($field_type, $field_name, $field_label) {
+  // Create a field array.
+  $field = array(
+    'type' => $field_type,
+    'field_name' => $field_name,
+    'locked' => TRUE,
+  );
+  
+  // Create the field.
+  field_create_field($field);
+  
+  // Create the array for the text instance of this field.
+  $instance = array(
+    'field_name' => $field_name,
+    'entity_type' => 'node',
+    'label' => $field_label,
+    'bundle' => 'mastercal_event',
+  );
+  
+  // Set widget data depending on the data type.
+  if ($field_type == 'text') {
+   $instance['widget'] = array(
+     'type' => 'textfield',
+   );
+  }
+  else if ($field_type == 'float') {
+    $instance['widget'] = array(
+      'type' => 'textfield',
+    );
+  }
+  else if ($field_type == 'date') {
+    $instance['widget'] = array(
+      'type' => 'date_popup',
+    );
+  }
+  
+  // Attach the field to the mastercal_event node.
+  field_create_instance($instance);
+}
+
