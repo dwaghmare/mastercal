@@ -217,6 +217,10 @@ function _mastercal_create_field($field_type, $field_name, $field_label) {
     'type' => $field_type,
     'field_name' => $field_name,
     'locked' => TRUE,
+    'active' => '1',
+    'cardinality' => '1',
+    'deleted' => '0',
+    
   );
   
   // Create the field.
@@ -228,6 +232,8 @@ function _mastercal_create_field($field_type, $field_name, $field_label) {
     'entity_type' => 'node',
     'label' => $field_label,
     'bundle' => 'mastercal_event',
+    'deleted' => '0',
+    'description' => 'UDQ field settings.'
   );
   
   // Set widget data depending on the data type.
@@ -236,18 +242,84 @@ function _mastercal_create_field($field_type, $field_name, $field_label) {
      'type' => 'textfield',
    );
   }
-  else if ($field_type == 'float') {
+  else if ($field_type == 'number_float') {
     $instance['widget'] = array(
       'type' => 'textfield',
     );
   }
   else if ($field_type == 'date') {
+    $field['settings'] = array(
+      'granularity' => array(
+        'day' => 'day',
+        'hour' => 'hour',
+        'minute' => 'minute',
+        'month' => 'month',
+        'second' => 0,
+        'year' => 'year',
+      ),
+      'repeat' => 0,
+      'timezone_db' => 'UTC',
+      'todate' => 'never',
+      'tz_handling' => 'site',
+    );
+    
+    $field['display'] = array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'date',
+        'settings' => array(
+          'format_type' => 'long',
+          'fromto' => 'both',
+          'multiple_from' => '',
+          'multiple_number' => '',
+          'multiple_to' => '',
+          'show_repeat_rule' => 'show',
+        ),
+        'type' => 'date_default',
+        'weight' => 1,
+      ),
+    );
+    
     $instance['widget'] = array(
       'type' => 'date_popup',
+      'module' => 'date',
+      'settings' => array(
+        'increment' => '15',
+        'input_format' => 'm/d/Y - H:i:s',
+        'input_format_custom' => '',
+        'label_position' => 'above',
+        'repeat_collapsed' => 0,
+        'text_parts' => array(),
+        'year_range' => '-3:+3',
+      ),
     );
   }
   
   // Attach the field to the mastercal_event node.
   field_create_instance($instance);
+}
+
+/**
+ * Helper function to return the field type given a field name. Used in edit 
+ * form default value for UDQ select list.
+ * 
+ * @param $field_name
+ */
+function _mastercal_get_udq_field_type($field_name) {
+  // Check to see if the field exists.
+  if (field_info_field($field_name)) {
+    // Assign the field object.
+    $field = field_info_field($field_name);
+    
+    // Get the field type.
+    $field_type = $field['type'];
+    
+    // Return the field type.
+    return $field_type;
+  }
+  else {
+    // Field is not mapped.
+    return NULL;
+  }
 }
 
