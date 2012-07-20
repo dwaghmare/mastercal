@@ -339,10 +339,11 @@ function mastercal_edit_form($form, &$form_state, $cid) {
         '#description' => t('The data type for the field.'),
         '#options' => array(
           'text' => t('Text'),
-          'float' => t('Number'),
+          'number_float' => t('Number'),
           'datetime' => t('Date'),
         ),
         '#empty_value' => t('-None-'),
+        '#default_value' => _mastercal_get_udq_field_type('field_event_' . strtolower(str_replace(' ', '_', $calendar->name)) . '_' . $udqid),
       );
     }  
   }
