@@ -283,7 +283,7 @@ function mastercal_cron() {
           if ($field_instance) { 
             // If the field instance is a date, convert it to a timestamp.
             if ($field_instance['widget']['type'] == 'date_select') {
-              $answer = !empty($udq2['Answer']) ? strtotime($udq2['Answer']) : NULL;
+              $answer = !empty($udq2['Answer']) ? $udq2['Answer'] : NULL;
             }
             else {
               $answer = !empty($udq2['Answer']) ? $udq2['Answer'] : NULL;
