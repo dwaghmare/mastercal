@@ -212,7 +212,7 @@ function mastercal_cron() {
         }
       
         // Grab the event data for this event using GetEvent. The 'Image' field
-        // is not returned in GetEvents.
+        // is not returned in GetEvents, among other fields.
         $event_data = _mastercal_get_event($cid, $did);
       
         // If the event has an image, decode it, save it to the public file
@@ -224,7 +224,10 @@ function mastercal_cron() {
           $file = file_save_data($image, 'public://' . $event_data[0]['ImageName'], FILE_EXISTS_REPLACE);
           $node->field_event_image['und']['0']['fid'] = $file->fid;
         }
-      
+        
+        // TODO: Refactor this to reduce running time. 
+        // Too many loops and API calls.
+        
         // Get the UDQ's for this event.
         $udqs = _mastercal_get_udqs($cid, $eid);
       
@@ -266,6 +269,30 @@ function mastercal_cron() {
               $n++;
             }
           }
+        }
+        
+        // Iterate over each UDQ.
+        foreach ($udqs as $udq2) {
+          // Create a reusable field name variable.
+          $field_name = 'field_event_' . strtolower(str_replace(' ', '_', $calendar->name)) . '_udq_' . $udq2['UDQID'];
+          
+          // Assign the field instance to a variable.
+          $field_instance = field_info_instance('node', $field_name, 'mastercal_event'); 
+          
+          // If the field instance exists.
+          if ($field_instance) { 
+            // If the field instance is a date, convert it to a timestamp.
+            if ($field_instance['widget']['type'] == 'date_select') {
+              $answer = !empty($udq2['Answer']) ? strtotime($udq2['Answer']) : NULL;
+            }
+            else {
+              $answer = !empty($udq2['Answer']) ? $udq2['Answer'] : NULL;
+            }
+            
+            // Save the field to the node.
+            $code = '$node->' . $field_name . '["und"][0]["value"] = $answer;';
+            eval($code);
+          }  
         }
         
         // Save the node.
