@@ -336,12 +336,11 @@ function mastercal_edit_form($form, &$form_state, $cid) {
       $form[$udq_fieldset][$udqid . '_data_type'] = array(
         '#type' => 'select',
         '#title' => t('Data Type'),
-        '#description' => t('The data type for the field, e.g. text -> string, number -> int, etc.'),
+        '#description' => t('The data type for the field.'),
         '#options' => array(
-          'string' => t('String'),
-          'int' => t('Integer'),
-          'date' => t('Date'),
-          'boolean' => t('Boolean'),
+          'text' => t('Text'),
+          'float' => t('Number'),
+          'datetime' => t('Date'),
         ),
         '#empty_value' => t('-None-'),
       );
@@ -446,6 +445,27 @@ function mastercal_edit_form_submit($form, &$form_state) {
   // database and just re-save it again.
   if (empty($password)) {
     $password = $calendar->password;
+  }
+  
+  // If the calendar is connected.
+  if ($calendar->connected) {
+    // Get the UDQs.
+    $udqs = _mastercal_get_udqs($cid);
+    
+    // Iterate over each UDQ.
+    foreach ($udqs as $udq) {
+      // Create a reusable variable for form_state values.
+      $udq_prefix = 'udq_' . $udq['UDQID'] . '_';
+    
+      // Check to see if this UDQ has been mapped.
+      if ($form_state['values'][$udq_prefix . 'data_type'] != '-None-') {
+        // Check to see if the field already exists.
+        if (!field_info_field('field_event_' . strtolower(str_replace(' ', '_', $calendar->name)) . '_udq_' . $udq['UDQID'])) {
+          // Create and attach the field.
+          _mastercal_create_field($form_state['values'][$udq_prefix . 'data_type'], 'field_event_' . strtolower(str_replace(' ', '_', $calendar->name)) . '_udq_' . $udq['UDQID'], $form_state['values'][$udq_prefix .'prompt_text']);
+        }
+      }
+    }
   }
   
   // Save the calendar.
