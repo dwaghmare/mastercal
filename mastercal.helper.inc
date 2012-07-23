@@ -216,7 +216,6 @@ function _mastercal_create_field($field_type, $field_name, $field_label) {
   $field = array(
     'type' => $field_type,
     'field_name' => $field_name,
-    'locked' => TRUE,
     'active' => '1',
     'cardinality' => '1',
     'deleted' => '0',
@@ -280,8 +279,25 @@ function _mastercal_create_field($field_type, $field_name, $field_label) {
       ),
     );
     
+    $instance['display'] = array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'date',
+        'settings' => array(
+          'format_type' => 'long',
+          'fromto' => 'both',
+          'multiple_from' => '',
+          'multiple_number' => '',
+          'multiple_to' => '',
+          'show_repeat_rule' => 'show',
+        ),
+        'type' => 'date_default',
+        'weight' => 1,
+      ),
+    );
+    
     $instance['widget'] = array(
-      'type' => 'date_popup',
+      'active' => 1,
       'module' => 'date',
       'settings' => array(
         'increment' => '15',
@@ -292,6 +308,8 @@ function _mastercal_create_field($field_type, $field_name, $field_label) {
         'text_parts' => array(),
         'year_range' => '-3:+3',
       ),
+      'type' => 'date_popup',
+      'weight' => '0',
     );
   }
   
