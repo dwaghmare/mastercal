@@ -187,7 +187,7 @@ function mastercal_cron() {
 
         
         // Prepare the body field.
-        $node->body['und'][0]['value'] = _mastercal_format($event['Description']);
+        $node->body['und'][0]['value'] = _mastercal_format_string($event['Description']);
         $node->body['und'][0]['format'] = 'filtered_html';
       
         // Count the number of dates.
