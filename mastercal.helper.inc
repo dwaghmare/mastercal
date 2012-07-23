@@ -206,7 +206,7 @@ function _mastercal_delete($cid) {
  * 
  * @param $string
  */
-function _mastercal_format($unformatted_string) {
+function _mastercal_format_string($unformatted_string) {
   // Strip the inline styles from the html elements.
   $stripped_string = preg_replace("/<([a-z][a-z0-9]*)[^>]*?(\/?)>/i", '<$1$2>', $unformatted_string);
   
