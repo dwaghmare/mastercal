@@ -501,7 +501,7 @@ function _mastercal_installed_instances() {
       'bundle' => 'mastercal_event',
       'default_value' => NULL,
       'deleted' => '0',
-      'description' => '',
+      'description' => 'Event ID field settings.',
       'display' => array(
         'default' => array(
           'label' => 'above',
@@ -518,7 +518,7 @@ function _mastercal_installed_instances() {
       ),
       'entity_type' => 'node',
       'field_name' => 'field_event_eid',
-      'label' => t('Event ID'),
+      'label' => 'Event ID',
       'required' => 1,
       'settings' => array(
         'max' => '',
@@ -541,7 +541,7 @@ function _mastercal_installed_instances() {
       'bundle' => 'mastercal_event',
       'default_value' => NULL,
       'deleted' => '0',
-      'description' => '',
+      'description' => 'Event Details ID field settings.',
       'entity_type' => 'node',
       'field_name' => 'field_event_did',
       'label' => t('Event Details ID'),
@@ -556,7 +556,7 @@ function _mastercal_installed_instances() {
       'bundle' => 'mastercal_event',
       'default_value' => NULL,
       'deleted' => '0',
-      'description' => '',
+      'description' => 'Calendar field settings.',
       'display' => array(
         'default' => array(
           'label' => 'above',
@@ -568,7 +568,7 @@ function _mastercal_installed_instances() {
       ),
       'entity_type' => 'node',
       'field_name' => 'field_event_calendar',
-      'label' => t('Calendar'),
+      'label' => 'Calendar',
       'required' => 0,
       'settings' => array(
         'text_processing' => '0',
@@ -590,7 +590,7 @@ function _mastercal_installed_instances() {
       'bundle' => 'mastercal_event',
       'default_value' => NULL,
       'deleted' => '0',
-      'description' => '',
+      'description' => 'Event Type field settings.',
       'display' => array(
         'default' => array(
           'label' => 'above',
@@ -602,7 +602,7 @@ function _mastercal_installed_instances() {
       ),
       'entity_type' => 'node',
       'field_name' => 'field_event_type',
-      'label' => t('Event Type'),
+      'label' => 'Event Type',
       'required' => 0,
       'settings' => array(
         'text_processing' => '0',
@@ -623,7 +623,7 @@ function _mastercal_installed_instances() {
     'field_event_date' => array(
       'bundle' => 'mastercal_event',
       'deleted' => '0',
-      'description' => '',
+      'description' => 'Event Date field settings.',
       'display' => array(
         'default' => array(
           'label' => 'above',
@@ -642,7 +642,7 @@ function _mastercal_installed_instances() {
       ),
       'entity_type' => 'node',
       'field_name' => 'field_event_date',
-      'label' => t('Date'),
+      'label' => 'Date',
       'required' => 1,
       'settings' => array(
         'default_value' => 'now',
@@ -673,7 +673,7 @@ function _mastercal_installed_instances() {
       'bundle' => 'mastercal_event',
       'default_value' => NULL,
       'deleted' => '0',
-      'description' => '',
+      'description' => 'Contact Name field settings.',
       'display' => array(
         'default' => array(
         'label' => 'above',
@@ -685,7 +685,7 @@ function _mastercal_installed_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_event_contact',
-    'label' => t('Contact Name'),
+    'label' => 'Contact Name',
     'required' => 0,
     'settings' => array(
       'text_processing' => '0',
@@ -707,7 +707,7 @@ function _mastercal_installed_instances() {
       'bundle' => 'mastercal_event',
       'default_value' => NULL,
       'deleted' => '0',
-      'description' => '',
+      'description' => 'Contact Email field settings.',
       'display' => array(
         'default' => array(
           'label' => 'above',
@@ -719,7 +719,7 @@ function _mastercal_installed_instances() {
       ),
       'entity_type' => 'node',
       'field_name' => 'field_event_email',
-      'label' => t('Contact Email'),
+      'label' => 'Contact Email',
       'required' => 0,
       'settings' => array(
         'text_processing' => '0',
@@ -741,7 +741,7 @@ function _mastercal_installed_instances() {
       'bundle' => 'mastercal_event',
       'default_value' => NULL,
       'deleted' => '0',
-      'description' => '',
+      'description' => 'Event Location field settings.',
       'display' => array(
         'default' => array(
           'label' => 'above',
@@ -753,7 +753,7 @@ function _mastercal_installed_instances() {
       ),
       'entity_type' => 'node',
       'field_name' => 'field_event_location',
-      'label' => t('Location'),
+      'label' => 'Location',
       'required' => 0,
       'settings' => array(
         'text_processing' => '0',
@@ -775,7 +775,7 @@ function _mastercal_installed_instances() {
       'bundle' => 'mastercal_event',
       'default_value' => NULL,
       'deleted' => '0',
-      'description' => '',
+      'description' => 'Event URL field settings.',
       'display' => array(
         'default' => array(
           'label' => 'above',
@@ -787,7 +787,7 @@ function _mastercal_installed_instances() {
       ),
       'entity_type' => 'node',
       'field_name' => 'field_event_url',
-      'label' => t('Location URL'),
+      'label' => 'Location URL',
       'required' => 0,
       'settings' => array(
         'text_processing' => '0',
@@ -807,7 +807,8 @@ function _mastercal_installed_instances() {
     // field_event_tags
     'field_event_tags' => array(
       'field_name' => 'field_event_tags',
-      'label' => t('Event Tags'),
+      'description' => 'Event Tags field settings.',
+      'label' => 'Event Tags',
       'bundle' => 'mastercal_event',
       'required' => FALSE,
       'widget' => array(
@@ -819,7 +820,8 @@ function _mastercal_installed_instances() {
     // field_event_image
     'field_event_image' => array(
       'field_name'  => 'field_event_image',
-      'label'       => t('Event Image'),
+      'description' => 'Event Image field settings.',
+      'label'       => 'Event Image',
       'required'    => FALSE,
       'widget' => array(
         'type'    => 'image_image',
@@ -831,14 +833,14 @@ function _mastercal_installed_instances() {
     'field_event_updated_date' => array(
       'bundle' => 'mastercal_event',
       'deleted' => '0',
-      'description' => '',
+      'description' => 'Event Updated Date field settings.',
       'display' => array(
         'default' => array(
           'label' => 'above',
           'module' => 'date',
           'settings' => array(
             'format_type' => 'long',
-            'fromto' => 'both',
+            'fromto' => 'never',
             'multiple_from' => '',
             'multiple_number' => '',
             'multiple_to' => '',
@@ -850,7 +852,7 @@ function _mastercal_installed_instances() {
       ),
       'entity_type' => 'node',
       'field_name' => 'field_event_updated_date',
-      'label' => t('Event Updated Date'),
+      'label' => 'Event Updated Date',
       'required' => 1,
       'settings' => array(
         'default_value' => 'blank',
@@ -879,14 +881,14 @@ function _mastercal_installed_instances() {
     'field_event_details_updated_date' => array(
       'bundle' => 'mastercal_event',
       'deleted' => '0',
-      'description' => '',
+      'description' => 'Event Details Updated Date field settings.',
       'display' => array(
         'default' => array(
           'label' => 'above',
           'module' => 'date',
           'settings' => array(
             'format_type' => 'long',
-            'fromto' => 'both',
+            'fromto' => 'never',
             'multiple_from' => '',
             'multiple_number' => '',
             'multiple_to' => '',
@@ -898,7 +900,7 @@ function _mastercal_installed_instances() {
       ),
       'entity_type' => 'node',
       'field_name' => 'field_event_details_updated_date',
-      'label' => t('Event Details Updated Date'),
+      'label' => 'Event Details Updated Date',
       'required' => 1,
       'settings' => array(
         'default_value' => 'blank',
