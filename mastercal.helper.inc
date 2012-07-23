@@ -24,6 +24,28 @@ function _mastercal_end_date($start_date, $time_range) {
 }
 
 /**
+ * Helper function to format a date returned from the MC API. Necessary to save
+ * the date to a field.
+ * 
+ * @param $date
+ */
+function _mastercal_format_date($date) {
+  // Explode into an array on 'T' character.
+  $date_array = explode('T', $date);
+  
+  // Explode date_array into array on '-' character.
+  $time_array = explode('-', $date_array[0]);
+  
+  // Concatenate date and time into datetime format.
+  $datetime = $date_array[0] . ' ' . $time_array[0];
+  
+  // Format the date using gmdate().
+  $formatted_date = gmdate('Y-m-d H:i:s', strtotime($datetime));
+  
+  return $formatted_date;
+}
+
+/**
  * Helper function to collapse dates. Changes the EventDate to an array of
  * multiple values. 
  *
