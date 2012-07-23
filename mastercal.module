@@ -125,6 +125,7 @@ function mastercal_cron() {
         // Assign XML fields to variables if not empty, otherwise NULL.
         $eid = $id;
         $did = $event['EventDetailID'];
+        $calendar_name = $calendar->name;
         $event_type = $event['EventTypeName'];
         $contact_name = $event['ContactName'];
         $contact_email = $event['ContactEmail'];
@@ -172,6 +173,7 @@ function mastercal_cron() {
         $node->title = $event['Title'];
         $node->field_event_eid['und'][0]['value'] = $eid;
         $node->field_event_did['und'][0]['value'] = $did;
+        $node->field_event_calendar['und'][0]['value'] = $calendar_name;
         $node->field_event_type['und'][0]['value'] = $event_type;
         $node->field_event_contact['und'][0]['value'] = $contact_name;
         $node->field_event_email['und'][0]['value'] = $contact_email;
