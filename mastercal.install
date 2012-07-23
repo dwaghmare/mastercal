@@ -557,7 +557,7 @@ function _mastercal_installed_instances() {
           'size' => '60',
         ),
         'type' => 'text_textfield',
-        'weight' => '-2',
+        'weight' => '-1',
       ),
     ),
     // Event Date
@@ -606,7 +606,7 @@ function _mastercal_installed_instances() {
           'year_range' => '-3:+3',
         ),
         'type' => 'date_popup',
-        'weight' => '-1',
+        'weight' => '0',
       ),
     ),
     // Event Contact Name
@@ -640,7 +640,7 @@ function _mastercal_installed_instances() {
         'size' => '60',
       ),
       'type' => 'text_textfield',
-      'weight' => '0',
+      'weight' => '1',
       ),
     ),
     // Event Contact Email
@@ -674,7 +674,7 @@ function _mastercal_installed_instances() {
           'size' => '60',
         ),
         'type' => 'text_textfield',
-        'weight' => '1',
+        'weight' => '2',
       ),
     ), 
     // Event Location
@@ -708,7 +708,7 @@ function _mastercal_installed_instances() {
           'size' => '60',
         ),
         'type' => 'text_textfield',
-        'weight' => '2',
+        'weight' => '3',
       ),
     ), 
     // Event URL
@@ -742,7 +742,7 @@ function _mastercal_installed_instances() {
           'size' => '60',
         ),
         'type' => 'text_textfield',
-        'weight' => '3',
+        'weight' => '4',
       ),
     ),
     // Event Tags
@@ -754,7 +754,7 @@ function _mastercal_installed_instances() {
       'required' => FALSE,
       'widget' => array(
         'type' => 'options_select',
-        'weight' => '3',
+        'weight' => '4',
       ),
     ),
     // Event Image
@@ -765,7 +765,7 @@ function _mastercal_installed_instances() {
       'required'    => FALSE,
       'widget' => array(
         'type'    => 'image_image',
-        'weight'  => '4',
+        'weight'  => '5',
       ),
     ),
   );
