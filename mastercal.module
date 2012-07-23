@@ -184,6 +184,7 @@ function mastercal_cron() {
         $node->field_event_url['und'][0]['value'] = $event_loc_url;
         $node->field_event_updated_date['und'][0]['value'] = $event_updated_date;
         $node->field_event_detail_updated_date['und'][0]['value'] = $event_detail_updated_date;
+
         
         // Prepare the body field.
         $node->body['und'][0]['value'] = _mastercal_format($event['Description']);
@@ -196,8 +197,11 @@ function mastercal_cron() {
         if ($n_dates > 1) {
           $count = 0;
           foreach ($event['EventDate'] as $day) {
-            $date = _mastercal_format_date($day['Start']);
-           
+            $date = explode('T', $day['Start']);
+            $time = explode('-', $date[1]);
+            $datetime = $date[0] . ' ' . $time[0];
+            $the_date = gmdate('Y-m-d H:i:s', strtotime($datetime));
+      
             $node->field_event_date['und'][$count]['value'] = $the_date;
             $node->field_event_date['und'][$count]['value2'] = $the_date;
            
@@ -205,10 +209,13 @@ function mastercal_cron() {
           }
         }
         else {
-          $date = _mastercal_format_date($event['EventDate'][0]['Start']);
-       
-          $node->field_event_date['und'][0]['value'] = $date;
-          $node->field_event_date['und'][0]['value2'] = $date;
+          $date = explode('T', $event['EventDate'][0]['Start']);
+          $time = explode('-', $date[1]);
+          $datetime = $date[0] . ' ' . $time[0];
+          $the_date = gmdate('Y-m-d H:i:s', strtotime($datetime));
+      
+          $node->field_event_date['und'][0]['value'] = $the_date;
+          $node->field_event_date['und'][0]['value2'] = $the_date;
           $node->field_event_date['und'][0]['date_type'] = 'datetime';
         }
       
