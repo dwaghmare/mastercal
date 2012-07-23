@@ -126,7 +126,7 @@ function mastercal_cron() {
         $eid = $id;
         $did = $event['EventDetailID'];
         $calendar_name = $calendar->name;
-        $event_type = $event['EventTypeName'];
+        $event_type = (!empty($event['EventTypeName'])) ? $event['EventTypeName'] : NULL;
         $contact_name = $event['ContactName'];
         $contact_email = $event['ContactEmail'];
         $event_loc = (!empty($event['Location'])) ? $event['Location'] : NULL;
@@ -305,8 +305,8 @@ function mastercal_cron() {
     }
   
     // Set confirmation message with number of nodes created and updated.
-    drupal_set_message(t("@created events created, @updated events updated.", 
-    array('@created' => $nodes['created'], '@updated' => $nodes['updated'])));
+    drupal_set_message(t("@created @calendar events created, @updated @calendar events updated.", 
+    array('@calendar' => $calendar->name, '@created' => $nodes['created'], '@updated' => $nodes['updated'])));
   }
 }
 
