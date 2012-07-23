@@ -163,7 +163,7 @@ function mastercal_cron() {
           $node = node_load($node_data->nid);
           
           // Check to see if the event has not been updated.
-          if ($node->field_event_updated_date['und'][0]['value'] == $event_updated_date && $node->field_event_details_updated_date['und'][0]['value'] == $event_detail_updated_date) {
+          if ($node->field_event_updated_date['und'][0]['value'] == $event_updated_date && $node->field_event_detail_updated_date['und'][0]['value'] == $event_detail_updated_date) {
             // If so, continue on to the next iteration skipping the code below.
             continue;
           }
