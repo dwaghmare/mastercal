@@ -246,7 +246,9 @@ function _mastercal_create_field($field_type, $field_name, $field_label) {
       'type' => 'textfield',
     );
   }
-  else if ($field_type == 'date') {
+  else if ($field_type == 'datetime') {
+    $field['module'] = 'date';
+    
     $field['settings'] = array(
       'granularity' => array(
         'day' => 'day',
@@ -262,40 +264,6 @@ function _mastercal_create_field($field_type, $field_name, $field_label) {
       'tz_handling' => 'site',
     );
     
-    $field['display'] = array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'date',
-        'settings' => array(
-          'format_type' => 'long',
-          'fromto' => 'both',
-          'multiple_from' => '',
-          'multiple_number' => '',
-          'multiple_to' => '',
-          'show_repeat_rule' => 'show',
-        ),
-        'type' => 'date_default',
-        'weight' => 1,
-      ),
-    );
-    
-    $instance['display'] = array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'date',
-        'settings' => array(
-          'format_type' => 'long',
-          'fromto' => 'both',
-          'multiple_from' => '',
-          'multiple_number' => '',
-          'multiple_to' => '',
-          'show_repeat_rule' => 'show',
-        ),
-        'type' => 'date_default',
-        'weight' => 1,
-      ),
-    );
-    
     $instance['widget'] = array(
       'active' => 1,
       'module' => 'date',
@@ -309,7 +277,6 @@ function _mastercal_create_field($field_type, $field_name, $field_label) {
         'year_range' => '-3:+3',
       ),
       'type' => 'date_popup',
-      'weight' => '0',
     );
   }
   
