@@ -283,13 +283,8 @@ function mastercal_cron() {
           
           // If the field instance exists.
           if ($field_instance) { 
-            // If the field instance is a date, convert it to a timestamp.
-            if ($field_instance['widget']['type'] == 'date_select') {
-              $answer = !empty($udq2['Answer']) ? $udq2['Answer'] : NULL;
-            }
-            else {
-              $answer = !empty($udq2['Answer']) ? $udq2['Answer'] : NULL;
-            }
+            // Assign the value.
+            $answer = !empty($udq2['Answer']) ? $udq2['Answer'] : NULL;
             
             // Save the field to the node.
             $code = '$node->' . $field_name . '["und"][0]["value"] = $answer;';
