@@ -131,11 +131,8 @@ function mastercal_cron() {
         $contact_email = $event['ContactEmail'];
         $event_loc = (!empty($event['Location'])) ? $event['Location'] : NULL;
         $event_loc_url = (!empty($event['LocationURL'])) ? $event['LocationURL'] : NULL;
-      
-        // Create updated time variables.
-        // @TODO: Use these to only update events if they have changed.
-        $event_updated_date = $event['EventUpdatedDate'];
-        $event_detail_updated_date = $event['EventDetailUpdatedDate'];
+        $event_updated_date = _mastercal_format_date($event['EventUpdatedDate']);
+        $event_detail_updated_date = _mastercal_format_date($event['EventDetailUpdatedDate']);
       
         // See if the event already exists as a node in Drupal.
         $query = new EntityFieldQuery;
@@ -164,7 +161,13 @@ function mastercal_cron() {
           // Load the the existing node.
           $node_data = reset($result['node']);
           $node = node_load($node_data->nid);
-        
+          
+          // Check to see if the event has not been updated.
+          if ($node->field_event_updated_date['und'][0]['value'] == $event_updated_date && $node->field_event_details_updated_date['und'][0]['value'] == $event_detail_updated_date) {
+            // If so, continue on to the next iteration skipping the code below.
+            continue;
+          }
+          
           // Add one to the updated count.
           $nodes['updated'] += 1;
         }
@@ -179,7 +182,9 @@ function mastercal_cron() {
         $node->field_event_email['und'][0]['value'] = $contact_email;
         $node->field_event_location['und'][0]['value'] = $event_loc;
         $node->field_event_url['und'][0]['value'] = $event_loc_url;
-      
+        $node->field_event_updated_date['und'][0]['value'] = $event_updated_date;
+        $node->field_event_detail_updated_date['und'][0]['value'] = $event_detail_updated_date;
+        
         // Prepare the body field.
         $node->body['und'][0]['value'] = _mastercal_format($event['Description']);
         $node->body['und'][0]['format'] = 'filtered_html';
@@ -191,11 +196,8 @@ function mastercal_cron() {
         if ($n_dates > 1) {
           $count = 0;
           foreach ($event['EventDate'] as $day) {
-            $date = explode('T', $day['Start']);
-            $time = explode('-', $date[1]);
-            $datetime = $date[0] . ' ' . $time[0];
-            $the_date = gmdate('Y-m-d H:i:s', strtotime($datetime));
-      
+            $date = _mastercal_format_date($day['Start']);
+           
             $node->field_event_date['und'][$count]['value'] = $the_date;
             $node->field_event_date['und'][$count]['value2'] = $the_date;
            
@@ -203,13 +205,10 @@ function mastercal_cron() {
           }
         }
         else {
-          $date = explode('T', $event['EventDate'][0]['Start']);
-          $time = explode('-', $date[1]);
-          $datetime = $date[0] . ' ' . $time[0];
-          $the_date = gmdate('Y-m-d H:i:s', strtotime($datetime));
-      
-          $node->field_event_date['und'][0]['value'] = $the_date;
-          $node->field_event_date['und'][0]['value2'] = $the_date;
+          $date = _mastercal_format_date($event['EventDate'][0]['Start']);
+       
+          $node->field_event_date['und'][0]['value'] = $date;
+          $node->field_event_date['und'][0]['value2'] = $date;
           $node->field_event_date['und'][0]['date_type'] = 'datetime';
         }
       
