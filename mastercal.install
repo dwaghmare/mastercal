@@ -419,10 +419,10 @@ function _mastercal_installed_fields() {
     'locked' => TRUE,
   );
   
-  // Event Updated Time
-  // field_event_updated_time
-  $fields['field_event_updated_time'] = array(
-    'field_name' => 'field_event_updated_time',
+  // Event Updated Date
+  // field_event_updated_date
+  $fields['field_event_updated_date'] = array(
+    'field_name' => 'field_event_updated_date',
     'type' => 'datetime',
     'active' => '1',
     'cardinality' => '1',
@@ -448,10 +448,10 @@ function _mastercal_installed_fields() {
     'locked' => TRUE,
   );
   
-  // Event Details Updated Time
-  // field_event_details_updated_time
-  $fields['field_event_details_updated_time'] = array(
-    'field_name' => 'field_event_details_updated_time',
+  // Event Details Updated Date
+  // field_event_details_updated_date
+  $fields['field_event_details_updated_date'] = array(
+    'field_name' => 'field_event_details_updated_date',
     'type' => 'datetime',
     'active' => '1',
     'cardinality' => '1',
@@ -826,9 +826,9 @@ function _mastercal_installed_instances() {
         'weight'  => '5',
       ),
     ),
-    // Event Updated Time
-    // field_event_updated_time
-    'field_event_updated_time' => array(
+    // Event Updated Date
+    // field_event_updated_date
+    'field_event_updated_date' => array(
       'bundle' => 'mastercal_event',
       'deleted' => '0',
       'description' => '',
@@ -849,8 +849,8 @@ function _mastercal_installed_instances() {
         ),
       ),
       'entity_type' => 'node',
-      'field_name' => 'field_event_updated_time',
-      'label' => t('Event Updated Time'),
+      'field_name' => 'field_event_updated_date',
+      'label' => t('Event Updated Date'),
       'required' => 1,
       'settings' => array(
         'default_value' => 'blank',
@@ -874,9 +874,9 @@ function _mastercal_installed_instances() {
         'type' => 'date_popup',
       ),
     ),
-    // Event Details Updated Time
-    // field_event_details_updated_time
-    'field_event_details_updated_time' => array(
+    // Event Details Updated Date
+    // field_event_details_updated_date
+    'field_event_details_updated_date' => array(
       'bundle' => 'mastercal_event',
       'deleted' => '0',
       'description' => '',
@@ -897,8 +897,8 @@ function _mastercal_installed_instances() {
         ),
       ),
       'entity_type' => 'node',
-      'field_name' => 'field_event_details_updated_time',
-      'label' => t('Event Details Updated Time'),
+      'field_name' => 'field_event_details_updated_date',
+      'label' => t('Event Details Updated Date'),
       'required' => 1,
       'settings' => array(
         'default_value' => 'blank',
