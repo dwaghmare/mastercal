@@ -419,6 +419,64 @@ function _mastercal_installed_fields() {
     'locked' => TRUE,
   );
   
+  // Event Updated Time
+  // field_event_updated_time
+  $fields['field_event_updated_time'] = array(
+    'field_name' => 'field_event_updated_time',
+    'type' => 'datetime',
+    'active' => '1',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'entity_types' => array(),
+    'foreign keys' => array(),
+    'indexes' => array(),
+    'module' => 'date',
+    'settings' => array(
+      'granularity' => array(
+        'day' => 'day',
+        'hour' => 'hour',
+        'minute' => 'minute',
+        'month' => 'month',
+        'second' => 0,
+        'year' => 'year',
+      ),
+      'repeat' => 0,
+      'timezone_db' => 'UTC',
+      'todate' => 'optional',
+      'tz_handling' => 'site',
+    ),
+    'locked' => TRUE,
+  );
+  
+  // Event Details Updated Time
+  // field_event_details_updated_time
+  $fields['field_event_details_updated_time'] = array(
+    'field_name' => 'field_event_details_updated_time',
+    'type' => 'datetime',
+    'active' => '1',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'entity_types' => array(),
+    'foreign keys' => array(),
+    'indexes' => array(),
+    'module' => 'date',
+    'settings' => array(
+      'granularity' => array(
+        'day' => 'day',
+        'hour' => 'hour',
+        'minute' => 'minute',
+        'month' => 'month',
+        'second' => 0,
+        'year' => 'year',
+      ),
+      'repeat' => 0,
+      'timezone_db' => 'UTC',
+      'todate' => 'optional',
+      'tz_handling' => 'site',
+    ),
+    'locked' => TRUE,
+  );
+  
   return $fields;
 }
 
@@ -460,7 +518,7 @@ function _mastercal_installed_instances() {
       ),
       'entity_type' => 'node',
       'field_name' => 'field_event_eid',
-      'label' => 'Event ID',
+      'label' => t('Event ID'),
       'required' => 1,
       'settings' => array(
         'max' => '',
@@ -486,7 +544,7 @@ function _mastercal_installed_instances() {
       'description' => '',
       'entity_type' => 'node',
       'field_name' => 'field_event_did',
-      'label' => 'Event Details ID',
+      'label' => t('Event Details ID'),
       'required' => 1,
       'widget' => array(
         'weight' => '-3',
@@ -510,7 +568,7 @@ function _mastercal_installed_instances() {
       ),
       'entity_type' => 'node',
       'field_name' => 'field_event_calendar',
-      'label' => 'Calendar',
+      'label' => t('Calendar'),
       'required' => 0,
       'settings' => array(
         'text_processing' => '0',
@@ -544,7 +602,7 @@ function _mastercal_installed_instances() {
       ),
       'entity_type' => 'node',
       'field_name' => 'field_event_type',
-      'label' => 'Event Type',
+      'label' => t('Event Type'),
       'required' => 0,
       'settings' => array(
         'text_processing' => '0',
@@ -584,7 +642,7 @@ function _mastercal_installed_instances() {
       ),
       'entity_type' => 'node',
       'field_name' => 'field_event_date',
-      'label' => 'Date',
+      'label' => t('Date'),
       'required' => 1,
       'settings' => array(
         'default_value' => 'now',
@@ -627,7 +685,7 @@ function _mastercal_installed_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_event_contact',
-    'label' => 'Contact Name',
+    'label' => t('Contact Name'),
     'required' => 0,
     'settings' => array(
       'text_processing' => '0',
@@ -661,7 +719,7 @@ function _mastercal_installed_instances() {
       ),
       'entity_type' => 'node',
       'field_name' => 'field_event_email',
-      'label' => 'Contact Email',
+      'label' => t('Contact Email'),
       'required' => 0,
       'settings' => array(
         'text_processing' => '0',
@@ -695,7 +753,7 @@ function _mastercal_installed_instances() {
       ),
       'entity_type' => 'node',
       'field_name' => 'field_event_location',
-      'label' => 'Location',
+      'label' => t('Location'),
       'required' => 0,
       'settings' => array(
         'text_processing' => '0',
@@ -729,7 +787,7 @@ function _mastercal_installed_instances() {
       ),
       'entity_type' => 'node',
       'field_name' => 'field_event_url',
-      'label' => 'Location URL',
+      'label' => t('Location URL'),
       'required' => 0,
       'settings' => array(
         'text_processing' => '0',
@@ -749,7 +807,7 @@ function _mastercal_installed_instances() {
     // field_event_tags
     'field_event_tags' => array(
       'field_name' => 'field_event_tags',
-      'label' => $t('Event Tags'),
+      'label' => t('Event Tags'),
       'bundle' => 'mastercal_event',
       'required' => FALSE,
       'widget' => array(
@@ -761,11 +819,107 @@ function _mastercal_installed_instances() {
     // field_event_image
     'field_event_image' => array(
       'field_name'  => 'field_event_image',
-      'label'       => $t('Event Image'),
+      'label'       => t('Event Image'),
       'required'    => FALSE,
       'widget' => array(
         'type'    => 'image_image',
         'weight'  => '5',
+      ),
+    ),
+    // Event Updated Time
+    // field_event_updated_time
+    'field_event_updated_time' => array(
+      'bundle' => 'mastercal_event',
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'date',
+          'settings' => array(
+            'format_type' => 'long',
+            'fromto' => 'both',
+            'multiple_from' => '',
+            'multiple_number' => '',
+            'multiple_to' => '',
+            'show_repeat_rule' => 'show',
+          ),
+          'type' => 'date_default',
+          'weight' => 1,
+        ),
+      ),
+      'entity_type' => 'node',
+      'field_name' => 'field_event_updated_time',
+      'label' => t('Event Updated Time'),
+      'required' => 1,
+      'settings' => array(
+        'default_value' => 'blank',
+        'default_value2' => 'blank',
+        'default_value_code' => '',
+        'default_value_code2' => '',
+        'user_register_form' => FALSE,
+      ),
+      'widget' => array(
+        'active' => 1,
+        'module' => 'date',
+        'settings' => array(
+          'increment' => '15',
+          'input_format' => 'm/d/Y - H:i:s',
+          'input_format_custom' => '',
+          'label_position' => 'above',
+          'repeat_collapsed' => 0,
+          'text_parts' => array(),
+          'year_range' => '-3:+3',
+        ),
+        'type' => 'date_popup',
+      ),
+    ),
+    // Event Details Updated Time
+    // field_event_details_updated_time
+    'field_event_details_updated_time' => array(
+      'bundle' => 'mastercal_event',
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'date',
+          'settings' => array(
+            'format_type' => 'long',
+            'fromto' => 'both',
+            'multiple_from' => '',
+            'multiple_number' => '',
+            'multiple_to' => '',
+            'show_repeat_rule' => 'show',
+          ),
+          'type' => 'date_default',
+          'weight' => 1,
+        ),
+      ),
+      'entity_type' => 'node',
+      'field_name' => 'field_event_details_updated_time',
+      'label' => t('Event Details Updated Time'),
+      'required' => 1,
+      'settings' => array(
+        'default_value' => 'blank',
+        'default_value2' => 'blank',
+        'default_value_code' => '',
+        'default_value_code2' => '',
+        'user_register_form' => FALSE,
+      ),
+      'widget' => array(
+        'active' => 1,
+        'module' => 'date',
+        'settings' => array(
+          'increment' => '15',
+          'input_format' => 'm/d/Y - H:i:s',
+          'input_format_custom' => '',
+          'label_position' => 'above',
+          'repeat_collapsed' => 0,
+          'text_parts' => array(),
+          'year_range' => '-3:+3',
+        ),
+        'type' => 'date_popup',
       ),
     ),
   );
