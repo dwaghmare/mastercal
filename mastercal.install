@@ -448,10 +448,10 @@ function _mastercal_installed_fields() {
     'locked' => TRUE,
   );
   
-  // Event Details Updated Date
-  // field_event_details_updated_date
-  $fields['field_event_details_updated_date'] = array(
-    'field_name' => 'field_event_details_updated_date',
+  // Event Detail Updated Date
+  // field_event_detail_updated_date
+  $fields['field_event_detail_updated_date'] = array(
+    'field_name' => 'field_event_detail_updated_date',
     'type' => 'datetime',
     'active' => '1',
     'cardinality' => '1',
@@ -876,12 +876,12 @@ function _mastercal_installed_instances() {
         'type' => 'date_popup',
       ),
     ),
-    // Event Details Updated Date
-    // field_event_details_updated_date
-    'field_event_details_updated_date' => array(
+    // Event Detail Updated Date
+    // field_event_detail_updated_date
+    'field_event_detail_updated_date' => array(
       'bundle' => 'mastercal_event',
       'deleted' => '0',
-      'description' => 'Event Details Updated Date field settings.',
+      'description' => 'Event Detail Updated Date field settings.',
       'display' => array(
         'default' => array(
           'label' => 'above',
@@ -899,8 +899,8 @@ function _mastercal_installed_instances() {
         ),
       ),
       'entity_type' => 'node',
-      'field_name' => 'field_event_details_updated_date',
-      'label' => 'Event Details Updated Date',
+      'field_name' => 'field_event_detail_updated_date',
+      'label' => 'Event Detail Updated Date',
       'required' => 1,
       'settings' => array(
         'default_value' => 'blank',
