@@ -281,7 +281,7 @@ function mastercal_edit_form($form, &$form_state, $cid) {
       $form['taxonomy']['terms'] = array(
       '#type' => 'checkboxes',
       '#options' => $terms,
-      '#description' => t('Select the fields that should be used as taxonomy terms in field_event_tags.'),
+      '#description' => t('Select the fields that should be used as taxonomy terms in field_mc_tags.'),
       '#default_value' => unserialize($calendar->terms),
       );
     }
@@ -290,7 +290,7 @@ function mastercal_edit_form($form, &$form_state, $cid) {
       $form['taxonomy']['terms'] = array(
       '#type' => 'checkboxes',
       '#options' => $terms,
-      '#description' => t('Select the fields that should be used as taxonomy terms in field_event_tags.'),
+      '#description' => t('Select the fields that should be used as taxonomy terms in field_mc_tags.'),
       );
     }
     
@@ -343,7 +343,7 @@ function mastercal_edit_form($form, &$form_state, $cid) {
           'datetime' => t('Date'),
         ),
         '#empty_value' => t('-None-'),
-        '#default_value' => _mastercal_get_udq_field_type('field_event_calendar_' . $calendar->cid . '_' . $udqid),
+        '#default_value' => _mastercal_get_udq_field_type('field_mc_calendar_' . $calendar->cid . '_' . $udqid),
       );
     }  
   }
@@ -461,9 +461,9 @@ function mastercal_edit_form_submit($form, &$form_state) {
       // Check to see if this UDQ has been mapped.
       if ($form_state['values'][$udq_prefix . 'data_type'] != '-None-') {
         // Check to see if the field already exists.
-        if (!field_info_field('field_event_' . strtolower(str_replace(' ', '_', $calendar->name)) . '_udq_' . $udq['UDQID'])) {
+        if (!field_info_field('field_mc_calendar_' . $calendar->cid . '_udq_' . $udq['UDQID'])) {
           // Create and attach the field.
-          _mastercal_create_field($form_state['values'][$udq_prefix . 'data_type'], 'field_event_calendar_' . $calendar->cid . '_udq_' . $udq['UDQID'], $form_state['values'][$udq_prefix .'prompt_text']);
+          _mastercal_create_field($form_state['values'][$udq_prefix . 'data_type'], 'field_mc_calendar_' . $calendar->cid . '_udq_' . $udq['UDQID'], $form_state['values'][$udq_prefix .'prompt_text']);
         }
       }
     }
