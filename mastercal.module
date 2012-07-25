@@ -182,7 +182,6 @@ function mastercal_cron() {
         $node->title = $event['Title'];
         $node->field_mc_eid['und'][0]['value'] = $eid;
         $node->field_mc_did['und'][0]['value'] = $did;
-        $node->field_mc_calendar['und'][0]['value'] = $calendar_name;
         $node->field_mc_type['und'][0]['value'] = $event_type;
         $node->field_mc_contact['und'][0]['value'] = $contact_name;
         $node->field_mc_email['und'][0]['value'] = $contact_email;
@@ -191,7 +190,30 @@ function mastercal_cron() {
         $node->field_mc_canceled['und'][0]['value'] = $event_canceled;
         $node->field_mc_updated_date['und'][0]['value'] = $event_updated_date;
         $node->field_mc_detail_updated_date['und'][0]['value'] = $event_detail_updated_date;
-
+        
+        // If the first calendar name value is not set, assign the current
+        // calendar name. 
+        if (!isset($node->field_mc_calendar['und'][0]['value'])) {
+          $node->field_mc_calendar['und'][0]['value'] = $calendar_name;
+        }
+        else {
+          // Set some flags for the calendar name loop.
+          $calendar_exists = FALSE;
+          $calendar_count = count($node->field_mc_calendar['und']);
+          
+          // Iterate over each item in field_mc_calendar['und'].
+          for ($i = 0; $i < $calendar_count; $i++) {
+            // If the item value equals the current calendar name, set the flag.
+            if ($node->field_mc_calendar['und'][$i]['value'] == $calendar_name) {
+              $calendar_exists = TRUE;
+            }
+          }
+          
+          // Add the current calendar name to the field if it doesn't exist.
+          if ($calendar_exists == FALSE) {
+            $node->field_mc_calendar['und'][$calendar_count]['value'] = $calendar_name;
+          }
+        }
         
         // Prepare the body field.
         $node->body['und'][0]['value'] = _mastercal_format_string($event['Description']);
