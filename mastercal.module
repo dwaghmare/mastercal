@@ -139,7 +139,7 @@ function mastercal_cron() {
         $result = $query
         ->entityCondition('entity_type', 'node')
         ->propertyCondition('type', 'mastercal_event')
-        ->fieldCondition('field_event_eid', 'value', $eid, '=')
+        ->fieldCondition('field_mc_eid', 'value', $eid, '=')
         ->execute();
       
         // If not, create and prepare a new node.
@@ -163,7 +163,7 @@ function mastercal_cron() {
           $node = node_load($node_data->nid);
           
           // Check to see if the event has not been updated.
-          if ($node->field_event_updated_date['und'][0]['value'] == $event_updated_date && $node->field_event_detail_updated_date['und'][0]['value'] == $event_detail_updated_date) {
+          if ($node->field_mc_updated_date['und'][0]['value'] == $event_updated_date && $node->field_mc_detail_updated_date['und'][0]['value'] == $event_detail_updated_date) {
             // If so, continue on to the next iteration skipping the code below.
             continue;
           }
@@ -174,16 +174,16 @@ function mastercal_cron() {
       
         // Assign variables to node object fields.
         $node->title = $event['Title'];
-        $node->field_event_eid['und'][0]['value'] = $eid;
-        $node->field_event_did['und'][0]['value'] = $did;
-        $node->field_event_calendar['und'][0]['value'] = $calendar_name;
-        $node->field_event_type['und'][0]['value'] = $event_type;
-        $node->field_event_contact['und'][0]['value'] = $contact_name;
-        $node->field_event_email['und'][0]['value'] = $contact_email;
-        $node->field_event_location['und'][0]['value'] = $event_location;
-        $node->field_event_location_url['und'][0]['value'] = $event_location_url_url;
-        $node->field_event_updated_date['und'][0]['value'] = $event_updated_date;
-        $node->field_event_detail_updated_date['und'][0]['value'] = $event_detail_updated_date;
+        $node->field_mc_eid['und'][0]['value'] = $eid;
+        $node->field_mc_did['und'][0]['value'] = $did;
+        $node->field_mc_calendar['und'][0]['value'] = $calendar_name;
+        $node->field_mc_type['und'][0]['value'] = $event_type;
+        $node->field_mc_contact['und'][0]['value'] = $contact_name;
+        $node->field_mc_email['und'][0]['value'] = $contact_email;
+        $node->field_mc_location['und'][0]['value'] = $event_location;
+        $node->field_mc_location_url['und'][0]['value'] = $event_location_url;
+        $node->field_mc_updated_date['und'][0]['value'] = $event_updated_date;
+        $node->field_mc_detail_updated_date['und'][0]['value'] = $event_detail_updated_date;
 
         
         // Prepare the body field.
@@ -197,26 +197,24 @@ function mastercal_cron() {
         if ($n_dates > 1) {
           $count = 0;
           foreach ($event['EventDate'] as $day) {
-            $date = explode('T', $day['Start']);
-            $time = explode('-', $date[1]);
-            $datetime = $date[0] . ' ' . $time[0];
-            $the_date = gmdate('Y-m-d H:i:s', strtotime($datetime));
-      
-            $node->field_event_date['und'][$count]['value'] = $the_date;
-            $node->field_event_date['und'][$count]['value2'] = $the_date;
+            // Format the date.
+            $date = _mastercal_format_date($day['Start']);
            
+            // Assign the date to the field.
+            $node->field_mc_date['und'][$count]['value'] = $date;
+            $node->field_mc_date['und'][$count]['value2'] = $date;
+
+            // Increment the count.
             $count += 1;
           }
         }
         else {
-          $date = explode('T', $event['EventDate'][0]['Start']);
-          $time = explode('-', $date[1]);
-          $datetime = $date[0] . ' ' . $time[0];
-          $the_date = gmdate('Y-m-d H:i:s', strtotime($datetime));
-      
-          $node->field_event_date['und'][0]['value'] = $the_date;
-          $node->field_event_date['und'][0]['value2'] = $the_date;
-          $node->field_event_date['und'][0]['date_type'] = 'datetime';
+          // Format the date.
+          $date = _mastercal_format_date($event['EventDate'][0]['Start']);
+          
+          // Assign the date to the field.
+          $node->field_mc_date['und'][0]['value'] = $date;
+          $node->field_mc_date['und'][0]['value2'] = $date;
         }
       
         // Grab the event data for this event using GetEvent. The 'Image' field
@@ -230,7 +228,7 @@ function mastercal_cron() {
         if (isset($event_data[0]['Image'])) {
           $image = base64_decode($event_data[0]['Image']);
           $file = file_save_data($image, 'public://' . $event_data[0]['ImageName'], FILE_EXISTS_REPLACE);
-          $node->field_event_image['und']['0']['fid'] = $file->fid;
+          $node->field_mc_image['und']['0']['fid'] = $file->fid;
         }
         
         // TODO: Refactor this to reduce running time. 
@@ -271,7 +269,7 @@ function mastercal_cron() {
         
             // Assign the term to the event type field.
             if (!empty($tid)) {
-              $node->field_event_tags['und'][$n]['tid'] = $tid;
+              $node->field_mc_tags['und'][$n]['tid'] = $tid;
         
               // Increment the count.
               $n++;
@@ -282,7 +280,7 @@ function mastercal_cron() {
         // Iterate over each UDQ.
         foreach ($udqs as $udq2) {
           // Create a reusable field name variable.
-          $field_name = 'field_event_' . strtolower(str_replace(' ', '_', $calendar->name)) . '_udq_' . $udq2['UDQID'];
+          $field_name = 'field_mc_' . strtolower(str_replace(' ', '_', $calendar->name)) . '_udq_' . $udq2['UDQID'];
           
           // Assign the field instance to a variable.
           $field_instance = field_info_instance('node', $field_name, 'mastercal_event'); 
