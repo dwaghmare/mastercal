@@ -196,7 +196,7 @@ function _mastercal_installed_fields() {
     'field_name' => 'field_mc_calendar',
     'type' => 'text',
     'active' => '1',
-    'cardinality' => '1',
+    'cardinality' => FIELD_CARDINALITY_UNLIMITED,
     'deleted' => '0',
     'entity_types' => array(),
     'foreign keys' => array(
