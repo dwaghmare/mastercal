@@ -34,7 +34,7 @@ function _mastercal_format_date($date) {
   $date_array = explode('T', $date);
   
   // Explode date_array into array on '-' character.
-  $time_array = explode('-', $date_array[0]);
+  $time_array = explode('-', $date_array[1]);
   
   // Concatenate date and time into datetime format.
   $datetime = $date_array[0] . ' ' . $time_array[0];
