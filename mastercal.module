@@ -129,8 +129,8 @@ function mastercal_cron() {
         $event_type = (!empty($event['EventTypeName'])) ? $event['EventTypeName'] : NULL;
         $contact_name = $event['ContactName'];
         $contact_email = $event['ContactEmail'];
-        $event_loc = (!empty($event['Location'])) ? $event['Location'] : NULL;
-        $event_loc_url = (!empty($event['LocationURL'])) ? $event['LocationURL'] : NULL;
+        $event_location = (!empty($event['Location'])) ? $event['Location'] : NULL;
+        $event_location_url = (!empty($event['LocationURL'])) ? $event['LocationURL'] : NULL;
         $event_updated_date = _mastercal_format_date($event['EventUpdatedDate']);
         $event_detail_updated_date = _mastercal_format_date($event['EventDetailUpdatedDate']);
       
@@ -180,8 +180,8 @@ function mastercal_cron() {
         $node->field_event_type['und'][0]['value'] = $event_type;
         $node->field_event_contact['und'][0]['value'] = $contact_name;
         $node->field_event_email['und'][0]['value'] = $contact_email;
-        $node->field_event_location['und'][0]['value'] = $event_loc;
-        $node->field_event_url['und'][0]['value'] = $event_loc_url;
+        $node->field_event_location['und'][0]['value'] = $event_location;
+        $node->field_event_location_url['und'][0]['value'] = $event_location_url_url;
         $node->field_event_updated_date['und'][0]['value'] = $event_updated_date;
         $node->field_event_detail_updated_date['und'][0]['value'] = $event_detail_updated_date;
 

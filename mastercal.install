@@ -365,9 +365,9 @@ function _mastercal_installed_fields() {
   );
 
   // Event URL
-  // field_event_url
-  $fields['field_event_url'] = array(
-    'field_name' => 'field_event_url',
+  // field_event_location_url
+  $fields['field_event_location_url'] = array(
+    'field_name' => 'field_event_location_url',
     'type' => 'text',
     'active' => '1',
     'cardinality' => '1',
@@ -770,8 +770,8 @@ function _mastercal_installed_instances() {
       ),
     ), 
     // Event URL
-    // field_event_url
-    'field_event_url' => array(
+    // field_event_location_url
+    'field_event_location_url' => array(
       'bundle' => 'mastercal_event',
       'default_value' => NULL,
       'deleted' => '0',
@@ -786,7 +786,7 @@ function _mastercal_installed_instances() {
         ),
       ),
       'entity_type' => 'node',
-      'field_name' => 'field_event_url',
+      'field_name' => 'field_event_location_url',
       'label' => 'Location URL',
       'required' => 0,
       'settings' => array(
