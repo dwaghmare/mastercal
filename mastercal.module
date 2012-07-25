@@ -134,7 +134,10 @@ function mastercal_cron() {
         $event_canceled = ($event['Canceled'] == 'false') ? 0 : 1;
         $event_updated_date = _mastercal_format_date($event['EventUpdatedDate']);
         $event_detail_updated_date = _mastercal_format_date($event['EventDetailUpdatedDate']);
-      
+        
+        // Count the number of dates.
+        $n_dates = count($event['EventDate']);
+        
         // See if the event already exists as a node in Drupal.
         $query = new EntityFieldQuery;
         $result = $query
@@ -163,8 +166,10 @@ function mastercal_cron() {
           $node_data = reset($result['node']);
           $node = node_load($node_data->nid);
           
-          // Check to see if the event has not been updated.
-          if ($node->field_mc_updated_date['und'][0]['value'] == $event_updated_date && $node->field_mc_detail_updated_date['und'][0]['value'] == $event_detail_updated_date) {
+          // Check if the event has not been updated AND the number of dates
+          // within the range of this import equals the number of dates in the 
+          // date field for this event.
+          if ($node->field_mc_updated_date['und'][0]['value'] == $event_updated_date && $node->field_mc_detail_updated_date['und'][0]['value'] == $event_detail_updated_date && $n_dates == count($node->field_mc_date['und'])) {
             // If so, continue on to the next iteration skipping the code below.
             continue;
           }
@@ -191,9 +196,6 @@ function mastercal_cron() {
         // Prepare the body field.
         $node->body['und'][0]['value'] = _mastercal_format_string($event['Description']);
         $node->body['und'][0]['format'] = 'filtered_html';
-      
-        // Count the number of dates.
-        $n_dates = count($event['EventDate']);
       
         // If multiple dates, iterate over each and assign it to the node properly.
         if ($n_dates > 1) {
