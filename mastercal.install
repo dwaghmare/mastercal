@@ -97,10 +97,10 @@ function mastercal_install() {
   // Define the node type.
   $mastercal_event = array(
     'type' => 'mastercal_event',
-    'name' => $t('Master Calendar Event'),
+    'name' => $t('Event'),
     'module' => 'mastercal',
     'base' => 'node_content',
-    'description' => $t('This is an event content type imported by the UIowa Master Calendar module.'),
+    'description' => $t('<em>Events</em> will be created when imported by the UIowa Master Calendar module. They can also be used as internal Drupal events.'),
     'has_title' => TRUE,
     'title_label' => $t('Name'),
   );
@@ -139,7 +139,7 @@ function mastercal_install() {
   
   // Create the taxonomy vocabulary.
   taxonomy_vocabulary_save((object) array(
-    'name' => 'Master Calendar Event Tags',
+    'name' => 'Event Tags',
     'machine_name' => 'mastercal_event_tags',
   ));
   
@@ -364,10 +364,39 @@ function _mastercal_installed_fields() {
     'locked' => TRUE,
   );
 
-  // Event URL
+  // Event Location URL
   // field_event_location_url
   $fields['field_event_location_url'] = array(
     'field_name' => 'field_event_location_url',
+    'type' => 'text',
+    'active' => '1',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'entity_types' => array(),
+    'foreign keys' => array(
+      'format' => array(
+        'columns' => array(
+          'format' => 'format',
+        ),
+        'table' => 'filter_format',
+      ),
+    ),
+    'indexes' => array(
+      'format' => array(
+        0 => 'format',
+      ),
+    ),
+    'module' => 'text',
+    'settings' => array(
+      'max_length' => '255',
+    ),
+    'locked' => TRUE,
+  );
+  
+  // Event Department
+  // field_event_department
+  $fields['field_event_department'] = array(
+    'field_name' => 'field_event_department',
     'type' => 'text',
     'active' => '1',
     'cardinality' => '1',
@@ -769,13 +798,13 @@ function _mastercal_installed_instances() {
         'weight' => '3',
       ),
     ), 
-    // Event URL
+    // Event Location URL
     // field_event_location_url
     'field_event_location_url' => array(
       'bundle' => 'mastercal_event',
       'default_value' => NULL,
       'deleted' => '0',
-      'description' => 'Event URL field settings.',
+      'description' => 'Event Location URL field settings.',
       'display' => array(
         'default' => array(
           'label' => 'above',
@@ -803,6 +832,40 @@ function _mastercal_installed_instances() {
         'weight' => '4',
       ),
     ),
+    // Event Department
+    // field_event_department
+    'field_event_department' => array(
+      'bundle' => 'mastercal_event',
+      'default_value' => NULL,
+      'deleted' => '0',
+      'description' => 'Event Department field settings.',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'text',
+          'settings' => array(),
+          'type' => 'text_default',
+          'weight' => 3,
+        ),
+      ),
+      'entity_type' => 'node',
+      'field_name' => 'field_event_department',
+      'label' => 'Department',
+      'required' => 0,
+      'settings' => array(
+        'text_processing' => '0',
+        'user_register_form' => FALSE,
+      ),
+      'widget' => array(
+        'active' => 1,
+        'module' => 'text',
+        'settings' => array(
+          'size' => '60',
+        ),
+        'type' => 'text_textfield',
+        'weight' => '5',
+      ),
+    ),
     // Event Tags
     // field_event_tags
     'field_event_tags' => array(
@@ -813,7 +876,7 @@ function _mastercal_installed_instances() {
       'required' => FALSE,
       'widget' => array(
         'type' => 'options_select',
-        'weight' => '4',
+        'weight' => '6',
       ),
     ),
     // Event Image
@@ -825,7 +888,7 @@ function _mastercal_installed_instances() {
       'required'    => FALSE,
       'widget' => array(
         'type'    => 'image_image',
-        'weight'  => '5',
+        'weight'  => '7',
       ),
     ),
     // Event Updated Date
