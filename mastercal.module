@@ -306,16 +306,23 @@ function mastercal_cron() {
         // Iterate over each UDQ.
         foreach ($udqs as $udq2) {
           // Create a reusable field name variable.
-          $field_name = 'field_mc_' . strtolower(str_replace(' ', '_', $calendar->name)) . '_udq_' . $udq2['UDQID'];
+          $field_name = 'field_mc_calendar_' . $calendar->cid . '_udq_' . $udq2['UDQID'];
           
           // Assign the field instance to a variable.
           $field_instance = field_info_instance('node', $field_name, 'mastercal_event'); 
           
           // If the field instance exists.
           if ($field_instance) { 
-            // Assign the value.
-            $answer = !empty($udq2['Answer']) ? $udq2['Answer'] : NULL;
-            
+            /// If the field instance is a date.
+            if ($field_instance['widget']['type'] == 'date_popup') {
+              // Format the date and assign it.
+              $answer = !empty($udq2['Answer']) ? _mastercal_format_date($udq2['Answer']) : NULL;
+            }
+            else {
+              // Assign the value.
+              $answer = !empty($udq2['Answer']) ? $udq2['Answer'] : NULL;
+            }
+        
             // Save the field to the node.
             $code = '$node->' . $field_name . '["und"][0]["value"] = $answer;';
             eval($code);
