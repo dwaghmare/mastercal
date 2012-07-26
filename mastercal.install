@@ -928,7 +928,7 @@ function _mastercal_installed_instances() {
         ),
       ),
       'deleted' => '0',
-      'description' => '',
+      'description' => 'Event Canceled field settings.',
       'display' => array(
         'default' => array(
           'label' => 'above',
