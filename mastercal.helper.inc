@@ -30,19 +30,25 @@ function _mastercal_end_date($start_date, $time_range) {
  * @param $date
  */
 function _mastercal_format_date($date) {
-  // Explode into an array on 'T' character.
-  $date_array = explode('T', $date);
-  
-  // Explode date_array into array on '-' character.
-  $time_array = explode('-', $date_array[1]);
-  
-  // Concatenate date and time into datetime format.
-  $datetime = $date_array[0] . ' ' . $time_array[0];
-  
-  // Format the date using gmdate().
-  $formatted_date = gmdate('Y-m-d H:i:s', strtotime($datetime));
-  
-  return $formatted_date;
+  // UDQ date fields do not contain time values.
+  if (substr_count($date, 'T') == 0) {
+    return $date;
+  }
+  else {
+    // Explode into an array on 'T' character.
+    $date_array = explode('T', $date);
+    
+    // Explode date_array into array on '-' character.
+    $time_array = explode('-', $date_array[1]);
+    
+    // Concatenate date and time into datetime format.
+    $datetime = $date_array[0] . ' ' . $time_array[0];
+    
+    // Format the date using gmdate().
+    $formatted_date = gmdate('Y-m-d H:i:s', strtotime($datetime));
+    
+    return $formatted_date;
+  }
 }
 
 /**
@@ -282,7 +288,7 @@ function _mastercal_create_field($field_type, $field_name, $field_label) {
       ),
       'repeat' => 0,
       'timezone_db' => 'UTC',
-      'todate' => 'never',
+      'fromto' => 'never',
       'tz_handling' => 'site',
     );
     
