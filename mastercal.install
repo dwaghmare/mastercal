@@ -70,7 +70,13 @@ function mastercal_schema() {
         'serialize' => TRUE,
         'description' => 'A serialized array of UDQ IDs that represent approved taxonomy terms.',
       ),
-      'sections' => array(
+      'single_section' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'serialize' => TRUE,
+        'description' => 'A serialized array of taxonomy term IDs or menu names representing a single Workbench Access section that should be assigned to events of this calendar.',
+      ),
+      'multiple_sections' => array(
         'type' => 'varchar',
         'length' => 255,
         'serialize' => TRUE,
