@@ -356,9 +356,6 @@ function _mastercal_get_workbench_access_editorial_sections() {
         $sections[_mastercal_get_vid($value)] = ucfirst($value); 
       }
     }
-    
-    return $sections;
-    
   }
   else {
     // Get an array of all custom menus.
@@ -366,8 +363,18 @@ function _mastercal_get_workbench_access_editorial_sections() {
     
     // Get an array of all menus selected for Workbench Access editorial sections.
     $workbench_menus = variable_get('workbench_access_menu');
+    
+    $sections = array('0' => '--None--');
+    
+    foreach ($workbench_menus as $key => $value) {
+      if ($value != '0') {
+        $sections[$key] = ucfirst($value);
+      }
+    }
   }
   
+  // Return an array of sections.
+  return $sections;
 }
 
 /**
