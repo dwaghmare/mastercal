@@ -131,7 +131,7 @@ function _mastercal_create_term($term) {
  * @param $terms
  * @param $sections
  */
-function _mastercal_save($calendar_name, $cid, $username, $password, $start_date, $time_range, $connected, $terms, $sections) {
+function _mastercal_save($calendar_name, $cid, $username, $password, $start_date, $time_range, $connected, $terms, $single_section, $multiple_sections) {
   // Check to see if the calendar is in the database.
   if (_mastercal_load($cid)) {
     // Update the fields for the existing calendar.
@@ -145,7 +145,8 @@ function _mastercal_save($calendar_name, $cid, $username, $password, $start_date
         'time_range' => $time_range,
         'connected' => $connected,
         'terms' => $terms,
-        'sections' => $sections,
+        'single_section' => $single_section,
+        'multiple_sections' => $multiple_sections,
       ))
       ->condition('cid', $cid, '=')
     ->execute();
@@ -159,7 +160,8 @@ function _mastercal_save($calendar_name, $cid, $username, $password, $start_date
         'name' => $calendar_name,
         'cid' => (int)$cid,
         'start_date' => REQUEST_TIME,
-        'sections' => $sections,
+        'single_section' => $single_section,
+        'multiple_sections' => $multiple_sections,
       ))
       ->useDefaults(array('username', 'password', 'time_range', 'connected'))
     ->execute();
@@ -347,13 +349,7 @@ function _mastercal_get_udq_field_type($field_name) {
  */
 function _mastercal_get_workbench_access_editorial_sections() {
   // Initialize an empty array.
-  if (variable_get('workbench_access_allow_multiple') == 1) {
-    $sections = array();
-  }
-  else {
-    // Add a blank option for select lists.
-    $sections = array('0' => '--None--');
-  }
+  $sections = array();
   
   if (variable_get('workbench_access') == 'taxonomy') {
     // Get an array of all vocabularies selected for Workbench Access 

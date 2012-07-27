@@ -162,7 +162,7 @@ function mastercal_add_form_submit($form, &$form_state) {
   $calendar = _mastercal_get_cal($form_state['values']['cid']);
   
   // Save the calendar in the database.
-  _mastercal_save($calendar['Name'], $form_state['values']['cid'], NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+  _mastercal_save($calendar['Name'], $form_state['values']['cid'], NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
   
   // Set a confirmation message.
   drupal_set_message(t('The calendar %calendar has been created. You can edit it from this page.', array('%calendar' => $calendar['Name'])));
@@ -264,37 +264,39 @@ function mastercal_edit_form($form, &$form_state, $cid) {
     '#title' => t('Workbench'),
     );
     
-    if (variable_get('workbench_access_allow_multiple') == 1) {
+    // Check for single section assignment.
+    if (variable_get('workbench_access_allow_multiple') == 0) {
+      // Workbench Access with one editorial section per node.
+      $form['workbench']['access_single'] = array(
+      '#type' => 'select',
+      '#title' => t('Workbench Access'),
+      '#description' => t('Select the Workbench Access editorial section that should be assigned to imported events. Users and roles with access to the selected editorial section will have access to create/edit events.'),
+      '#empty_option' => '--None--',
+      '#options' => _mastercal_get_workbench_access_editorial_sections(),
+      '#default_value' => unserialize($calendar->single_section),
+      );
+    }
+    else {
       // Check if sections is NULL.
-      if ($calendar->sections != NULL) {
+      if ($calendar->multiple_sections != NULL) {
         // Workbench Access with multiple editorial sections per node.
-        $form['workbench']['access'] = array(
+        $form['workbench']['access_multiple'] = array(
         '#type' => 'checkboxes',
         '#title' => t('Workbench Access'),
         '#description' => t('Select the Workbench Access editorial sections that should be assigned to imported events. Users and roles with access to the selected editorial sections will have access to create/edit events.'),
         '#options' => _mastercal_get_workbench_access_editorial_sections(),
-        '#default_value' => unserialize($calendar->sections),
+        '#default_value' => unserialize($calendar->multiple_sections),
         );
       }
       else {
         // Workbench Access with multiple editorial sections per node, no default value.
-        $form['workbench']['access'] = array(
+        $form['workbench']['access_multiple'] = array(
         '#type' => 'checkboxes',
         '#title' => t('Workbench Access'),
         '#description' => t('Select the Workbench Access editorial sections that should be assigned to imported events. Users and roles with access to the selected editorial sections will have access to create/edit events.'),
         '#options' => _mastercal_get_workbench_access_editorial_sections(),
         );
       }
-    }
-    else {
-      // Workbench Access with one editorial section per node.
-      $form['workbench']['access'] = array(
-        '#type' => 'select',
-        '#title' => t('Workbench Access'),
-        '#description' => t('Select the Workbench Access editorial section that should be assigned to imported events. Users and roles with access to the selected editorial section will have access to create/edit events.'),
-        '#options' => _mastercal_get_workbench_access_editorial_sections(),
-        '#default_value' => unserialize($calendar->sections),
-      );
     }
   }
   
@@ -480,7 +482,8 @@ function mastercal_edit_form_submit($form, &$form_state) {
   $time_range = $form_state['values']['time_range'];
   $connected = $form_state['values']['connected'];
   $terms = (!empty($form_state['values']['terms'])) ? serialize($form_state['values']['terms']) :  NULL;
-  $sections = (!empty($form_state['values']['access'])) ? serialize($form_state['values']['access']) : NULL;
+  $single_section = (!empty($form_state['values']['access_single'])) ? serialize($form_state['values']['access_single']) : NULL;
+  $multiple_sections = (!empty($form_state['values']['access_multiple'])) ? serialize($form_state['values']['access_multiple']) : NULL;
   
   // Load the calendar from the database as an object.
   $calendar = _mastercal_load($cid);
@@ -513,7 +516,7 @@ function mastercal_edit_form_submit($form, &$form_state) {
   }
   
   // Save the calendar.
-  _mastercal_save($calendar->name, $cid, $username, $password, $start_date, $time_range, $connected, $terms, $sections);
+  _mastercal_save($calendar->name, $cid, $username, $password, $start_date, $time_range, $connected, $terms, $single_section, $multiple_sections);
   
   // Set a confirmation message.
   drupal_set_message(t('The %calendar_name calendar has been saved.', array('%calendar_name' => $calendar->name)));
