@@ -159,6 +159,7 @@ function _mastercal_save($calendar_name, $cid, $username, $password, $start_date
         'name' => $calendar_name,
         'cid' => (int)$cid,
         'start_date' => REQUEST_TIME,
+        'sections' => $sections,
       ))
       ->useDefaults(array('username', 'password', 'time_range', 'connected'))
     ->execute();
