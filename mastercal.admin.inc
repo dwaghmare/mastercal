@@ -265,14 +265,26 @@ function mastercal_edit_form($form, &$form_state, $cid) {
     );
     
     if (variable_get('workbench_access_allow_multiple') == 1) {
-      // Workbench Access with multiple editorial sections per node.
-      $form['workbench']['access'] = array(
-      '#type' => 'checkboxes',
-      '#title' => t('Workbench Access'),
-      '#description' => t('Select the Workbench Access editorial sections that should be assigned to imported events. Users and roles with access to the selected editorial sections will have access to create/edit events.'),
-      '#options' => _mastercal_get_workbench_access_editorial_sections(),
-      '#default_value' => unserialize($calendar->sections),
-      );
+      // Check if sections is NULL.
+      if ($calendar->sections != NULL) {
+        // Workbench Access with multiple editorial sections per node.
+        $form['workbench']['access'] = array(
+        '#type' => 'checkboxes',
+        '#title' => t('Workbench Access'),
+        '#description' => t('Select the Workbench Access editorial sections that should be assigned to imported events. Users and roles with access to the selected editorial sections will have access to create/edit events.'),
+        '#options' => _mastercal_get_workbench_access_editorial_sections(),
+        '#default_value' => unserialize($calendar->sections),
+        );
+      }
+      else {
+        // Workbench Access with multiple editorial sections per node, no default value.
+        $form['workbench']['access'] = array(
+        '#type' => 'checkboxes',
+        '#title' => t('Workbench Access'),
+        '#description' => t('Select the Workbench Access editorial sections that should be assigned to imported events. Users and roles with access to the selected editorial sections will have access to create/edit events.'),
+        '#options' => _mastercal_get_workbench_access_editorial_sections(),
+        );
+      }
     }
     else {
       // Workbench Access with one editorial section per node.
