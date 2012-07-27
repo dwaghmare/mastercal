@@ -256,6 +256,34 @@ function mastercal_edit_form($form, &$form_state, $cid) {
     '#default_value' => $calendar->time_range,
   );
   
+  // If Workbench Access is enabled.
+  if (module_exists('workbench_access')) {
+    // Workbench fieldset
+    $form['workbench'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Workbench'),
+    );
+    
+    if (variable_get('workbench_access_allow_multiple') == 1) {
+      // Workbench Access with multiple editorial sections per node.
+      $form['workbench']['access'] = array(
+      '#type' => 'checkboxes',
+      '#title' => t('Workbench Access'),
+      '#description' => t('Select the Workbench Access editorial sections that should be assigned to imported events. Users and roles with access to the selected editorial sections will have access to create/edit events.'),
+      '#options' => _mastercal_get_workbench_access_editorial_sections(),
+      );
+    }
+    else {
+      // Workbench Access with one editorial section per node.
+      $form['workbench']['access'] = array(
+        '#type' => 'select',
+        '#title' => t('Workbench Access'),
+        '#description' => t('Select the Workbench Access editorial section that should be assigned to imported events. Users and roles with access to the selected editorial section will have access to create/edit events.'),
+        '#options' => _mastercal_get_workbench_access_editorial_sections(),
+      );
+    }
+  }
+  
   // If the calendar is connected.
   if ($calendar->connected == 1) {
     // Get the UDQs for the calendar.
