@@ -336,3 +336,47 @@ function _mastercal_get_udq_field_type($field_name) {
   }
 }
 
+/**
+ * Helper function to return array of Workbench Access editorial sections.
+ * 
+ * return $sections
+ */
+function _mastercal_get_workbench_access_editorial_sections() {
+  if (variable_get('workbench_access') == 'taxonomy') {
+    // Get an array of all vocabularies selected for Workbench Access 
+    // editorial sections.
+    $workbench_vocabularies = variable_get('workbench_access_taxonomy');
+    
+    // Create an empty array.
+    $sections = array('0' => '--None--');
+    
+    // Add each selected vocabulary to the $sections array.
+    foreach ($workbench_vocabularies as $key => $value) {
+      if ($value != '0') {
+        $sections[_mastercal_get_vid($value)] = ucfirst($value); 
+      }
+    }
+    
+    return $sections;
+    
+  }
+  else {
+    // Get an array of all custom menus.
+    $menus = menu_get_menus();
+    
+    // Get an array of all menus selected for Workbench Access editorial sections.
+    $workbench_menus = variable_get('workbench_access_menu');
+  }
+  
+}
+
+/**
+ * Helper function return the vid of a give vocabulary.
+ * 
+ * @param $name
+ */
+function _mastercal_get_vid($name) {
+  $names = taxonomy_vocabulary_get_names();
+  return $names[$name]->vid;
+}
+
