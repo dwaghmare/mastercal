@@ -346,13 +346,19 @@ function _mastercal_get_udq_field_type($field_name) {
  * return $sections
  */
 function _mastercal_get_workbench_access_editorial_sections() {
+  // Initialize an empty array.
+  if (variable_get('workbench_access_allow_multiple') == 1) {
+    $sections = array();
+  }
+  else {
+    // Add a blank option for select lists.
+    $sections = array('0' => '--None--');
+  }
+  
   if (variable_get('workbench_access') == 'taxonomy') {
     // Get an array of all vocabularies selected for Workbench Access 
     // editorial sections.
     $workbench_vocabularies = variable_get('workbench_access_taxonomy');
-    
-    // Create an empty array.
-    $sections = array('0' => '--None--');
     
     // Add each selected vocabulary to the $sections array.
     foreach ($workbench_vocabularies as $key => $value) {
@@ -367,8 +373,6 @@ function _mastercal_get_workbench_access_editorial_sections() {
     
     // Get an array of all menus selected for Workbench Access editorial sections.
     $workbench_menus = variable_get('workbench_access_menu');
-    
-    $sections = array('0' => '--None--');
     
     foreach ($workbench_menus as $key => $value) {
       if ($value != '0') {
