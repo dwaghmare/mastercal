@@ -359,20 +359,26 @@ function _mastercal_get_workbench_access_editorial_sections() {
     // Add each selected vocabulary to the $sections array.
     foreach ($workbench_vocabularies as $key => $value) {
       if ($value != '0') {
-        $sections[_mastercal_get_vid($value)] = ucfirst($value); 
+        // Get the vid of the current taxonomy.
+        $vid = _mastercal_get_vid($value);
+        
+        // Get the taxonomy tree.
+        $taxonomy = taxonomy_get_tree($vid);
+        
+        // For each term in the taxonomy, asign the tid and name to $sections.
+        foreach ($taxonomy as $term) {
+          $sections[$term->tid] = $term->name;
+        }
       }
     }
   }
   else {
-    // Get an array of all custom menus.
-    $menus = menu_get_menus();
-    
     // Get an array of all menus selected for Workbench Access editorial sections.
     $workbench_menus = variable_get('workbench_access_menu');
     
     foreach ($workbench_menus as $key => $value) {
       if ($value != '0') {
-        $sections[$key] = ucfirst($value);
+        $menu = menu_tree_all_data($value);
       }
     }
   }
