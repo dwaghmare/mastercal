@@ -271,6 +271,7 @@ function mastercal_edit_form($form, &$form_state, $cid) {
       '#title' => t('Workbench Access'),
       '#description' => t('Select the Workbench Access editorial sections that should be assigned to imported events. Users and roles with access to the selected editorial sections will have access to create/edit events.'),
       '#options' => _mastercal_get_workbench_access_editorial_sections(),
+      '#default_value' => unserialize($calendar->sections),
       );
     }
     else {
@@ -280,6 +281,7 @@ function mastercal_edit_form($form, &$form_state, $cid) {
         '#title' => t('Workbench Access'),
         '#description' => t('Select the Workbench Access editorial section that should be assigned to imported events. Users and roles with access to the selected editorial section will have access to create/edit events.'),
         '#options' => _mastercal_get_workbench_access_editorial_sections(),
+        '#default_value' => unserialize($calendar->sections),
       );
     }
   }
@@ -466,7 +468,7 @@ function mastercal_edit_form_submit($form, &$form_state) {
   $time_range = $form_state['values']['time_range'];
   $connected = $form_state['values']['connected'];
   $terms = (!empty($form_state['values']['terms'])) ? serialize($form_state['values']['terms']) :  NULL;
-  $sections = (!empty($form_state['values']['workbench']['access'])) ? searlize($form_state['values']['workbench']['access']) : NULL;
+  $sections = (!empty($form_state['values']['access'])) ? serialize($form_state['values']['access']) : NULL;
   
   // Load the calendar from the database as an object.
   $calendar = _mastercal_load($cid);
