@@ -17,5 +17,18 @@ as nodes.
   * Once connected, additional fields can be configured on the edit calendar form. 
 6. Run cron.
 
+### Workbench Access
+The mastercal module can integrate with Workbench Access. To do so follow these
+steps.
+1. Download and enable Workbench and Workbench Access. Follow their instructions
+for installation and configuring section assignment.
+2. Once enabled, additional configuration options will be available in the 
+mastercal configuration page. Each calendar can select the taxonomy terms or 
+menu items that should be assigned to those events.
+3. By default, Retroactive Section Assignment is enabled on each calendar. This
+assigns sections to existing events during cron. It can be turned off to decrease
+cron running time. However, events will have to be manually updated if sections
+assignment changes.
+
 ## Troubleshooting
 Contact ITS Web Services.
