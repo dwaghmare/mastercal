@@ -82,6 +82,13 @@ function mastercal_schema() {
         'serialize' => TRUE,
         'description' => 'A serialized array of taxonomy term IDs or menu names representing Workbench Access sections that should be assigned to events of this calendar.',
       ),
+      'retroactive_assignment' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'length' => 2,
+        'default' => '0',
+        'description' => 'Integer representing boolean on whether existing events should be have sections reassigned on cron.',
+      ),
     ),
     'primary key' => array('cid'),
   );
