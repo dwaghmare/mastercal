@@ -492,7 +492,7 @@ function mastercal_edit_form_submit($form, &$form_state) {
   $terms = (!empty($form_state['values']['terms'])) ? serialize($form_state['values']['terms']) :  NULL;
   $single_section = (!empty($form_state['values']['access_single'])) ? serialize($form_state['values']['access_single']) : NULL;
   $multiple_sections = (!empty($form_state['values']['access_multiple'])) ? serialize($form_state['values']['access_multiple']) : NULL;
-  $retroactive_assignment = (!empty($form_state['values']['retroactive_assignment'])) ? $form_state['values']['retroactive_assignment'] : 1;
+  $retroactive_assignment = (!empty($form_state['values']['retroactive_assignment'])) ? $form_state['values']['retroactive_assignment'] : NULL;
   
   // Load the calendar from the database as an object.
   $calendar = _mastercal_load($cid);
