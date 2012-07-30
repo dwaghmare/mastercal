@@ -114,6 +114,19 @@ function mastercal_cron() {
   // For each calendar in the database, run get_events.
   foreach ($calendars as $calendar) {
     if ($calendar->connected == 1) {
+      // If Workbench Access is enabled.
+      if (module_exists('workbench_access')) {
+        $workbench_access_sections = array();
+        // If single section assignment.
+        if (variable_get('workbench_access_allow_multiple') == 0) {
+          $workbench_access_sections = unserialize($calendar->single_section);
+        }
+        // Multiple section assignment.
+        else {
+          $workbench_access_sections = unserialize($calendar->multiple_sections);
+        }
+      }
+      
       // Assign the cid to a variable.
       $cid = $calendar->cid;
     
@@ -134,19 +147,6 @@ function mastercal_cron() {
         $event_canceled = ($event['Canceled'] == 'false') ? 0 : 1;
         $event_updated_date = _mastercal_format_date($event['EventUpdatedDate']);
         $event_detail_updated_date = _mastercal_format_date($event['EventDetailUpdatedDate']);
-        
-        // If Workbench Access is enabled.
-        if (module_exists('workbench_access')) {
-          $workbench_access_sections = array();
-          // If single section assignment.
-          if (variable_get('workbench_access_allow_multiple') == 0) {
-            $workbench_access_sections = unserialize($calendar->single_sections);
-          }
-          // Multiple section assignment.
-          else {
-            $workbench_access_sections = unserialize($calendar->multiple_sections);
-          }
-        }
         
         // Count the number of dates.
         $n_dates = count($event['EventDate']);
@@ -169,12 +169,6 @@ function mastercal_cron() {
         
           // Sets publisher to first user.
           $node->uid = 1;
-          
-          // If Workbench Access is enabled and sections have been configured.
-          if ($workbench_access_sections) {          
-            // Assign sections to node.
-            $node->workbench_access = $workbench_access_sections;
-          }
             
           // Add one to the created count.
           $nodes['created'] += 1;
@@ -244,6 +238,12 @@ function mastercal_cron() {
           if ($calendar_exists == FALSE) {
             $node->field_mc_calendar['und'][$calendar_count]['value'] = $calendar_name;
           }
+        }
+        
+        // If Workbench Access is enabled and sections have been configured.
+        if ($workbench_access_sections) {
+          // Assign sections to node.
+          $node->workbench_access = $workbench_access_sections;
         }
         
         // Prepare the body field.
