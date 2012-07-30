@@ -365,7 +365,7 @@ function _mastercal_get_workbench_access_editorial_sections() {
         // Get the taxonomy tree.
         $taxonomy = taxonomy_get_tree($vid);
         
-        // For each term in the taxonomy, asign the tid and name to $sections.
+        // For each term in the taxonomy, assign the tid and name to $sections.
         foreach ($taxonomy as $term) {
           $sections[$term->tid] = $term->name;
         }
@@ -381,6 +381,7 @@ function _mastercal_get_workbench_access_editorial_sections() {
         // Get the menu tree.
         $menu = menu_tree_all_data($value);
         
+        // For each menu item in the menu, assign the mlid and link title to $sections.
         foreach ($menu as $item) {
           $sections[$item['link']['mlid']] = $item['link']['link_title'];
         }
