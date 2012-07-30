@@ -378,7 +378,12 @@ function _mastercal_get_workbench_access_editorial_sections() {
     
     foreach ($workbench_menus as $key => $value) {
       if ($value != '0') {
+        // Get the menu tree.
         $menu = menu_tree_all_data($value);
+        
+        foreach ($menu as $item) {
+          $sections[$item['link']['mlid']] = $item['link']['link_title'];
+        }
       }
     }
   }
