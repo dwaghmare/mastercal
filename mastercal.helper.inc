@@ -131,7 +131,7 @@ function _mastercal_create_term($term) {
  * @param $terms
  * @param $sections
  */
-function _mastercal_save($calendar_name, $cid, $username, $password, $start_date, $time_range, $connected, $terms, $single_section, $multiple_sections) {
+function _mastercal_save($calendar_name, $cid, $username, $password, $start_date, $time_range, $connected, $terms, $single_section, $multiple_sections, $retroactive_assignment) {
   // Check to see if the calendar is in the database.
   if (_mastercal_load($cid)) {
     // Update the fields for the existing calendar.
@@ -147,6 +147,7 @@ function _mastercal_save($calendar_name, $cid, $username, $password, $start_date
         'terms' => $terms,
         'single_section' => $single_section,
         'multiple_sections' => $multiple_sections,
+        'retroactive_assignment' => $retroactive_assignment,
       ))
       ->condition('cid', $cid, '=')
     ->execute();
@@ -163,7 +164,7 @@ function _mastercal_save($calendar_name, $cid, $username, $password, $start_date
         'single_section' => $single_section,
         'multiple_sections' => $multiple_sections,
       ))
-      ->useDefaults(array('username', 'password', 'time_range', 'connected'))
+      ->useDefaults(array('username', 'password', 'time_range', 'connected', 'retroactive_assignment'))
     ->execute();
     
     return $return;
