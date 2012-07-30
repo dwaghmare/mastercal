@@ -135,6 +135,19 @@ function mastercal_cron() {
         $event_updated_date = _mastercal_format_date($event['EventUpdatedDate']);
         $event_detail_updated_date = _mastercal_format_date($event['EventDetailUpdatedDate']);
         
+        // If Workbench Access is enabled.
+        if (module_exists('workbench_access')) {
+          $workbench_access_sections = array();
+          // If single section assignment.
+          if (variable_get('workbench_access_allow_multiple') == 0) {
+            $workbench_access_sections = unserialize($calendar->single_sections);
+          }
+          // Multiple section assignment.
+          else {
+            $workbench_access_sections = unserialize($calendar->multiple_sections);
+          }
+        }
+        
         // Count the number of dates.
         $n_dates = count($event['EventDate']);
         
@@ -156,7 +169,13 @@ function mastercal_cron() {
         
           // Sets publisher to first user.
           $node->uid = 1;
-        
+          
+          // If Workbench Access is enabled and sections have been configured.
+          if ($workbench_access_sections) {          
+            // Assign sections to node.
+            $node->workbench_access = $workbench_access_sections;
+          }
+            
           // Add one to the created count.
           $nodes['created'] += 1;
         }
@@ -170,6 +189,18 @@ function mastercal_cron() {
           // within the range of this import equals the number of dates in the 
           // date field for this event.
           if ($node->field_mc_updated_date['und'][0]['value'] == $event_updated_date && $node->field_mc_detail_updated_date['und'][0]['value'] == $event_detail_updated_date && $n_dates == count($node->field_mc_date['und'])) {
+            // If Workbench Access is enabled and sections have been configured.
+            if ($workbench_access_sections) {
+              // If retroactive assignment is enabled.
+              if ($calendar->retroactive_assignment == 1) {
+                // Assign sections to node.
+                $node->workbench_access = $workbench_access_sections;
+
+                // Save the node.
+                node_submit($node);
+                node_save($node);
+              }
+            }
             // If so, continue on to the next iteration skipping the code below.
             continue;
           }
