@@ -304,6 +304,7 @@ function mastercal_edit_form($form, &$form_state, $cid) {
       '#type' => 'checkbox',
       '#title' => t('Retroactive Section Assignment'),
       '#description' => t('During cron runs, existing events will have their Workbench Access section(s) reassigned to the section(s) above.'),
+      '#default_value' => $calendar->retroactive_assignment,
     );
   }
   
