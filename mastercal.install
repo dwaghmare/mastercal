@@ -86,7 +86,7 @@ function mastercal_schema() {
         'type' => 'int',
         'not null' => TRUE,
         'length' => 2,
-        'default' => '0',
+        'default' => '1',
         'description' => 'Integer representing boolean on whether existing events should be have sections reassigned on cron.',
       ),
     ),
