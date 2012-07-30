@@ -162,7 +162,7 @@ function mastercal_add_form_submit($form, &$form_state) {
   $calendar = _mastercal_get_cal($form_state['values']['cid']);
   
   // Save the calendar in the database.
-  _mastercal_save($calendar['Name'], $form_state['values']['cid'], NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+  _mastercal_save($calendar['Name'], $form_state['values']['cid'], NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
   
   // Set a confirmation message.
   drupal_set_message(t('The calendar %calendar has been created. You can edit it from this page.', array('%calendar' => $calendar['Name'])));
@@ -298,6 +298,13 @@ function mastercal_edit_form($form, &$form_state, $cid) {
         );
       }
     }
+    
+    // Retroactive section assignment.
+    $form['workbench']['retroactive_assignment'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Retroactive Section Assignment'),
+      '#description' => t('During cron runs, existing events will have their Workbench Access section(s) reassigned to the section(s) above.'),
+    );
   }
   
   // If the calendar is connected.
@@ -484,6 +491,7 @@ function mastercal_edit_form_submit($form, &$form_state) {
   $terms = (!empty($form_state['values']['terms'])) ? serialize($form_state['values']['terms']) :  NULL;
   $single_section = (!empty($form_state['values']['access_single'])) ? serialize($form_state['values']['access_single']) : NULL;
   $multiple_sections = (!empty($form_state['values']['access_multiple'])) ? serialize($form_state['values']['access_multiple']) : NULL;
+  $retroactive_assignment = $form_state['values']['retroactive_assignment'];
   
   // Load the calendar from the database as an object.
   $calendar = _mastercal_load($cid);
@@ -516,7 +524,7 @@ function mastercal_edit_form_submit($form, &$form_state) {
   }
   
   // Save the calendar.
-  _mastercal_save($calendar->name, $cid, $username, $password, $start_date, $time_range, $connected, $terms, $single_section, $multiple_sections);
+  _mastercal_save($calendar->name, $cid, $username, $password, $start_date, $time_range, $connected, $terms, $single_section, $multiple_sections, $retroactive_assignment);
   
   // Set a confirmation message.
   drupal_set_message(t('The %calendar_name calendar has been saved.', array('%calendar_name' => $calendar->name)));
