@@ -220,8 +220,8 @@ function _mastercal_delete($cid) {
  * @param $string
  */
 function _mastercal_format_string($unformatted_string) {
-  // Strip the inline styles from the html elements.
-  $stripped_string = preg_replace("/<([a-z][a-z0-9]*)[^>]*?(\/?)>/i", '<$1$2>', $unformatted_string);
+  // Strip the inline styles from the html elements. Ignores 'a' - anchor elements.
+  $stripped_string = preg_replace("/<([b-z][b-z0-9]*)[^>]*?(\/?)>/i", '<$1$2>', $unformatted_string);
   
   // Create array of characters to be replaced.
   $targets = array('<!-- ?xml:namespace prefix = o ns = "urn:schemas-microsoft-com:office:office" ? -->', "\n", '“', '”', "‘", "’", '-', '—', '…');
