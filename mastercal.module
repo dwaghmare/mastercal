@@ -116,6 +116,7 @@ function mastercal_cron() {
     if ($calendar->connected == 1) {
       // If Workbench Access is enabled.
       if (module_exists('workbench_access')) {
+        // Initialize the workbench_access_sections array.
         $workbench_access_sections = array();
         // If single section assignment.
         if (variable_get('workbench_access_allow_multiple') == 0) {
@@ -125,6 +126,9 @@ function mastercal_cron() {
         else {
           $workbench_access_sections = unserialize($calendar->multiple_sections);
         }
+        
+        // Set the Workbench Access scheme variable.
+        $workbench_access_scheme = variable_get('workbench_access');
       }
       
       // Assign the cid to a variable.
@@ -188,6 +192,7 @@ function mastercal_cron() {
               // If retroactive assignment is enabled.
               if ($calendar->retroactive_assignment == 1) {
                 // Assign sections to node.
+                $node->workbench_access_scheme['access_scheme'] = $workbench_access_scheme;
                 $node->workbench_access = $workbench_access_sections;
 
                 // Save the node.
@@ -243,6 +248,7 @@ function mastercal_cron() {
         // If Workbench Access is enabled and sections have been configured.
         if ($workbench_access_sections) {
           // Assign sections to node.
+          $node->workbench_access_scheme['access_scheme'] = $workbench_access_scheme;
           $node->workbench_access = $workbench_access_sections;
         }
         
