@@ -72,23 +72,19 @@ function mastercal_menu() {
   );
   
   // Passes the CID of the calendar to edit.
-  // @TODO: The access callback should be changed to be more restrictive.
   $items['admin/config/uiowa/mastercal/%/edit'] = array(
   'title' => 'Edit a calendar.',
   'page callback' => 'drupal_get_form',
   'page arguments' => array('mastercal_edit_form', 4),
-  'access callback' => TRUE,
   'access arguments' => array('administer mastercal'),
   'file' => 'mastercal.admin.inc',
   );
   
   // Passes the CID of the calendar to remove.
-  // @TODO: The access callback should be changed to be more restrictive.
   $items['admin/config/uiowa/mastercal/%/delete'] = array(
     'title' => 'Delete a calendar.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('mastercal_delete_form', 4),
-    'access callback' => TRUE,
     'access arguments' => array('administer mastercal'),
     'file' => 'mastercal.admin.inc',
   );
