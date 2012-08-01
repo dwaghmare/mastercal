@@ -41,8 +41,11 @@ function _mastercal_format_date($date) {
     // Explode date_array into array on '-' character.
     $time_array = explode('-', $date_array[1]);
     
+    // Reduce the precision of the seconds.
+    $time = explode('.', $time_array[0]);
+    
     // Concatenate date and time into datetime format.
-    $datetime = $date_array[0] . ' ' . $time_array[0];
+    $datetime = $date_array[0] . ' ' . $time[0];
     
     // Format the date using gmdate().
     $formatted_date = gmdate('Y-m-d H:i:s', strtotime($datetime));
