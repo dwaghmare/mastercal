@@ -279,12 +279,12 @@ function _mastercal_create_field($field_type, $field_name, $field_label) {
      'type' => 'textfield',
    );
   }
-  else if ($field_type == 'number_float') {
+  elseif ($field_type == 'number_float') {
     $instance['widget'] = array(
       'type' => 'textfield',
     );
   }
-  else if ($field_type == 'datetime') {
+  elseif ($field_type == 'datetime') {
     $field['module'] = 'date';
     
     $field['settings'] = array(
@@ -405,5 +405,27 @@ function _mastercal_get_workbench_access_editorial_sections() {
 function _mastercal_get_vid($name) {
   $names = taxonomy_vocabulary_get_names();
   return $names[$name]->vid;
+}
+
+/**
+ * Helper function to determine if a calendar is in the calendar
+ * field (field_mc_calendar) of $key => $value form.
+ * 
+ * Chose not to use in_array() because of funky results.
+ * 
+ * @param $search
+ * @param $items
+ */
+function _mastercal_calendar_check($search, $calendars) {
+  // Iterate over each calendar in the calendar field.
+  foreach ($calendars as $calendar) {
+    // If the calendar exists, return true.
+    if ($calendar['value'] == $search) {
+      return TRUE;
+    }  
+  }
+  
+  // Otherwise return false.
+  return FALSE;
 }
 
