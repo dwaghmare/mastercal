@@ -518,7 +518,7 @@ function mastercal_edit_form_submit($form, &$form_state) {
         // Check to see if the field already exists.
         if (!field_info_field('field_mc_calendar_' . $calendar->cid . '_udq_' . $udq['UDQID'])) {
           // Create and attach the field.
-          _mastercal_create_field($form_state['values'][$udq_prefix . 'data_type'], 'field_mc_calendar_' . $calendar->cid . '_udq_' . $udq['UDQID'], $form_state['values'][$udq_prefix .'prompt_text']);
+          _mastercal_create_field($form_state['values'][$udq_prefix . 'data_type'], 'field_mc_calendar_' . $calendar->cid . '_udq_' . $udq['UDQID'], $form_state['values'][$udq_prefix . 'prompt_text']);
         }
       }
     }
