@@ -179,10 +179,13 @@ function mastercal_cron() {
           $node_data = reset($result['node']);
           $node = node_load($node_data->nid);
           
-          // Check if the event has not been updated AND the number of dates
-          // within the range of this import equals the number of dates in the 
-          // date field for this event.
-          if ($node->field_mc_updated_date['und'][0]['value'] == $event_updated_date && $node->field_mc_detail_updated_date['und'][0]['value'] == $event_detail_updated_date && $n_dates == count($node->field_mc_date['und'])) {
+          // Criteria to skip an event.
+          // - The event has not been updated AND
+          // - The number of dates within the range of this import equals the 
+          //   number of dates in the date field for this event AND
+          // - The calendar this event belongs to is already in the 
+           //  field_mc_calendar array.
+          if ($node->field_mc_updated_date['und'][0]['value'] == $event_updated_date && $node->field_mc_detail_updated_date['und'][0]['value'] == $event_detail_updated_date && $n_dates == count($node->field_mc_date['und']) && _mastercal_calendar_check($calendar_name, $node->field_mc_calendar['und'])) {
             // If Workbench Access is enabled.
             if (module_exists('workbench_access')) {
               // If retroactive assignment is enabled.
