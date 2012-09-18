@@ -297,7 +297,7 @@ function mastercal_cron() {
           $file = file_save_data($image, 'public://' . $event_data[0]['ImageName'], FILE_EXISTS_REPLACE);
           $node->field_mc_image['und']['0']['fid'] = $file->fid;
         }
-         
+        //If there is a phone number for the event contact add it
         if (isset($event_data[0]['ContactPhone']) && !empty($event_data[0]['ContactPhone'])) {
           $node->field_mc_phone['und'][0]['value'] = $event_data[0]['ContactPhone'];
         }
