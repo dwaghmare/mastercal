@@ -142,7 +142,7 @@ function mastercal_cron() {
         $event_type = (!empty($event['EventTypeName'])) ? $event['EventTypeName'] : NULL;
         $contact_name = $event['ContactName'];
         $contact_email = $event['ContactEmail'];
-        $contact_phone = (!empty($event['ContactPhone'])) ? $event['ContactPhone'] : NULL;
+        $contact_phone = $event['ContactPhone'];
         $event_location = (!empty($event['Location'])) ? $event['Location'] : NULL;
         $event_location_url = (!empty($event['LocationURL'])) ? $event['LocationURL'] : NULL;
         $event_canceled = ($event['Canceled'] == 'false') ? 0 : 1;
