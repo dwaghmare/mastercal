@@ -142,6 +142,7 @@ function mastercal_cron() {
         $event_type = (!empty($event['EventTypeName'])) ? $event['EventTypeName'] : NULL;
         $contact_name = $event['ContactName'];
         $contact_email = $event['ContactEmail'];
+        $contact_phone = (!empty($event['ContactPhone'])) ? $event['ContactPhone'] : NULL;
         $event_location = (!empty($event['Location'])) ? $event['Location'] : NULL;
         $event_location_url = (!empty($event['LocationURL'])) ? $event['LocationURL'] : NULL;
         $event_canceled = ($event['Canceled'] == 'false') ? 0 : 1;
@@ -217,6 +218,7 @@ function mastercal_cron() {
         $node->field_mc_type['und'][0]['value'] = $event_type;
         $node->field_mc_contact['und'][0]['value'] = $contact_name;
         $node->field_mc_email['und'][0]['value'] = $contact_email;
+        $node->field_mc_phone['und'][0]['value'] = $contact_phone;
         $node->field_mc_location['und'][0]['value'] = $event_location;
         $node->field_mc_location_url['und'][0]['value'] = $event_location_url;
         $node->field_mc_canceled['und'][0]['value'] = $event_canceled;
