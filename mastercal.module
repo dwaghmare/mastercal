@@ -259,14 +259,19 @@ function mastercal_cron() {
         // Prepare the body field.
         $node->body['und'][0]['value'] = _mastercal_format_string($event['Description']);
         $node->body['und'][0]['format'] = 'filtered_html';
-      
+        
+        // Unset the date field.
+        // This will make sure individual dates deleted on MC are respected in Arts Iowa.
+        // @TODO: Look into canceling dates.
+        unset($node->field_mc_date);
+        
         // If multiple dates, iterate over each and assign it to the node properly.
         if ($n_dates > 1) {
           $count = 0;
           foreach ($event['EventDate'] as $day) {
             // Format the date.
             $date = _mastercal_format_date($day['Start']);
-           
+            
             // Assign the date to the field.
             $node->field_mc_date['und'][$count]['value'] = $date;
             $node->field_mc_date['und'][$count]['value2'] = $date;
