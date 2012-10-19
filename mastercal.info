@@ -1,7 +1,7 @@
 name = UIowa Master Calendar Integration
 description = Import events from Master Calendar as nodes.
 package = UIowa
-version = 7.x-1.7-dev
+version = 7.x-1.9-dev
 core = 7.x
 files[] = mastercal.module
 dependencies[] = taxonomy
