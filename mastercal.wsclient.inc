@@ -128,7 +128,15 @@ function _mastercal_get_events($cid) {
   $service = wsclient_service_load('calendar');
   
   // Get the result.
-  $result = $service->GetEvents($param);
+  // Added error handling if the MC API is down.
+  if ($service != 'false') {
+    $result = $service->GetEvents($param);
+  }
+  else {
+    drupal_set_message('Cannot connect to Master Calendar API.', 'error');
+    $events = NULL;
+    return $events;
+  }
   
   // Load the response as XML.
   $xml = simplexml_load_string($result->GetEventsResult);
