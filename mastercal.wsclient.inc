@@ -32,6 +32,9 @@ function mastercal_default_wsclient_service() {
   }
   catch (WSClientException $e) {
     watchdog('wsclient', $e->__toString());
+    
+    // This prevents an undefined variable error if the MC API is down.
+    $services = NULL;
   }
   
   return $services;
