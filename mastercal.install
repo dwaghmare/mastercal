@@ -294,6 +294,36 @@ function _mastercal_installed_fields() {
     'locked' => TRUE,
   );
   
+
+ // Title URL
+  // field_mc_titleurl
+  $fields['field_mc_titleurl'] = array(
+    'field_name' => 'field_mc_titleurl',
+    'type' => 'text',
+    'active' => '1',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'entity_types' => array(),
+    'foreign keys' => array(
+      'format' => array(
+        'columns' => array(
+          'format' => 'format',
+        ),
+        'table' => 'filter_format',
+      ),
+    ),
+    'indexes' => array(
+      'format' => array(
+        0 => 'format',
+      ),
+    ),
+    'module' => 'text',
+    'settings' => array(
+      'max_length' => '255',
+    ),
+    'locked' => TRUE,
+  );
+
   // Contact Name
   // field_mc_contact
   $fields['field_mc_contact'] = array(
@@ -767,6 +797,40 @@ function _mastercal_installed_instances() {
         ),
         'type' => 'date_popup',
         'weight' => '0',
+      ),
+    ),
+    // Event Title URL
+    // field_mc_titleurl
+    'field_mc_titleurl' => array(
+      'bundle' => 'mastercal_event',
+      'default_value' => NULL,
+      'deleted' => '0',
+      'description' => 'Contact Name field settings.',
+      'display' => array(
+        'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 4,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_mc_titleurl',
+    'label' => 'Contact Name',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => '0',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => '60',
+      ),
+      'type' => 'text_textfield',
+      'weight' => '1',
       ),
     ),
     // Event Contact Name

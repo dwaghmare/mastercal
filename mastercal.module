@@ -294,7 +294,9 @@ function mastercal_cron() {
           // Grab the event data for this event using GetEvent. The 'Image' field
           // is not returned in GetEvents, among other fields.
           $event_data = _mastercal_get_event($cid, $did);
-        
+          if (isset($event_data[0]['TitleUrl'])) {
+            $node->field_mc_titleurl['und']['0']['value'] =  = $event_data[0]['TitleUrl'];
+          }
           // If the event has an image, decode it, save it to the public file
           // system and assign it to the corresponding node.
           // NOTE : This uses the 'Add Image' link under the body field of the
