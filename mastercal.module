@@ -293,6 +293,9 @@ function mastercal_cron() {
         
           // Grab the event data for this event using GetEvent. The 'Image' field
           // is not returned in GetEvents, among other fields.
+          
+          //Get the Title URL field 
+          $node->field_mc_titleurl['und']['0']['value'] = NULL;
           $event_data = _mastercal_get_event($cid, $did);
           if (isset($event_data[0]['TitleUrl'])) {
             $node->field_mc_titleurl['und']['0']['value'] = $event_data[0]['TitleUrl'];
