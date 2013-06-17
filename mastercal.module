@@ -48,7 +48,6 @@ function mastercal_form_alter(&$form, &$form_state, $form_id) {
         $form['field_mc_calendar']['#access'] = FALSE;
         $form['field_mc_updated_date']['#access'] = FALSE;
         $form['field_mc_detail_updated_date']['#access'] = FALSE;
-        $form['field_mc_tags']['#access'] = FALSE;
       }
     }
   }
