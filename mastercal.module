@@ -389,12 +389,15 @@ function mastercal_cron() {
 
             // If the field instance exists.
             if ($field_instance) {
-              /// If the field instance is a date.
+              // If the field instance is a date.
               if ($field_instance['widget']['type'] == 'date_popup') {
                 // Format the date and assign it.
                 $answer = !empty($udq2['Answer']) ? _mastercal_format_date($udq2['Answer']) : NULL;
               }
-              else {
+              elseif ($field_instance['widget']['type'] == 'text') {
+                 $answer = !empty($udq2['Answer']) ? substr($udq2['Answer'], 0, 254) : NULL;
+               }
+               else {
                 // Assign the value.
                 $answer = !empty($udq2['Answer']) ? $udq2['Answer'] : NULL;
               }
