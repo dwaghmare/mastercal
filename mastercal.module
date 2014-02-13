@@ -394,10 +394,10 @@ function mastercal_cron() {
                 // Format the date and assign it.
                 $answer = !empty($udq2['Answer']) ? _mastercal_format_date($udq2['Answer']) : NULL;
               }
-              elseif ($field_instance['widget']['type'] == 'textfield') {
-                 $answer = !empty($udq2['Answer']) ? substr($udq2['Answer'], 0, 254) : NULL;
-               }
-               else {
+              elseif ($field_instance['widget']['type'] == 'text_textfield') {
+                $answer = !empty($udq2['Answer']) ? substr($udq2['Answer'], 0, 250) : NULL;
+              }
+              else {
                 // Assign the value.
                 $answer = !empty($udq2['Answer']) ? $udq2['Answer'] : NULL;
               }
