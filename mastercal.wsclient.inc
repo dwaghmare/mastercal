@@ -124,16 +124,13 @@ function _mastercal_get_events($cid) {
     'udqAnswer' => NULL,
   );
 
-  // Cast array to object.
-  $params = (object) $param;
-
   // Load the WSClient calendar service.
   $service = wsclient_service_load('calendar');
 
   // Get the result.
   // Added error handling if the MC API is down.
   if ($service != 'false') {
-    $result = $service->GetEvents($params);
+    $result = $service->GetEvents($param);
   }
   else {
     drupal_set_message('Cannot connect to Master Calendar API.', 'error');
